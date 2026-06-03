@@ -1,0 +1,16 @@
+{
+  "name": "sistema-reservas-workspace",
+  "version": "1.0.0",
+  "description": "Sistema Web de Reserva de Salas de Estudio",
+  "scripts": {
+    "dev:backend": "cd backend && .\\mvnw.cmd spring-boot:run",
+    "dev:frontend": "cd frontend && npm start",
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "keywords": [],
+  "author": "Equipo 6",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
