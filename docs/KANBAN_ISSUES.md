@@ -13,10 +13,10 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 **Objetivo:** Configurar el proyecto Spring Boot para que se conecte correctamente a la base de datos PostgreSQL local.
 
 **Tareas a realizar:**
-- [ ] Editar `backend/src/main/resources/application.properties`
-- [ ] Agregar credenciales y URL JDBC de PostgreSQL.
-- [ ] Configurar JPA (`hibernate.ddl-auto=validate`, `show-sql=true`, dialecto).
-- [ ] Verificar que la aplicación levante sin arrojar errores de conexión.
+- [x] Editar `backend/src/main/resources/application.properties`
+- [x] Agregar credenciales y URL JDBC de PostgreSQL.
+- [x] Configurar JPA (`hibernate.ddl-auto=validate`, `show-sql=true`, dialecto).
+- [x] Verificar que la aplicación levante sin arrojar errores de conexión.
 
 ---
 
@@ -29,10 +29,10 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 **Objetivo:** Construir el modelo relacional físico en la base de datos de acuerdo al MER especificado.
 
 **Tareas a realizar:**
-- [ ] Crear el archivo `database/01_schema.sql`.
-- [ ] Implementar la creación de tablas: `CARRERA`, `ESTUDIANTE`, `EDIFICIO`, `SALA`, `HORARIO_DISPONIBLE`, `ESTADO_RESERVA`, `RESERVA`.
-- [ ] Añadir llaves primarias y foráneas correspondientes.
-- [ ] Incluir restricciones `NOT NULL`, `UNIQUE` y tipos de dato según la rúbrica.
+- [x] Crear el archivo `database/01_schema.sql`.
+- [x] Implementar la creación de tablas: `CARRERA`, `ESTUDIANTE`, `EDIFICIO`, `SALA`, `HORARIO_DISPONIBLE`, `ESTADO_RESERVA`, `RESERVA`.
+- [x] Añadir llaves primarias y foráneas correspondientes.
+- [x] Incluir restricciones `NOT NULL`, `UNIQUE` y tipos de dato según la rúbrica.
 
 ---
 
