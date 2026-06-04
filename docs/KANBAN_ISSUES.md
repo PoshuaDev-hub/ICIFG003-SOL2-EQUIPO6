@@ -45,11 +45,11 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 **Objetivo:** Poblar la base de datos con información base para poder desarrollar y testear el sistema.
 
 **Tareas a realizar:**
-- [ ] Crear el archivo `database/02_seed.sql`.
-- [ ] Insertar al menos 3 carreras y 5 estudiantes (con RUT y correos válidos).
-- [ ] Insertar 1-2 edificios y al menos 5 salas de estudio.
-- [ ] Insertar horarios disponibles por sala y estados ("Confirmada", "Cancelada").
-- [ ] Insertar algunas reservas iniciales para las pruebas.
+- [x] Crear el archivo `database/02_seed.sql`.
+- [x] Insertar al menos 3 carreras y 5 estudiantes (con RUT y correos válidos).
+- [x] Insertar 1-2 edificios y al menos 5 salas de estudio.
+- [x] Insertar horarios disponibles por sala y estados ("Confirmada", "Cancelada").
+- [x] Insertar algunas reservas iniciales para las pruebas.
 
 ---
 
