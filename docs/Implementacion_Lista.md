@@ -43,3 +43,26 @@ Este documento detalla los archivos modificados y la lógica implementada tras l
 ### Lógica y Contexto
 - **Modelo Relacional Físico:** Se construyó el script DDL que traduce fielmente el MER especificado en los documentos del proyecto. Las tablas quedaron correctamente relacionadas mediante claves foráneas, respetando los tipos de datos (`SERIAL`, `VARCHAR`, `INT`, `DATE`, `TIME`, `TIMESTAMP`) y las restricciones definidas en la rúbrica.
 - **Compatibilidad con JPA:** La estructura del schema está alineada con las entidades JPA del backend, permitiendo que `hibernate.ddl-auto=validate` funcione sin errores al validar el mapeo objeto-relacional.
+
+---
+
+## Issue 3: [Sprint 2] Crear script de datos de prueba (02_seed.sql)
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`database/02_seed.sql` (Creado):**
+   - Se pobló la base con datos coherentes para las 7 tablas del MER, respetando el orden de dependencias de llaves foráneas (`CARRERA → EDIFICIO → SALA → ESTADO_RESERVA → ESTUDIANTE → HORARIO_DISPONIBLE → RESERVA`).
+   - **CARRERA:** 4 carreras (supera el mínimo de 3).
+   - **ESTUDIANTE:** 6 estudiantes con RUT de dígito verificador válido (algoritmo módulo 11) y correos únicos (supera el mínimo de 5).
+   - **EDIFICIO:** 2 edificios (acota al rango 1-2 que pide el ticket).
+   - **SALA:** 6 salas con capacidades 4, 4, 8, 8, 12 y 20, de modo que quede cobertura para los tres filtros del RF03 (≤4, ≤8, >8).
+   - **HORARIO_DISPONIBLE:** 30 bloques (5 por sala), cada horario amarrado a su `id_sala`.
+   - **ESTADO_RESERVA:** Confirmada y Cancelada, con `id_estado` asignado manualmente.
+   - **RESERVA:** 10 reservas iniciales mezclando estados Confirmada y Cancelada.
+   - Se agregó un `TRUNCATE ... RESTART IDENTITY CASCADE` inicial para que el script sea idempotente y re-ejecutable sin romper las llaves foráneas.
+
+### Lógica y Contexto
+- **Manejo de IDs:** Dado que el `01_schema.sql` define las PK como `SERIAL` (salvo `ESTADO_RESERVA`, que es `INT`), el seed **no** inserta IDs explícitos en las tablas SERIAL: deja que PostgreSQL los genere por orden de inserción y las FKs referencian esos correlativos (CARRERA 1..4, SALA 1..6, etc.). La única tabla con `id_estado` manual es `ESTADO_RESERVA`. Como nunca se fuerzan valores en las secuencias, los `INSERT` que haga el backend más adelante (Issue #8) toman el siguiente correlativo sin colisiones.
+- **Anticipación de reglas de negocio (Issue #8):** Aunque las validaciones viven en la capa de servicio, los datos del seed ya las cumplen para no generar inconsistencias en las pruebas: todas las observaciones tienen ≥ 15 caracteres, ninguna combinación `sala + horario + fecha` se repite en estado Confirmada (no se "pisan" reservas), y cada `id_horario` pertenece efectivamente a su `id_sala`.
+- **Validación realizada:** El script se ejecutó sobre el `01_schema.sql` real en PostgreSQL 16 sin errores, respetando todas las restricciones `NOT NULL`, `UNIQUE` y de llave foránea. Se verificó adicionalmente que un `INSERT` posterior sin `id` genera correctamente el siguiente correlativo, confirmando que las secuencias quedan sanas para el desarrollo del backend.

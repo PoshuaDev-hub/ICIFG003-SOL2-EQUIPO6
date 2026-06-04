@@ -1,66 +1,100 @@
--- Seed de datos de prueba
--- CARRERAS
-INSERT INTO CARRERA (nombre_carrera, facultad) VALUES 
-('Ingeniería Civil Informática', 'Facultad de Ingeniería'),
-('Arquitectura', 'Facultad de Arquitectura'),
-('Psicología', 'Facultad de Ciencias Sociales');
+-- =====================================================================
+--  02_seed.sql  |  Datos de prueba - Sistema de Reserva de Salas
+--  Proyecto: ICIFG003-SOL2-EQUIPO6  |  Issue #3 (Sprint 2)
+--  Responsable: Lucas Chong
+--  Base de datos: PostgreSQL
+--
+--  USO:
+--    1) psql -d reserva_salas_db -f database/01_schema.sql   (Issue #2)
+--    2) psql -d reserva_salas_db -f database/02_seed.sql      (este script)
+--
+--  NOTA SOBRE IDs:
+--    Las PK son SERIAL, por lo que NO se insertan IDs explícitos:
+--    se generan automáticamente según el orden de inserción
+--    (CARRERA 1..n, SALA 1..n, etc.). Las FKs referencian esos
+--    correlativos. La única excepción es ESTADO_RESERVA, cuya PK
+--    (id_estado) es INT y por eso se asigna manualmente.
+--    El TRUNCATE ... RESTART IDENTITY inicial reinicia los SERIAL,
+--    de modo que el script puede re-ejecutarse sin romper las FKs.
+-- =====================================================================
 
--- EDIFICIOS
-INSERT INTO EDIFICIO (nombre_edificio, direccion) VALUES 
-('Edificio A', 'Av. Principal 123'),
-('Edificio B', 'Av. Secundaria 456'),
-('Edificio C', 'Av. Terciaria 789');
+TRUNCATE TABLE RESERVA, HORARIO_DISPONIBLE, SALA, EDIFICIO,
+               ESTADO_RESERVA, ESTUDIANTE, CARRERA RESTART IDENTITY CASCADE;
 
--- SALAS (Capacidades: <=4, <=8, >8)
-INSERT INTO SALA (codigo_sala, nombre_sala, capacidad, piso, descripcion, estado, id_edificio) VALUES 
-('S1', 'Estudio 1', 4, 1, 'Sala pequeña', 'Activa', 1),
-('S2', 'Estudio 2', 4, 1, 'Sala pequeña', 'Activa', 1),
-('S3', 'Estudio 3', 8, 2, 'Sala mediana', 'Activa', 2),
-('S4', 'Estudio 4', 8, 2, 'Sala mediana', 'Activa', 2),
-('S5', 'Estudio 5', 20, 3, 'Sala grande', 'Activa', 3),
-('S6', 'Estudio 6', 30, 3, 'Sala grande', 'Activa', 3);
+-- =====================================================================
+-- 1. CARRERA  (minimo 3)
+-- =====================================================================
+INSERT INTO CARRERA (nombre_carrera, facultad) VALUES
+  ('Ingeniería Civil Informática', 'Facultad de Ingeniería'),          -- id 1
+  ('Ingeniería Comercial',         'Facultad de Economía y Negocios'), -- id 2
+  ('Derecho',                      'Facultad de Ciencias Jurídicas'),  -- id 3
+  ('Psicología',                   'Facultad de Ciencias Sociales');   -- id 4
 
--- ESTADOS
-INSERT INTO ESTADO_RESERVA (id_estado, nombre_estado) VALUES 
-(1, 'Confirmada'),
-(2, 'Cancelada');
+-- =====================================================================
+-- 2. EDIFICIO  (1-2 segun el ticket)
+-- =====================================================================
+INSERT INTO EDIFICIO (nombre_edificio, direccion) VALUES
+  ('Biblioteca Central',        'Av. Libertador Bernardo O''Higgins 1234, Santiago'), -- id 1
+  ('Edificio de Estudio Anexo', 'Av. Vicuña Mackenna 4860, Macul, Santiago');         -- id 2
 
--- ESTUDIANTES
-INSERT INTO ESTUDIANTE (rut, nombre, apellido, correo, telefono, fecha_registro, id_carrera) VALUES 
-('11111111-1', 'Juan', 'Perez', 'j.perez@uni.cl', '911111111', '2026-01-01', 1),
-('22222222-2', 'Maria', 'Gomez', 'm.gomez@uni.cl', '922222222', '2026-01-02', 1),
-('33333333-3', 'Pedro', 'Lopez', 'p.lopez@uni.cl', '933333333', '2026-01-03', 2),
-('44444444-4', 'Ana', 'Diaz', 'a.diaz@uni.cl', '944444444', '2026-01-04', 2),
-('55555555-5', 'Luis', 'Ruiz', 'l.ruiz@uni.cl', '955555555', '2026-01-05', 3),
-('66666666-6', 'Carla', 'Soto', 'c.soto@uni.cl', '966666666', '2026-01-06', 3),
-('77777777-7', 'Diego', 'Mora', 'd.mora@uni.cl', '977777777', '2026-01-07', 1),
-('88888888-8', 'Sofia', 'Vega', 's.vega@uni.cl', '988888888', '2026-01-08', 2),
-('99999999-9', 'Jorge', 'Silva', 'j.silva@uni.cl', '999999999', '2026-01-09', 3),
-('00000000-0', 'Elena', 'Rios', 'e.rios@uni.cl', '900000000', '2026-01-10', 1);
+-- =====================================================================
+-- 3. SALA  (minimo 5; capacidades cubren los filtros del RF03: <=4, <=8, >8)
+-- =====================================================================
+INSERT INTO SALA (codigo_sala, nombre_sala, capacidad, piso, descripcion, estado, id_edificio) VALUES
+  ('A101', 'Sala A101', 4,  1, 'Sala pequeña silenciosa para estudio individual o en parejas.', 'Disponible', 1), -- id 1
+  ('B102', 'Sala B102', 4,  1, 'Sala pequeña con pizarra acrílica.',                             'Disponible', 1), -- id 2
+  ('C201', 'Sala C201', 8,  2, 'Sala mediana con proyector para grupos.',                        'Disponible', 1), -- id 3
+  ('D202', 'Sala D202', 8,  2, 'Sala mediana con equipo de videoconferencia.',                   'Disponible', 2), -- id 4
+  ('E301', 'Sala E301', 12, 3, 'Sala grande para talleres y reuniones de equipo.',               'Disponible', 2), -- id 5
+  ('F302', 'Sala F302', 20, 3, 'Sala grande tipo auditorio para presentaciones.',                'Mantención', 2); -- id 6
 
--- HORARIOS (5 por sala)
-INSERT INTO HORARIO_DISPONIBLE (id_sala, hora_inicio, hora_termino) VALUES 
-(1, '08:00', '09:30'), (1, '09:30', '11:00'), (1, '11:00', '12:30'), (1, '12:30', '14:00'), (1, '14:00', '15:30'),
-(2, '08:00', '09:30'), (2, '09:30', '11:00'), (2, '11:00', '12:30'), (2, '12:30', '14:00'), (2, '14:00', '15:30'),
-(3, '08:00', '09:30'), (3, '09:30', '11:00'), (3, '11:00', '12:30'), (3, '12:30', '14:00'), (3, '14:00', '15:30'),
-(4, '08:00', '09:30'), (4, '09:30', '11:00'), (4, '11:00', '12:30'), (4, '12:30', '14:00'), (4, '14:00', '15:30'),
-(5, '08:00', '09:30'), (5, '09:30', '11:00'), (5, '11:00', '12:30'), (5, '12:30', '14:00'), (5, '14:00', '15:30'),
-(6, '08:00', '09:30'), (6, '09:30', '11:00'), (6, '11:00', '12:30'), (6, '12:30', '14:00'), (6, '14:00', '15:30');
+-- =====================================================================
+-- 4. ESTADO_RESERVA  (PK INT manual; valores de la rubrica)
+-- =====================================================================
+INSERT INTO ESTADO_RESERVA (id_estado, nombre_estado) VALUES
+  (1, 'Confirmada'),
+  (2, 'Cancelada');
 
--- RESERVAS
-INSERT INTO RESERVA (fecha_reserva, observacion, fecha_creacion, id_estudiante, id_sala, id_horario, id_estado) VALUES 
-('2026-05-29', 'Reserva hoy', '2026-05-28 10:00:00', 1, 1, 1, 1),
-('2026-05-29', 'Reserva hoy urgente', '2026-05-28 11:00:00', 2, 2, 6, 1),
-('2026-05-29', 'Estudio grupal', '2026-05-28 12:00:00', 3, 3, 11, 2),
-('2026-05-30', 'Mañana', '2026-05-28 13:00:00', 4, 4, 16, 1),
-('2026-05-30', 'Mañana', '2026-05-28 14:00:00', 5, 5, 21, 1),
-('2026-05-31', 'Finde', '2026-05-28 15:00:00', 6, 6, 26, 1),
-('2026-06-01', 'Proximo mes', '2026-05-28 16:00:00', 7, 1, 2, 1),
-('2026-06-02', 'Proximo mes', '2026-05-28 17:00:00', 8, 2, 7, 1),
-('2026-06-03', 'Proximo mes', '2026-05-28 18:00:00', 9, 3, 12, 1),
-('2026-06-04', 'Proximo mes', '2026-05-28 19:00:00', 10, 4, 17, 1),
-('2026-06-05', 'Proximo mes', '2026-05-28 20:00:00', 1, 5, 22, 1),
-('2026-06-06', 'Proximo mes', '2026-05-28 21:00:00', 2, 6, 27, 1),
-('2026-06-07', 'Proximo mes', '2026-05-28 22:00:00', 3, 1, 3, 2),
-('2026-06-08', 'Proximo mes', '2026-05-28 23:00:00', 4, 2, 8, 1),
-('2026-06-09', 'Proximo mes', '2026-05-28 09:00:00', 5, 3, 13, 1);
+-- =====================================================================
+-- 5. ESTUDIANTE  (minimo 5; RUT con digito verificador valido y correo unico)
+-- =====================================================================
+INSERT INTO ESTUDIANTE (rut, nombre, apellido, correo, telefono, fecha_registro, id_carrera) VALUES
+  ('12345678-5', 'Lucas',     'Chong',    'lucas.chong@alumnos.uni.cl',     '+56912345678', '2025-03-10', 1), -- id 1
+  ('21123456-3', 'María',     'González', 'maria.gonzalez@alumnos.uni.cl',  '+56987654321', '2025-03-12', 2), -- id 2
+  ('19876543-0', 'Diego',     'Fuentes',  'diego.fuentes@alumnos.uni.cl',   '+56911112222', '2024-08-01', 1), -- id 3
+  ('20345678-6', 'Camila',    'Rojas',    'camila.rojas@alumnos.uni.cl',    '+56922223333', '2025-03-15', 3), -- id 4
+  ('18234567-9', 'Joaquín',   'Soto',     'joaquin.soto@alumnos.uni.cl',    '+56933334444', '2023-03-20', 4), -- id 5
+  ('17555444-0', 'Valentina', 'Pérez',    'valentina.perez@alumnos.uni.cl', '+56944445555', '2024-03-05', 2); -- id 6
+
+-- =====================================================================
+-- 6. HORARIO_DISPONIBLE  (5 bloques por sala -> ids 1..30, agrupados por sala)
+--    Sala 1: 1-5 | Sala 2: 6-10 | Sala 3: 11-15 | Sala 4: 16-20 | Sala 5: 21-25 | Sala 6: 26-30
+-- =====================================================================
+INSERT INTO HORARIO_DISPONIBLE (id_sala, hora_inicio, hora_termino) VALUES
+  (1, '08:00', '09:30'), (1, '09:30', '11:00'), (1, '11:00', '12:30'), (1, '12:30', '14:00'), (1, '14:00', '15:30'),
+  (2, '08:00', '09:30'), (2, '09:30', '11:00'), (2, '11:00', '12:30'), (2, '12:30', '14:00'), (2, '14:00', '15:30'),
+  (3, '08:00', '09:30'), (3, '09:30', '11:00'), (3, '11:00', '12:30'), (3, '12:30', '14:00'), (3, '14:00', '15:30'),
+  (4, '08:00', '09:30'), (4, '09:30', '11:00'), (4, '11:00', '12:30'), (4, '12:30', '14:00'), (4, '14:00', '15:30'),
+  (5, '08:00', '09:30'), (5, '09:30', '11:00'), (5, '11:00', '12:30'), (5, '12:30', '14:00'), (5, '14:00', '15:30'),
+  (6, '08:00', '09:30'), (6, '09:30', '11:00'), (6, '11:00', '12:30'), (6, '12:30', '14:00'), (6, '14:00', '15:30');
+
+-- =====================================================================
+-- 7. RESERVA  (reservas iniciales de prueba)
+--    Reglas respetadas:
+--      - observacion >= 15 caracteres (regla del Issue #8).
+--      - id_horario pertenece al id_sala indicado.
+--      - sin choques en estado Confirmada para la misma sala+horario+fecha.
+-- =====================================================================
+INSERT INTO RESERVA (fecha_reserva, observacion, fecha_creacion, id_estudiante, id_sala, id_horario, id_estado) VALUES
+  ('2026-06-09', 'Reunión de estudio para el examen de cálculo II.',          '2026-06-04 09:15:00', 1, 1, 1,  1),
+  ('2026-06-09', 'Preparación de presentación grupal de marketing.',          '2026-06-04 10:05:00', 2, 1, 2,  1),
+  ('2026-06-10', 'Sesión cancelada por cambio de horario del grupo.',         '2026-06-03 16:20:00', 3, 2, 6,  2),
+  ('2026-06-10', 'Estudio para el certamen de programación avanzada.',        '2026-06-04 11:40:00', 4, 3, 11, 1),
+  ('2026-06-11', 'Ensayo de la defensa del proyecto de título grupal.',       '2026-06-04 08:30:00', 5, 4, 16, 1),
+  ('2026-06-11', 'Reunión de coordinación del trabajo semestral en equipo.',  '2026-06-04 12:00:00', 6, 5, 21, 1),
+  ('2026-06-12', 'Revisión final del informe antes de la entrega del viernes.','2026-06-04 13:25:00', 1, 6, 26, 1),
+  ('2026-06-12', 'Trabajo colaborativo de análisis de datos del proyecto.',   '2026-06-04 14:10:00', 2, 2, 7,  1),
+  ('2026-06-08', 'Reserva anulada por disponibilidad de otra sala libre.',    '2026-06-02 17:45:00', 3, 1, 3,  2),
+  ('2026-06-09', 'Sesión de repaso de bases de datos relacionales SQL.',      '2026-06-04 15:00:00', 4, 3, 12, 1);
+
+-- Fin del seed.
