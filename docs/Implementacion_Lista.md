@@ -66,3 +66,35 @@ Este documento detalla los archivos modificados y la lógica implementada tras l
 - **Manejo de IDs:** Dado que el `01_schema.sql` define las PK como `SERIAL` (salvo `ESTADO_RESERVA`, que es `INT`), el seed **no** inserta IDs explícitos en las tablas SERIAL: deja que PostgreSQL los genere por orden de inserción y las FKs referencian esos correlativos (CARRERA 1..4, SALA 1..6, etc.). La única tabla con `id_estado` manual es `ESTADO_RESERVA`. Como nunca se fuerzan valores en las secuencias, los `INSERT` que haga el backend más adelante (Issue #8) toman el siguiente correlativo sin colisiones.
 - **Anticipación de reglas de negocio (Issue #8):** Aunque las validaciones viven en la capa de servicio, los datos del seed ya las cumplen para no generar inconsistencias en las pruebas: todas las observaciones tienen ≥ 15 caracteres, ninguna combinación `sala + horario + fecha` se repite en estado Confirmada (no se "pisan" reservas), y cada `id_horario` pertenece efectivamente a su `id_sala`.
 - **Validación realizada:** El script se ejecutó sobre el `01_schema.sql` real en PostgreSQL 16 sin errores, respetando todas las restricciones `NOT NULL`, `UNIQUE` y de llave foránea. Se verificó adicionalmente que un `INSERT` posterior sin `id` genera correctamente el siguiente correlativo, confirmando que las secuencias quedan sanas para el desarrollo del backend.
+
+---
+
+## Issue 4: [Sprint 2] Implementar arquitectura de tres capas, DTOs y mapeo de entidades
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`backend/src/main/java/com/equipo6/reservas/models/*` (Creados):**
+   - Se crearon las 7 entidades que representan el MER: `Carrera`, `Edificio`, `Sala`, `Estudiante`, `HorarioDisponible`, `EstadoReserva` y `Reserva`.
+   - Se implementó JPA (`@Entity`, `@Table`, `@ManyToOne`, `@OneToMany`, `@JoinColumn`) respetando la cardinalidad estricta (1:N y M:N).
+   - Se integró Lombok (`@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`) para optimizar el código y reducir el *boilerplate* (getters, setters y constructores).
+
+2. **`backend/src/main/java/com/equipo6/reservas/repositories/*` (Creados):**
+   - Se crearon las interfaces correspondientes para cada entidad extendiendo de `JpaRepository` para la interacción directa con PostgreSQL.
+
+3. **`backend/src/main/java/com/equipo6/reservas/dtos/ReservaDTO.java` (Creado):**
+   - Se implementó el patrón DTO (Data Transfer Object) para la entidad transaccional principal (`Reserva`), asegurando que solo se transfieran los IDs de las relaciones (estudiante, sala, horario, estado) en lugar de exponer los objetos completos de la base de datos hacia la API.
+
+4. **`backend/src/main/java/com/equipo6/reservas/services/ReservaService.java` (Creado):**
+   - Se encapsuló la lógica de negocio. Se encarga de la transformación de datos (Entity ↔ DTO) y de gestionar la recuperación de las entidades relacionadas a través de los repositorios antes de persistir una nueva reserva.
+
+5. **`backend/src/main/java/com/equipo6/reservas/controllers/ReservaController.java` (Creado):**
+   - Se creó el controlador REST (`@RestController`, `@RequestMapping("/api/reservas")`) con los endpoints iniciales (GET y POST) para interactuar con el frontend.
+
+6. **`backend/src/main/java/com/equipo6/reservas/config/CorsConfig.java` (Creado):**
+   - Se implementó `WebMvcConfigurer` para establecer una configuración global de CORS, habilitando explícitamente el origen `http://localhost:4200` y los métodos HTTP requeridos para el consumo desde Angular.
+
+### Lógica y Contexto
+- **Mapeo Relacional Estratégico:** La relación M:N original de las reservas se modeló correctamente promoviendo la tabla intermedia a una Entidad JPA independiente (`Reserva`). Esto permite alojar los atributos propios de la relación (`observacion`, `fecha_reserva`, `fecha_creacion`) sin romper las reglas de persistencia de Hibernate.
+- **Seguridad y Desacoplamiento (DTOs):** Al usar DTOs, la capa de presentación (Controller) se aísla completamente del diseño de la base de datos (Entity). Esto previene bucles infinitos en la serialización JSON (problema común en relaciones bidireccionales de JPA) y protege la integridad del esquema validado en el Issue 1.
+- **Preparación para la Integración:** La configuración global de CORS centraliza las políticas de seguridad, evitando la necesidad de usar anotaciones `@CrossOrigin` repetitivas en cada controlador futuro y garantizando una comunicación fluida con la capa frontend desarrollada por el equipo.
