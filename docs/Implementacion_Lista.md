@@ -130,3 +130,24 @@ La capa de presentación quedó completamente habilitada. El uso de DTOs asegura
 
 ### Lógica y Contexto
 Todas las consultas necesarias para el filtrado dinámico del frontend están listas en la capa de persistencia. Se utilizaron `@Query` y `@Param` explícitos asegurando escalabilidad. Cada consulta fue documentada internamente para relacionarla de forma trazable con el requerimiento de negocio que satisface.
+
+---
+
+## 10. Página principal: Layout CSS Grid y Semántica HTML (Issue 10)
+**Objetivo:** Crear la estructura y diseño general de la página principal según normativas HTML5, CSS Grid y dotar de un diseño premium responsivo a la aplicación.
+
+### Archivos Afectados
+* **`frontend/src/styles.scss` (Modificado):**
+  * Se definieron variables de colores CSS (Glassmorphism, sombras, índigo como color primario).
+  * Se importó la fuente global *Outfit* de Google Fonts para dar un acabado profesional.
+  * Reset básico de márgenes, paddings y `box-sizing`.
+* **`frontend/src/app/app.html` (Modificado):**
+  * Se borró el placeholder por defecto de Angular.
+  * Se incluyeron las etiquetas semánticas exigidas: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`.
+  * Se creó la jerarquía DOM para facilitar la aplicación de Grid.
+* **`frontend/src/app/app.scss` (Modificado):**
+  * Se implementó **CSS Grid** (`display: grid;`) en el layout global y en el contenedor del cuerpo (main y aside).
+  * Se configuraron los Media Queries solicitados: Escritorio (>1024px), Tablet (768-1023px) ajustando los paddings, y Móvil (<768px) donde la grilla pasa a 1 sola columna permitiendo que el `<aside>` caiga fluidamente bajo el `<main>`.
+
+### Lógica y Contexto
+Esta implementación es fundamental porque establece el esqueleto responsivo y la estética de toda la plataforma de aquí en adelante. Gracias a las variables CSS en `styles.scss`, los futuros componentes (como tarjetas de sala y formularios) podrán usar de manera consistente los colores y tipografías establecidas aquí, reduciendo código duplicado.

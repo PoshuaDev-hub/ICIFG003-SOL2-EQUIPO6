@@ -2,6 +2,9 @@
 
 Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a continuación. Copia el título en el campo del título del issue, y todo el texto desde "### Descripción" hacia abajo en la descripción del issue. Luego, asígnalo al responsable indicado.
 
+**🚨 NOTA CRÍTICA PARA DISEÑO FRONTEND (Humanos e IAs):** 
+Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivamente iconos vectoriales (SVG)** en línea. Está estrictamente prohibido el uso de imágenes rasterizadas (como PNG o JPG) para la iconografía del sitio, con el fin de mantener un rendimiento y nitidez óptimos.
+
 ---
 
 ## Issue 1
@@ -159,10 +162,10 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 **Objetivo:** Crear la estructura y diseño general de la página principal según las normativas de HTML5 y CSS Grid.
 
 **Tareas a realizar:**
-- [ ] En `app.component.html`, utilizar etiquetas semánticas obligatorias: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`.
-- [ ] Implementar **CSS Grid** para el Layout principal.
-- [ ] Implementar Media Queries para Escritorio (>1024px), Tablet (768-1023px) y Móvil (<768px).
-- [ ] Asegurar que el aside pase debajo del contenido principal en móvil.
+- [x] En `app.component.html`, utilizar etiquetas semánticas obligatorias: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`.
+- [x] Implementar **CSS Grid** para el Layout principal.
+- [x] Implementar Media Queries para Escritorio (>1024px), Tablet (768-1023px) y Móvil (<768px).
+- [x] Asegurar que el aside pase debajo del contenido principal en móvil.
 
 ---
 
