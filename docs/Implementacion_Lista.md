@@ -151,3 +151,34 @@ Todas las consultas necesarias para el filtrado dinámico del frontend están li
 
 ### Lógica y Contexto
 Esta implementación es fundamental porque establece el esqueleto responsivo y la estética de toda la plataforma de aquí en adelante. Gracias a las variables CSS en `styles.scss`, los futuros componentes (como tarjetas de sala y formularios) podrán usar de manera consistente los colores y tipografías establecidas aquí, reduciendo código duplicado.
+
+---
+
+## Issue 8: [Sprint 3] Endpoint POST /api/reservas con validaciones de negocio
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`backend/src/main/java/com/equipo6/reservas/services/ReservaService.java` (Modificado):**
+   - Se agregó el método `validarFecha()` que verifica que `fechaReserva >= hoy`, lanzando `IllegalArgumentException` en caso contrario.
+   - Se agregó el método `validarObservacion()` que comprueba que la observación tenga al menos 15 caracteres (trim, no espacios en blanco).
+   - Se agregó el método `validarDisponibilidad()` que consulta `ReservaRepository.existsReservaConfirmada()` para detectar conflictos de horario con reservas en estado "Confirmada".
+   - Se reemplazaron los `orElseThrow()` genéricos por mensajes descriptivos que indican qué ID no se encontró.
+
+2. **`backend/src/main/java/com/equipo6/reservas/controllers/ReservaController.java` (Modificado):**
+   - Se cambió el tipo de retorno de `POST /api/reservas` a `ResponseEntity<?>` para poder devolver tanto el DTO creado (201) como mensajes de error.
+   - Se captura `IllegalArgumentException` → retorna `400 Bad Request` con mensaje descriptivo.
+   - Se captura `IllegalStateException` → retorna `409 Conflict` con mensaje de horario ocupado.
+
+3. **`backend/src/main/java/com/equipo6/reservas/repositories/ReservaRepository.java` (Modificado):**
+   - Se agregó la consulta JPQL `existsReservaConfirmada()` que verifica mediante `COUNT` si existe una reserva con la misma sala, fecha y horario en estado "Confirmada", retornando `boolean`.
+
+### Lógica y Contexto
+- **Validaciones de negocio implementadas:**
+  - Fecha de reserva no puede ser anterior al día actual.
+  - Observación debe tener mínimo 15 caracteres.
+  - El estudiante debe existir en la base de datos (con mensaje de error por ID).
+  - La sala y horario deben existir en la base de datos.
+  - No se puede reservar un horario que ya tenga una reserva Confirmada para la misma sala y fecha.
+- **Códigos HTTP:** Se utiliza `400 Bad Request` para errores de validación de campos y `409 Conflict` para conflictos de disponibilidad, siguiendo las buenas prácticas REST.
+- **Integridad referencial:** Las validaciones previenen la creación de reservas duplicadas o inválidas, manteniendo la consistencia de los datos en la base de datos.

@@ -20,4 +20,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     // Native Query: Requerimiento de lista de reservas unida al estudiante para una sala
     @Query(value = "SELECT r.* FROM reserva r JOIN estudiante e ON r.id_estudiante = e.id WHERE r.id_sala = :salaId", nativeQuery = true)
     List<Reserva> findReservasConEstudianteNative(@Param("salaId") Integer salaId);
+
+    // JPQL: Verificar si existe una reserva confirmada para misma sala+fecha+horario (Issue 8)
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END FROM Reserva r WHERE r.sala.id = :salaId AND r.fechaReserva = :fecha AND r.horario.id = :horarioId AND r.estado.nombreEstado = 'Confirmada'")
+    boolean existsReservaConfirmada(@Param("salaId") Integer salaId, @Param("fecha") LocalDate fecha, @Param("horarioId") Integer horarioId);
 }
