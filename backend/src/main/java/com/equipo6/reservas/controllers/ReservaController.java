@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reservas")
@@ -22,8 +23,14 @@ public class ReservaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservaDTO> crearReserva(@RequestBody ReservaDTO reservaDTO) {
-        ReservaDTO nuevaReserva = reservaService.crearReserva(reservaDTO);
-        return new ResponseEntity<>(nuevaReserva, HttpStatus.CREATED);
+    public ResponseEntity<?> crearReserva(@RequestBody ReservaDTO reservaDTO) {
+        try {
+            ReservaDTO nuevaReserva = reservaService.crearReserva(reservaDTO);
+            return new ResponseEntity<>(nuevaReserva, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+        }
     }
 }

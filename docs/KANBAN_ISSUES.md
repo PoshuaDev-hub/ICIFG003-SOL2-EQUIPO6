@@ -128,12 +128,12 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Proveer el endpoint de creación de reserva aplicando todas las reglas de negocio estrictas.
 
 **Tareas a realizar:**
-- [ ] Desarrollar lógica en `ReservaService` para el método de crear reserva.
-- [ ] Validar que la fecha sea ≥ hoy.
-- [ ] Validar que el horario no esté ya reservado (y en estado Confirmada).
-- [ ] Validar que el estudiante exista en la DB.
-- [ ] Validar que la observación tenga ≥ 15 caracteres.
-- [ ] Retornar código HTTP correcto (ej. 400 Bad Request o 409 Conflict) con mensaje descriptivo si falla.
+- [x] Desarrollar lógica en `ReservaService` para el método de crear reserva.
+- [x] Validar que la fecha sea ≥ hoy.
+- [x] Validar que el horario no esté ya reservado (y en estado Confirmada).
+- [x] Validar que el estudiante exista en la DB.
+- [x] Validar que la observación tenga ≥ 15 caracteres.
+- [x] Retornar código HTTP correcto (ej. 400 Bad Request o 409 Conflict) con mensaje descriptivo si falla.
 
 ---
 
