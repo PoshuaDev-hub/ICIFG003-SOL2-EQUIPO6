@@ -62,42 +62,42 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 **Objetivo:** Mapear el modelo de base de datos a objetos de Java usando JPA y simplificar el código con Lombok.
 
 **Tareas a realizar:**
-- [ ] Crear paquetes `model` o `entity`.
-- [ ] Crear clases Java para cada tabla del MER (Carrera, Estudiante, etc.).
-- [ ] Configurar anotaciones `@Entity`, `@Table`, `@Id`, `@GeneratedValue`.
-- [ ] Implementar relaciones usando `@ManyToOne` y `@OneToMany`.
-- [ ] Integrar Lombok con `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`.
+- [x] Crear paquetes `model` o `entity`.
+- [x] Crear clases Java para cada tabla del MER (Carrera, Estudiante, etc.).
+- [x] Configurar anotaciones `@Entity`, `@Table`, `@Id`, `@GeneratedValue`.
+- [x] Implementar relaciones usando `@ManyToOne` y `@OneToMany`.
+- [x] Integrar Lombok con `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`.
 
 ---
 
 ## Issue 5
 **Título:** [Sprint 3] Crear Repositories y Services (CRUD base)
-**Asignado a:** Joshua
+**Asignado a:** Victor
 **Etiquetas sugeridas:** `backend`, `sprint-3`, `enhancement`
 
 ### Descripción
 **Objetivo:** Crear la capa de acceso a datos y la lógica de negocio base.
 
 **Tareas a realizar:**
-- [ ] Crear interfaces `Repository` extendiendo de `JpaRepository` para las entidades clave.
-- [ ] Crear clases `Service` con anotación `@Service`.
-- [ ] Implementar métodos base en los servicios (ej. `findAll()`, `findById()`, `save()`).
+- [x] Crear interfaces `Repository` extendiendo de `JpaRepository` para las entidades clave.
+- [x] Crear clases `Service` con anotación `@Service`.
+- [x] Implementar métodos base en los servicios (ej. `findAll()`, `findById()`, `save()`).
 
 ---
 
 ## Issue 6
 **Título:** [Sprint 3] Crear Controllers y DTOs (Endpoints y CORS)
-**Asignado a:** Subaru
+**Asignado a:** Victor
 **Etiquetas sugeridas:** `backend`, `sprint-3`, `enhancement`
 
 ### Descripción
 **Objetivo:** Exponer la API REST para que el frontend pueda consumirla.
 
 **Tareas a realizar:**
-- [ ] Crear los DTOs necesarios (ej. `ReservaRequestDTO`, `SalaResponseDTO`).
-- [ ] Implementar `Controllers` (`@RestController`, `@RequestMapping`).
-- [ ] Exponer los Endpoints base (GET salas, GET estudiantes, etc.).
-- [ ] Configurar CORS (`@CrossOrigin`) para permitir peticiones desde `localhost:4200`.
+- [x] Crear los DTOs necesarios (ej. `ReservaRequestDTO`, `SalaResponseDTO`).
+- [x] Implementar `Controllers` (`@RestController`, `@RequestMapping`).
+- [x] Exponer los Endpoints base (GET salas, GET estudiantes, etc.).
+- [x] Configurar CORS (`@CrossOrigin`) para permitir peticiones desde `localhost:4200`.
 
 ---
 
