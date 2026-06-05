@@ -69,32 +69,46 @@ Este documento detalla los archivos modificados y la lógica implementada tras l
 
 ---
 
-## Issue 4: [Sprint 2] Implementar arquitectura de tres capas, DTOs y mapeo de entidades
+---
+
+## Issue 4: [Sprint 2] Crear entidades JPA con relaciones y Lombok
 
 **Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-1. **`backend/src/main/java/com/equipo6/reservas/models/*` (Creados):**
-   - Se crearon las 7 entidades que representan el MER: `Carrera`, `Edificio`, `Sala`, `Estudiante`, `HorarioDisponible`, `EstadoReserva` y `Reserva`.
-   - Se implementó JPA (`@Entity`, `@Table`, `@ManyToOne`, `@OneToMany`, `@JoinColumn`) respetando la cardinalidad estricta (1:N y M:N).
-   - Se integró Lombok (`@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`) para optimizar el código y reducir el *boilerplate* (getters, setters y constructores).
-
-2. **`backend/src/main/java/com/equipo6/reservas/repositories/*` (Creados):**
-   - Se crearon las interfaces correspondientes para cada entidad extendiendo de `JpaRepository` para la interacción directa con PostgreSQL.
-
-3. **`backend/src/main/java/com/equipo6/reservas/dtos/ReservaDTO.java` (Creado):**
-   - Se implementó el patrón DTO (Data Transfer Object) para la entidad transaccional principal (`Reserva`), asegurando que solo se transfieran los IDs de las relaciones (estudiante, sala, horario, estado) en lugar de exponer los objetos completos de la base de datos hacia la API.
-
-4. **`backend/src/main/java/com/equipo6/reservas/services/ReservaService.java` (Creado):**
-   - Se encapsuló la lógica de negocio. Se encarga de la transformación de datos (Entity ↔ DTO) y de gestionar la recuperación de las entidades relacionadas a través de los repositorios antes de persistir una nueva reserva.
-
-5. **`backend/src/main/java/com/equipo6/reservas/controllers/ReservaController.java` (Creado):**
-   - Se creó el controlador REST (`@RestController`, `@RequestMapping("/api/reservas")`) con los endpoints iniciales (GET y POST) para interactuar con el frontend.
-
-6. **`backend/src/main/java/com/equipo6/reservas/config/CorsConfig.java` (Creado):**
-   - Se implementó `WebMvcConfigurer` para establecer una configuración global de CORS, habilitando explícitamente el origen `http://localhost:4200` y los métodos HTTP requeridos para el consumo desde Angular.
+* **`backend/src/main/java/com/equipo6/reservas/models/*` (Creados):** Se crearon las clases Java para las tablas del MER (`Carrera`, `Edificio`, `Sala`, `Estudiante`, `HorarioDisponible`, `EstadoReserva`, `Reserva`).
+* **Anotaciones base:** Se configuró JPA mediante `@Entity`, `@Table`, `@Id`, y `@GeneratedValue(strategy = GenerationType.IDENTITY)` para el auto-incremento.
+* **Relaciones:** Se implementó la cardinalidad estricta usando `@ManyToOne` y `@OneToMany` con sus respectivos `@JoinColumn` para enlazar las llaves foráneas.
+* **Integración Lombok:** Se añadieron `@Data`, `@NoArgsConstructor` y `@AllArgsConstructor` para automatizar getters, setters y constructores, limpiando el código de métodos repetitivos.
 
 ### Lógica y Contexto
-- **Mapeo Relacional Estratégico:** La relación M:N original de las reservas se modeló correctamente promoviendo la tabla intermedia a una Entidad JPA independiente (`Reserva`). Esto permite alojar los atributos propios de la relación (`observacion`, `fecha_reserva`, `fecha_creacion`) sin romper las reglas de persistencia de Hibernate.
-- **Seguridad y Desacoplamiento (DTOs):** Al usar DTOs, la capa de presentación (Controller) se aísla completamente del diseño de la base de datos (Entity). Esto previene bucles infinitos en la serialización JSON (problema común en relaciones bidireccionales de JPA) y protege la integridad del esquema validado en el Issue 1.
-- **Preparación para la Integración:** La configuración global de CORS centraliza las políticas de seguridad, evitando la necesidad de usar anotaciones `@CrossOrigin` repetitivas en cada controlador futuro y garantizando una comunicación fluida con la capa frontend desarrollada por el equipo.
+Se mapeó exitosamente el modelo físico de la base de datos a objetos Java. La relación M:N original de las reservas se modeló según el estándar relacional, promoviendo la tabla intermedia a una Entidad JPA independiente (`Reserva`). Esto permite alojar los atributos propios de la relación sin romper las reglas de persistencia de Hibernate.
+
+---
+
+## Issue 5: [Sprint 3] Crear Repositories y Services (CRUD base)
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+* **`backend/src/main/java/com/equipo6/reservas/repositories/*` (Creados):** Se crearon interfaces para cada entidad clave extendiendo de `JpaRepository`, habilitando el acceso a datos sin necesidad de implementar sentencias SQL manuales.
+* **`backend/src/main/java/com/equipo6/reservas/services/*` (Creados):** Se implementaron las clases de servicio con la anotación `@Service`.
+* **Métodos CRUD:** Se establecieron los métodos base de la lógica de negocio, haciendo uso de `findAll()`, `findById()` y `save()` proporcionados por el repositorio para gestionar el ciclo de vida de los datos.
+
+### Lógica y Contexto
+Se separó la capa de acceso a datos de la capa de lógica de negocio, cumpliendo con la arquitectura limpia. Los servicios ahora actúan como intermediarios que pueden procesar validaciones antes de contactar a los repositorios, preparando el terreno para la inyección de datos desde los controladores.
+
+---
+
+## Issue 6: [Sprint 3] Crear Controllers y DTOs (Endpoints y CORS)
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+* **`backend/src/main/java/com/equipo6/reservas/dtos/*` (Creados):** Se implementaron los objetos de transferencia de datos (ej. `ReservaDTO`) para capturar y enviar información desde y hacia el cliente.
+* **`backend/src/main/java/com/equipo6/reservas/controllers/*` (Creados):** Se establecieron los controladores con `@RestController` y `@RequestMapping("/api/...")`.
+* **Endpoints base:** Se expusieron las rutas HTTP iniciales (GET, POST) para que el frontend pueda consumir los recursos de salas, estudiantes y reservas.
+* **`backend/src/main/java/com/equipo6/reservas/config/CorsConfig.java` (Creado):** Se configuró una política CORS global para habilitar explícitamente el origen `http://localhost:4200`, permitiendo la comunicación segura con Angular.
+
+### Lógica y Contexto
+La capa de presentación quedó completamente habilitada. El uso de DTOs asegura que la API solo transfiera las referencias necesarias (como los IDs) hacia el exterior, evitando exponer el modelo completo de la base de datos y previniendo problemas de serialización JSON. Además, la configuración CORS garantiza que el frontend y el backend interactúen sin bloqueos del navegador.
