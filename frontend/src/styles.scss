@@ -1,18 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+/* --- Estilos Globales: Biblioteca Cálida (Sin blancos puros) --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
-  --primary-color: #6366f1; /* Indigo 500 */
-  --primary-hover: #4f46e5;
-  --bg-color: #f8fafc;
-  --surface-color: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
+  /* Paleta Base Cálida */
+  --bg-main: #F0EDE8;       /* Gris cálido / Papel antiguo */
+  --bg-card: #E8E4DD;       /* Crema un poco más oscura para cards */
   
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --text-main: #2C1E16;     /* Marrón oscuro mate / Espresso */
+  --text-muted: #5C4033;    /* Nogal / Madera oscura */
+  
+  --accent-wood: #8B6F47;   /* Roble claro / Ámbar */
+  --accent-hover: #725A38;
+  
+  --border-color: rgba(92, 64, 51, 0.15); /* Borde sutil madera */
+  
+  --font-display: 'Playfair Display', serif;
+  --font-ui: 'Outfit', sans-serif;
+  
+  --shadow-soft: 0 8px 30px rgba(44, 30, 22, 0.08);
+  --shadow-float: 0 15px 40px rgba(44, 30, 22, 0.15);
 }
 
 * {
@@ -22,19 +28,26 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
-  font-family: 'Outfit', sans-serif;
-  background-color: var(--bg-color);
+  font-family: var(--font-ui);
+  background-color: var(--bg-main);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth; /* Para que los anchor links (#) bajen suavemente */
 }
 
-ul {
-  list-style: none;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+ul {
+  list-style: none;
 }

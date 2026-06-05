@@ -1,45 +1,134 @@
-<div class="app-layout">
-  <!-- INSTRUCCIÓN PARA IAs Y DESARROLLADORES: Al agregar iconos a este o futuros componentes, utilizar SIEMPRE SVG (imágenes vectoriales). No usar PNGs ni librerías pesadas. -->
-  <header class="app-header">
+<div class="lib-layout">
+  
+  <!-- 🧭 Navbar Superior (Sticky + Animación Scroll) -->
+  <header class="lib-header" [class.scrolled]="isScrolled">
     <div class="logo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
-        <path d="M3 21V9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12"></path>
-        <path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"></path>
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
       </svg>
-      <span>Reserva</span>Salas
+      <div class="logo-text">
+        <span class="title">Biblioteca Central</span>
+      </div>
     </div>
-    <nav class="app-nav">
+    
+    <nav class="lib-nav">
       <ul>
         <li><a href="#" class="active">Inicio</a></li>
-        <li><a href="#">Explorar Salas</a></li>
-        <li><a href="#">Mis Reservas</a></li>
+        <li><a href="#salas">Reservar Salas</a></li>
+        <li><a href="#actividad">Mis Reservas</a></li>
       </ul>
     </nav>
   </header>
 
-  <div class="layout-body">
-    <main class="app-main">
-      <!-- Aquí se renderizarán los componentes dinámicos de Angular -->
-      <router-outlet></router-outlet>
+  <!-- 🖼️ Carrusel Hero (debajo del navbar) -->
+  <section class="hero-carousel">
+    <!-- Diapositivas -->
+    <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide">
+      <img [src]="slide" alt="Vista de la biblioteca">
+      <div class="overlay"></div> <!-- Overlay oscuro suave para legibilidad -->
+    </div>
+    
+    <div class="hero-content">
+      <h1>Reserva tu espacio. <br>Encuentra tu enfoque.</h1>
+      <p>Entornos diseñados meticulosamente para la lectura, el estudio profundo y la colaboración académica.</p>
+    </div>
 
-      <!-- Placeholder visual temporal para ver el diseño de la grilla -->
-      <div class="welcome-banner">
-        <h1>Bienvenido al Sistema de Reservas</h1>
-        <p>Encuentra y reserva salas de estudio de manera rápida y sencilla.</p>
-      </div>
-    </main>
+    <!-- Controles de navegación manual -->
+    <button class="nav-btn prev" (click)="prevSlide()" aria-label="Anterior">‹</button>
+    <button class="nav-btn next" (click)="nextSlide()" aria-label="Siguiente">›</button>
 
-    <aside class="app-aside">
-      <div class="aside-content">
-        <h3>Tu Actividad</h3>
-        <p>No tienes reservas activas para hoy.</p>
-        <button class="btn-primary">Nueva Reserva</button>
-      </div>
-    </aside>
+    <!-- Indicadores (Puntos) -->
+    <div class="dots-container">
+      <span class="dot" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide" (click)="goToSlide(i)"></span>
+    </div>
+  </section>
+
+  <!-- 📅 Diseño Principal (Grid) -->
+  <div class="layout-container" id="salas">
+    <!-- Titulo general para dar simetria a Main y Aside -->
+    <div class="section-title">
+      <h2>Salas Disponibles</h2>
+      <p>Espacios privados y silenciosos. Selecciona una opción para coordinar tu horario.</p>
+    </div>
+
+    <div class="layout-body">
+      <!-- Sección principal de Reservas -->
+      <main class="lib-main">
+        <div class="cards-grid">
+          <!-- Tarjeta 1 -->
+          <article class="room-card">
+            <div class="card-info">
+              <h3>Sala de Lectura "Borges"</h3>
+              <p class="capacity">Capacidad: 4 personas</p>
+              <p class="desc">Mesa de roble, luz cálida natural y conexión eléctrica. Orientada al sur.</p>
+            </div>
+            <button class="btn-reserve" (click)="simularReserva()">Coordinar Reserva</button>
+          </article>
+
+          <!-- Tarjeta 2 -->
+          <article class="room-card">
+            <div class="card-info">
+              <h3>Sala de Ensayo "Mistral"</h3>
+              <p class="capacity">Capacidad: 8 personas</p>
+              <p class="desc">Aislamiento acústico, pantalla de proyección y mesa redonda. Ideal para debates.</p>
+            </div>
+            <button class="btn-reserve" (click)="simularReserva()">Coordinar Reserva</button>
+          </article>
+        </div>
+        
+        <router-outlet></router-outlet>
+      </main>
+
+      <!-- Panel Lateral -->
+      <aside class="lib-aside" id="actividad">
+        <section class="aside-card info-card">
+          <h4>Normativa de Biblioteca</h4>
+          <ul class="rules-list">
+            <li>Maneje los libros con cuidado.</li>
+            <li>Hable en voz muy baja en todas las áreas.</li>
+            <li>Su reserva será cancelada si no se presenta a los 15 minutos de la hora de inicio.</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
   </div>
 
-  <footer class="app-footer">
-    <p>Equipo 6 - Sistema de Reserva para Salas</p>
+  <!-- 🦶 Pie de página (Footer) -->
+  <footer class="lib-footer">
+    <div class="footer-content">
+      <p>Grupo 6 &mdash; Reserva de Salas</p>
+      <div class="footer-links">
+        <a href="#">Catálogo</a>
+        <a href="#">Contacto</a>
+        <a href="#">Ayuda</a>
+      </div>
+    </div>
   </footer>
+
+  <!-- 💬 Widget Flotador (Esquina inferior derecha) -->
+  <div class="floater-container">
+    <!-- Panel que se despliega -->
+    <div class="floater-panel" [class.open]="isFloaterOpen">
+      <div class="panel-info">
+        <h4>Atención al Lector</h4>
+        <p>Lunes a Viernes<br>08:00 - 20:00 hrs.</p>
+        <div class="social-links">
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">Correo</a>
+        </div>
+      </div>
+      <div class="panel-image">
+        <!-- Reemplazar con la imagen real descargada -->
+        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80" alt="Bibliotecaria" />
+      </div>
+    </div>
+    
+    <!-- Botón accionador -->
+    <button class="floater-btn" (click)="toggleFloater()" [attr.aria-label]="isFloaterOpen ? 'Cerrar widget' : 'Contacto y Horarios'">
+      <svg *ngIf="!isFloaterOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      <svg *ngIf="isFloaterOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
 </div>
