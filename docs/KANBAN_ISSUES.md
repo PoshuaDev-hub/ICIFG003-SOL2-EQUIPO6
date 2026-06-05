@@ -103,22 +103,22 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 
 ## Issue 7
 **Título:** [Sprint 3] Implementar queries objetales (JPQL) y nativas
-**Asignado a:** Lucas
+**Asignado a:** Joshua
 **Etiquetas sugeridas:** `backend`, `sprint-3`, `enhancement`
 
 ### Descripción
 **Objetivo:** Desarrollar las consultas específicas necesarias para los requerimientos del frontend.
 
 **Tareas a realizar:**
-- [ ] Implementar mínimo 3 queries objetales (JPQL) en los repositorios (Ej. `findByCapacidadLessThanEqual`).
-- [ ] Implementar mínimo 2 queries nativas (`@Query(nativeQuery=true)`). Ejemplo: disponibilidad de sala y lista de reservas unida al estudiante.
-- [ ] Documentar o comentar qué requerimiento suple cada query.
+- [x] Implementar mínimo 3 queries objetales (JPQL) en los repositorios (Ej. `findByCapacidadLessThanEqual`).
+- [x] Implementar mínimo 2 queries nativas (`@Query(nativeQuery=true)`). Ejemplo: disponibilidad de sala y lista de reservas unida al estudiante.
+- [x] Documentar o comentar qué requerimiento suple cada query.
 
 ---
 
 ## Issue 8
 **Título:** [Sprint 3] Endpoint POST /api/reservas con validaciones
-**Asignado a:** Victor
+**Asignado a:** Subaru
 **Etiquetas sugeridas:** `backend`, `sprint-3`, `enhancement`
 
 ### Descripción
@@ -136,7 +136,7 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 
 ## Issue 9
 **Título:** [Sprint 4] Crear servicios Angular (HttpClient) e Interfaces TS
-**Asignado a:** Joshua
+**Asignado a:** Lucas
 **Etiquetas sugeridas:** `frontend`, `sprint-4`, `enhancement`
 
 ### Descripción
@@ -152,7 +152,7 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 
 ## Issue 10
 **Título:** [Sprint 4] Página principal: Layout CSS Grid y Semántica HTML
-**Asignado a:** Subaru
+**Asignado a:** Joshua
 **Etiquetas sugeridas:** `frontend`, `sprint-4`, `enhancement`
 
 ### Descripción
@@ -168,7 +168,7 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 
 ## Issue 11
 **Título:** [Sprint 4] Componente reutilizable: TarjetaSalaComponent
-**Asignado a:** Lucas
+**Asignado a:** Subaru
 **Etiquetas sugeridas:** `frontend`, `sprint-4`, `enhancement`
 
 ### Descripción
@@ -185,7 +185,7 @@ Instrucciones: Crea un "Issue" nuevo en GitHub por cada uno de los bloques a con
 
 ## Issue 12
 **Título:** [Sprint 4] Componentes reutilizables: MenuNavComponent y MensajeComponent
-**Asignado a:** Victor
+**Asignado a:** Lucas
 **Etiquetas sugeridas:** `frontend`, `sprint-4`, `enhancement`
 
 ### Descripción

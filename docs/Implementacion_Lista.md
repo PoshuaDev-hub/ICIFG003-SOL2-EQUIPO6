@@ -112,3 +112,21 @@ Se separó la capa de acceso a datos de la capa de lógica de negocio, cumpliend
 
 ### Lógica y Contexto
 La capa de presentación quedó completamente habilitada. El uso de DTOs asegura que la API solo transfiera las referencias necesarias (como los IDs) hacia el exterior, evitando exponer el modelo completo de la base de datos y previniendo problemas de serialización JSON. Además, la configuración CORS garantiza que el frontend y el backend interactúen sin bloqueos del navegador.
+
+---
+
+## 7. Implementar queries objetales (JPQL) y nativas (Issue 7)
+**Objetivo:** Desarrollar las consultas específicas necesarias para soportar los requerimientos avanzados del frontend (filtrado y cruce de datos).
+
+### Archivos Afectados
+* **`backend/src/main/java/com/equipo6/reservas/repositories/SalaRepository.java` (Modificado):**
+  * Se agregó la consulta JPQL `@Query("SELECT s FROM Sala s WHERE s.capacidad >= :capacidad")` para filtrar salas según su capacidad mínima (RF02).
+* **`backend/src/main/java/com/equipo6/reservas/repositories/ReservaRepository.java` (Modificado):**
+  * Se agregó la consulta JPQL para listar reservas de una sala en una fecha concreta (RF04).
+  * Se implementó una **Native Query** (`SELECT r.* FROM reserva r JOIN estudiante e ...`) para obtener el detalle de las reservas unido a la información del estudiante asociado a una sala.
+* **`backend/src/main/java/com/equipo6/reservas/repositories/HorarioDisponibleRepository.java` (Modificado):**
+  * Se incluyó una consulta JPQL para traer todos los horarios base de una sala específica (RF05).
+  * Se construyó una **Native Query** compleja (`SELECT hd.* FROM horario_disponible hd WHERE ... NOT IN (...)`) para calcular en tiempo real los horarios disponibles de una sala excluyendo aquellos que ya poseen una reserva "Confirmada".
+
+### Lógica y Contexto
+Todas las consultas necesarias para el filtrado dinámico del frontend están listas en la capa de persistencia. Se utilizaron `@Query` y `@Param` explícitos asegurando escalabilidad. Cada consulta fue documentada internamente para relacionarla de forma trazable con el requerimiento de negocio que satisface.
