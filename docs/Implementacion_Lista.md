@@ -231,3 +231,32 @@ Todas las consultas necesarias para el filtrado dinámico del frontend están li
 
 ### Lógica y Contexto
 Esta implementación es fundamental porque establece el esqueleto responsivo y la estética de toda la plataforma de aquí en adelante. Gracias a las variables CSS en `styles.scss`, los futuros componentes (como tarjetas de sala y formularios) podrán usar de manera consistente los colores y tipografías establecidas aquí, reduciendo código duplicado.
+
+---
+
+## Issue 11: [Sprint 4] Componente reutilizable: TarjetaSalaComponent
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`frontend/src/app/components/tarjeta-sala/tarjeta-sala.ts` (Creado):**
+   - Componente standalone con `@Input({ required: true }) sala: Sala` que recibe los datos de la sala.
+   - `@Output() reservar = new EventEmitter<number>()` que emite el ID de la sala al hacer clic.
+   - Método `getImagenSala()` que retorna una imagen representativa.
+
+2. **`frontend/src/app/components/tarjeta-sala/tarjeta-sala.html` (Creado):**
+   - Template con etiqueta semántica `<article>` para cada tarjeta.
+   - Imagen con `alt` dinámico (`'Imagen de ' + sala.nombreSala`) y `loading="lazy"`.
+   - Muestra: nombre de la sala, capacidad, ubicación (piso + edificio), horario disponible y botón "Reservar".
+   - Botón con `aria-label` dinámico (`'Reservar ' + sala.nombreSala`).
+
+3. **`frontend/src/app/components/tarjeta-sala/tarjeta-sala.scss` (Creado):**
+   - Layout con Flexbox (`display: flex; flex-direction: column`).
+   - Distribución vertical de la información dentro de la tarjeta.
+   - Efecto hover con elevación (`translateY` + `box-shadow`).
+   - Botón con estados `hover` y `focus-visible` para accesibilidad por teclado.
+
+### Lógica y Contexto
+- **Componente reutilizable:** Recibe una sala mediante `@Input()` y emite eventos con `@Output()`, lo que permite usarlo con `*ngFor` en cualquier parte de la aplicación sin acoplarse a un servicio específico.
+- **Flexbox:** Se usó `display: flex` tanto en la tarjeta principal (columna) como en la distribución de la información, cumpliendo con el requerimiento de la rúbrica.
+- **Accesibilidad:** La imagen tiene `alt` descriptivo, el botón tiene `aria-label` y `focus-visible`, y el orden de tabulación es lógico de arriba a abajo.

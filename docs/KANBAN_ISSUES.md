@@ -178,11 +178,11 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Crear el componente visual que muestra la información individual de una sala.
 
 **Tareas a realizar:**
-- [ ] Generar el componente `tarjeta-sala`.
-- [ ] Usar `@Input()` para recibir los datos de la sala.
-- [ ] Usar `@Output()` para emitir el evento del botón "Reservar".
-- [ ] Aplicar diseño con **Flexbox**.
-- [ ] Asegurar accesibilidad (atributo `alt` en la imagen, `aria-label` en el botón).
+- [x] Generar el componente `tarjeta-sala`.
+- [x] Usar `@Input()` para recibir los datos de la sala.
+- [x] Usar `@Output()` para emitir el evento del botón "Reservar".
+- [x] Aplicar diseño con **Flexbox**.
+- [x] Asegurar accesibilidad (atributo `alt` en la imagen, `aria-label` en el botón).
 
 ---
 

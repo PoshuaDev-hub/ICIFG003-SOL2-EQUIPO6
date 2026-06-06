@@ -1,0 +1,23 @@
+<article class="tarjeta-sala">
+  <div class="sala-imagen">
+    <img [src]="getImagenSala()" [alt]="'Imagen de ' + sala.nombreSala" loading="lazy">
+  </div>
+  <div class="sala-info">
+    <h3>{{ sala.nombreSala }}</h3>
+    <p class="sala-capacidad">
+      <span class="label">Capacidad:</span> {{ sala.capacidad }} personas
+    </p>
+    <p class="sala-ubicacion">
+      <span class="label">Ubicación:</span> Piso {{ sala.piso }} — {{ sala.edificio.nombreEdificio }}
+    </p>
+    <p class="sala-horario">
+      <span class="label">Horario:</span> 08:00 - 15:30
+    </p>
+    <button
+      class="btn-reservar"
+      (click)="reservar.emit(sala.id)"
+      [attr.aria-label]="'Reservar ' + sala.nombreSala">
+      Reservar
+    </button>
+  </div>
+</article>
