@@ -1,0 +1,36 @@
+<div
+  *ngIf="visible"
+  class="mensaje-toast"
+  [class.exito]="tipo === 'exito'"
+  [class.error]="tipo === 'error'"
+  role="alert"
+  aria-live="polite">
+
+  <!-- Ícono tipo -->
+  <span class="mensaje-icon" aria-hidden="true">
+    <!-- Check (éxito) -->
+    <svg *ngIf="tipo === 'exito'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="9 12 11 14 15 10"></polyline>
+    </svg>
+    <!-- X (error) -->
+    <svg *ngIf="tipo === 'error'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+  </span>
+
+  <p class="mensaje-texto">{{ texto }}</p>
+
+  <!-- Botón cerrar manual -->
+  <button class="mensaje-cerrar" (click)="onCerrar()" aria-label="Cerrar mensaje">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</div>

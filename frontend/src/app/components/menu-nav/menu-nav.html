@@ -1,0 +1,49 @@
+<header class="lib-header" [class.scrolled]="isScrolled">
+
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon"
+      aria-hidden="true">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>
+    <div class="logo-text">
+      <span class="title">Biblioteca Central</span>
+    </div>
+  </div>
+
+  <nav class="lib-nav" [class.open]="isMenuOpen" aria-label="Navegación principal">
+    <ul>
+      <li><a href="#" class="active" (click)="closeMenu()">Inicio</a></li>
+      <li><a href="#salas" (click)="closeMenu()">Reservar Salas</a></li>
+      <li><a href="#actividad" (click)="closeMenu()">Mis Reservas</a></li>
+    </ul>
+  </nav>
+
+  <!-- Botón hamburguesa (solo visible en móvil) -->
+  <button
+    class="hamburger-btn"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="isMenuOpen"
+    [attr.aria-label]="isMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
+    aria-controls="nav-menu">
+
+    <!-- Ícono hamburguesa -->
+    <svg *ngIf="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+
+    <!-- Ícono X (cerrar) -->
+    <svg *ngIf="isMenuOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+</header>

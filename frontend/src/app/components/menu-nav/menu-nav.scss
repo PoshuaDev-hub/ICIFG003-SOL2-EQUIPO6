@@ -1,0 +1,118 @@
+.lib-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--bg-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5vw;
+  border-bottom: 1px solid var(--border-color);
+  transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+
+  &.scrolled {
+    padding: 1rem 5vw;
+    background-color: rgba(240, 237, 232, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+
+    .logo-text .title {
+      font-size: 1.3rem;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-main);
+
+    .icon { stroke: var(--accent-wood); }
+
+    .logo-text {
+      .title {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        font-weight: 700;
+        transition: font-size 0.3s ease;
+      }
+    }
+  }
+
+  /* Nav desktop: Flexbox horizontal */
+  .lib-nav ul {
+    display: flex;
+    gap: 3rem;
+
+    a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+
+      &:hover,
+      &.active { color: var(--accent-wood); }
+    }
+  }
+
+  /* Hamburguesa: oculto en desktop */
+  .hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    color: var(--text-main);
+    line-height: 0;
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-wood);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* --- Responsive móvil (<768px) --- */
+@media screen and (max-width: 767px) {
+  .lib-header {
+    flex-wrap: wrap;
+    padding: 1.2rem 5vw;
+
+    .hamburger-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Nav colapsado por defecto en móvil */
+    .lib-nav {
+      display: none;
+      width: 100%;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      padding-bottom: 0.5rem;
+
+      /* Visible cuando .open */
+      &.open {
+        display: flex;
+      }
+
+      ul {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+
+        li a {
+          display: block;
+          padding: 0.85rem 0;
+          font-size: 1rem;
+          border-bottom: 1px dashed var(--border-color);
+        }
+
+        li:last-child a { border-bottom: none; }
+      }
+    }
+  }
+}

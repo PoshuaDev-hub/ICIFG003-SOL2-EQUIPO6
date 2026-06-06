@@ -1,25 +1,7 @@
 <div class="lib-layout">
   
-  <!-- 🧭 Navbar Superior (Sticky + Animación Scroll) -->
-  <header class="lib-header" [class.scrolled]="isScrolled">
-    <div class="logo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon">
-        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-      </svg>
-      <div class="logo-text">
-        <span class="title">Biblioteca Central</span>
-      </div>
-    </div>
-    
-    <nav class="lib-nav">
-      <ul>
-        <li><a href="#" class="active">Inicio</a></li>
-        <li><a href="#salas">Reservar Salas</a></li>
-        <li><a href="#actividad">Mis Reservas</a></li>
-      </ul>
-    </nav>
-  </header>
+  <!-- 🧭 Navbar (componente reutilizable con hamburguesa) -->
+  <app-menu-nav></app-menu-nav>
 
   <!-- 🖼️ Carrusel Hero (debajo del navbar) -->
   <section class="hero-carousel">
@@ -105,6 +87,14 @@
       </div>
     </div>
   </footer>
+
+  <!-- 💬 Componente de mensajes (éxito / error) -->
+  <app-mensaje
+    [visible]="mensajeVisible"
+    [tipo]="mensajeTipo"
+    [texto]="mensajeTexto"
+    (cerrar)="cerrarMensaje()">
+  </app-mensaje>
 
   <!-- 💬 Widget Flotador (Esquina inferior derecha) -->
   <div class="floater-container">

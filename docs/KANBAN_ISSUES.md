@@ -195,9 +195,9 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Desarrollar los componentes modulares para navegación y retroalimentación del sistema.
 
 **Tareas a realizar:**
-- [ ] Generar componente `menu-nav` usando Flexbox, con versión responsiva (hamburguesa en móvil).
-- [ ] Generar componente `mensaje` para alertas de éxito o error.
-- [ ] Configurar el `mensaje` para que se cierre automáticamente tras 4 segundos.
+- [x] Generar componente `menu-nav` usando Flexbox, con versión responsiva (hamburguesa en móvil).
+- [x] Generar componente `mensaje` para alertas de éxito o error.
+- [x] Configurar el `mensaje` para que se cierre automáticamente tras 4 segundos.
 
 ---
 

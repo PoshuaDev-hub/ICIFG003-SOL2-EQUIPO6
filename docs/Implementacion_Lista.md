@@ -260,3 +260,65 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 - **Componente reutilizable:** Recibe una sala mediante `@Input()` y emite eventos con `@Output()`, lo que permite usarlo con `*ngFor` en cualquier parte de la aplicación sin acoplarse a un servicio específico.
 - **Flexbox:** Se usó `display: flex` tanto en la tarjeta principal (columna) como en la distribución de la información, cumpliendo con el requerimiento de la rúbrica.
 - **Accesibilidad:** La imagen tiene `alt` descriptivo, el botón tiene `aria-label` y `focus-visible`, y el orden de tabulación es lógico de arriba a abajo.
+
+---
+
+## Issue 12: [Sprint 4] Componentes reutilizables: MenuNavComponent y MensajeComponent
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`frontend/src/app/components/menu-nav/menu-nav.ts` (Creado):**
+   - Componente standalone que gestiona su propio scroll con `@HostListener('window:scroll')`.
+   - Propiedad `isScrolled` para aplicar la clase comprimida al header.
+   - Propiedad `isMenuOpen` para controlar la visibilidad del menú en móvil.
+   - Métodos `toggleMenu()` y `closeMenu()` para el comportamiento del hamburger.
+
+2. **`frontend/src/app/components/menu-nav/menu-nav.html` (Creado):**
+   - Etiqueta semántica `<header>` con `<nav aria-label="Navegación principal">`.
+   - Botón hamburguesa con SVG inline, `aria-expanded` y `aria-label` dinámico (accesibilidad).
+   - El ícono cambia de ☰ a ✕ según el estado de `isMenuOpen`.
+   - Los enlaces llaman a `closeMenu()` para cerrar el menú al navegar.
+
+3. **`frontend/src/app/components/menu-nav/menu-nav.scss` (Creado):**
+   - Layout con **Flexbox** (`display: flex; justify-content: space-between`).
+   - Desktop: hamburger oculto, nav horizontal con `gap: 3rem`.
+   - Móvil (<768px): hamburger visible, nav colapsado con `display: none` / expandido con `.open`.
+   - Animación de scroll: `padding` y `backdrop-filter` al agregar clase `.scrolled`.
+
+4. **`frontend/src/app/components/mensaje/mensaje.ts` (Creado):**
+   - `@Input() tipo: 'exito' | 'error'`, `@Input() texto`, `@Input() visible`.
+   - `@Output() cerrar` para notificar al padre cuando el mensaje debe ocultarse.
+   - `ngOnChanges`: inicia `setTimeout` de 4 segundos al volverse visible; cancela el timer si se oculta antes.
+   - `ngOnDestroy`: limpia el timer para evitar memory leaks.
+
+5. **`frontend/src/app/components/mensaje/mensaje.html` (Creado):**
+   - `*ngIf="visible"` con `role="alert"` y `aria-live="polite"` para lectores de pantalla.
+   - SVG de check para éxito y SVG de X para error (iconografía vectorial).
+   - Botón de cierre manual con `aria-label="Cerrar mensaje"`.
+
+6. **`frontend/src/app/components/mensaje/mensaje.scss` (Creado):**
+   - Toast fijo (`position: fixed; bottom: 2rem`) centrado horizontalmente.
+   - Paleta diferenciada: verde suave para éxito, rojo suave para error.
+   - Animación de entrada `slideUp` con `@keyframes`.
+   - En móvil: ocupa el ancho completo menos márgenes.
+
+7. **`frontend/src/app/app.ts` (Modificado):**
+   - Se eliminó `isScrolled` y `@HostListener` (ahora viven en `MenuNavComponent`).
+   - Se importaron `MenuNavComponent` y `MensajeComponent`.
+   - Se añadieron `mensajeVisible`, `mensajeTipo`, `mensajeTexto` y métodos `mostrarMensaje()` / `cerrarMensaje()`.
+   - `simularReserva()` ahora invoca `mostrarMensaje('exito', ...)`.
+
+8. **`frontend/src/app/app.html` (Modificado):**
+   - El bloque `<header>` fue reemplazado por `<app-menu-nav>`.
+   - Se añadió `<app-mensaje>` con binding bidireccional de inputs/outputs.
+
+9. **`frontend/src/app/app.scss` (Modificado):**
+   - Se eliminó el bloque `.lib-header` (migrado a `menu-nav.scss`).
+   - Se eliminaron las referencias al header en las media queries.
+
+### Lógica y Contexto
+- **Separación de responsabilidades:** El scroll del navbar ya no contamina `App` — `MenuNavComponent` es autocontenido. Esto facilita reutilizarlo en cualquier otra página sin acoplar estado.
+- **Cierre automático del mensaje:** Se usa `ngOnChanges` en lugar de `ngOnInit` para detectar cada vez que `visible` cambia a `true`, reiniciando el timer. Sin esto, el segundo mensaje nunca arrancaría el timer.
+- **Accesibilidad del hamburger:** El botón usa `aria-expanded` dinámico y `aria-controls`, lo que permite a lectores de pantalla anunciar el estado del menú.
+- **Preparación para Issues 14 y 15:** `MensajeComponent` está listo para ser invocado desde el formulario de reserva (Issue 14) y el panel de reservas (Issue 15) simplemente llamando a `mostrarMensaje(tipo, texto)` desde el componente padre.

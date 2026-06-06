@@ -5,65 +5,6 @@
   min-height: 100vh;
 }
 
-/* --- 🧭 Navbar (Sticky + Transición) --- */
-.lib-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: var(--bg-main);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 5vw; /* Altura inicial ajustada a petición del usuario */
-  border-bottom: 1px solid var(--border-color);
-  transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  
-  /* Animación al hacer scroll */
-  &.scrolled {
-    padding: 1rem 5vw; /* Más delgado */
-    background-color: rgba(240, 237, 232, 0.95); /* #F0EDE8 con opacidad */
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-soft);
-    
-    .logo-text .title {
-      font-size: 1.3rem; /* Título ligeramente más pequeño */
-    }
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--text-main);
-    
-    .icon { stroke: var(--accent-wood); }
-    
-    .logo-text {
-      .title {
-        font-family: var(--font-display);
-        font-size: 1.8rem;
-        font-weight: 700;
-        transition: font-size 0.3s ease;
-      }
-    }
-  }
-
-  .lib-nav ul {
-    display: flex;
-    gap: 3rem;
-    
-    a {
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      transition: color 0.3s ease;
-      
-      &:hover, &.active { color: var(--accent-wood); }
-    }
-  }
-}
 
 /* --- 🖼️ Carrusel Hero --- */
 .hero-carousel {
@@ -352,14 +293,11 @@
 @media screen and (max-width: 1023px) {
   .layout-container { padding: 4rem 5vw; }
   .layout-body { grid-template-columns: 1fr 280px; }
-  .lib-header { padding: 1.5rem 5vw; }
 }
 
 @media screen and (max-width: 767px) {
   .layout-container { padding: 3rem 5vw; }
   .layout-body { grid-template-columns: 1fr; gap: 3rem; }
-  .lib-header { flex-direction: column; gap: 1rem; padding: 1.5rem 5vw; }
-  .lib-header .lib-nav ul { gap: 1.5rem; justify-content: center; }
   .hero-carousel { height: 55vh; min-height: 350px; }
   .hero-carousel .hero-content h1 { font-size: 2.2rem; }
   .lib-footer .footer-content { flex-direction: column; gap: 1.5rem; text-align: center; }

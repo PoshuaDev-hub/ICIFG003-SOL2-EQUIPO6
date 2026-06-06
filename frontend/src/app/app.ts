@@ -1,22 +1,30 @@
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MenuNavComponent } from './components/menu-nav/menu-nav';
+import { MensajeComponent } from './components/mensaje/mensaje';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, MenuNavComponent, MensajeComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App implements OnInit, OnDestroy {
-  // --- 1. Navbar Sticky & Scroll Animation ---
-  isScrolled = false;
+  // --- Mensaje (éxito / error) ---
+  mensajeVisible = false;
+  mensajeTipo: 'exito' | 'error' = 'exito';
+  mensajeTexto = '';
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    // Cuando el scroll pasa de 50px, activa la clase comprimida
-    this.isScrolled = window.scrollY > 50;
+  mostrarMensaje(tipo: 'exito' | 'error', texto: string) {
+    this.mensajeTipo = tipo;
+    this.mensajeTexto = texto;
+    this.mensajeVisible = true;
+  }
+
+  cerrarMensaje() {
+    this.mensajeVisible = false;
   }
 
   // --- 2. Carrusel Hero ---
@@ -67,7 +75,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   simularReserva() {
-    console.log('Reserva iniciada');
+    this.mostrarMensaje('exito', 'Reserva registrada correctamente. Recibirás una confirmación pronto.');
   }
 
   // --- 3. Floater Widget ---
