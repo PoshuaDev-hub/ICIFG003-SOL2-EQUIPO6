@@ -436,3 +436,15 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 - **Envio a la API:** El body se construye con `idEstado: 1` (Confirmada) y se envia como `POST /api/reservas`. Errores del backend como conflicto de horario se capturan pero aun no se muestran en MensajeComponent.
 - **UX del modal:** El overlay captura clics fuera del formulario para cerrarlo. El modal tiene scroll interno para no desbordar la pantalla en movil.
 
+### Fixes Post-Implementacion
+
+1. **`HorarioDisponible.java`** -- Se agrego `@JsonIgnoreProperties("horariosDisponibles")` en el campo `sala` para romper la recursion infinita al serializar la lista de horarios disponibles. Sin esto, el endpoint `/api/horarios/disponibles` lanzaba `StackOverflowError` y el frontend mostraba "No hay horarios disponibles".
+
+2. **`app.ts`** -- `salaSeleccionada` cambio de `number | null` a `Sala | null`. `onReservar(idSala)` ahora busca la sala completa en `this.salas`.
+
+3. **`app.html`** -- Se agrego `[salaNombre]="salaSeleccionada.nombreSala"` y `[fechaInicial]="filtroFecha"` al formulario.
+
+4. **`formulario-reserva.ts`** -- Nuevos `@Input() salaNombre` y `@Input() fechaInicial`. `ngOnInit` precarga la fecha y dispara `cargarHorarios()` automaticamente si ambos valores existen.
+
+5. **`formulario-reserva.html`** -- Muestra "Reservando: **Nombre Sala**" en lugar de "Reservando sala ID: X".
+

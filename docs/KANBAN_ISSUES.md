@@ -232,6 +232,12 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 - [x] Aplicar validaciones frontend (requeridos, correo, mínimo 15 caracteres).
 - [x] Enviar datos a la API e invocar `MensajeComponent` con el resultado.
 
+**Fixes post-implementación:**
+- [x] Corregir serialización circular `HorarioDisponible ↔ Sala` (`@JsonIgnoreProperties`)
+- [x] Precargar fecha del filtro en el formulario (`fechaInicial`)
+- [x] Mostrar nombre de la sala en el modal en vez del ID genérico
+- [x] Auto-cargar horarios al abrir el modal con fecha ya seteada
+
 ---
 
 ## Issue 15
