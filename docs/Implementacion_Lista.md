@@ -324,3 +324,51 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 - **Cierre automático del mensaje:** Se usa `ngOnChanges` en lugar de `ngOnInit` para detectar cada vez que `visible` cambia a `true`, reiniciando el timer. Sin esto, el segundo mensaje nunca arrancaría el timer.
 - **Accesibilidad del hamburger:** El botón usa `aria-expanded` dinámico y `aria-controls`, lo que permite a lectores de pantalla anunciar el estado del menú.
 - **Preparación para Issues 14 y 15:** `MensajeComponent` está listo para ser invocado desde el formulario de reserva (Issue 14) y el panel de reservas (Issue 15) simplemente llamando a `mostrarMensaje(tipo, texto)` desde el componente padre.
+
+---
+
+## Issue 13: [Sprint 5] Visualización y filtrado de salas (RF02 y RF03)
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+
+1. **`frontend/src/app/app.ts` (Modificado):**
+   - Se importaron `FormsModule`, `TarjetaSalaComponent`, `SalaService` e interface `Sala`.
+   - Se inyectó `SalaService` mediante el constructor (inyección de dependencias de Angular).
+   - Se declararon las variables de estado: `salas: Sala[]`, `filtroCapacidad: number` y `filtroFecha: string` (inicializada con la fecha actual del sistema).
+   - Se implementó `cargarSalas()`: llama a `salaService.getSalas()` y suscribe el resultado al array `salas`. Incluye manejo de error con `MensajeComponent`.
+   - Se implementó `aplicarFiltros()`: si `filtroCapacidad > 0`, llama a `salaService.getSalasPorCapacidad()`; en caso contrario llama a `cargarSalas()`.
+   - Se implementó `onReservar(idSala)`: recibe el ID emitido por `TarjetaSalaComponent` y muestra un mensaje preparatorio para el Issue 14.
+   - Se invoca `cargarSalas()` desde `ngOnInit()`.
+
+2. **`frontend/src/app/app.html` (Modificado):**
+   - Se eliminaron las dos tarjetas de sala estáticas ("Borges" y "Mistral").
+   - Se añadió `<div class="filters-container">` con dos controles de filtrado:
+     - `<select id="capacidadFilter">` con opciones 0 (todas), 4, 8, 12 y 20+ personas, vinculado con `[(ngModel)]="filtroCapacidad"` y `(change)="aplicarFiltros()"`.
+     - `<input type="date" id="fechaFilter">` vinculado con `[(ngModel)]="filtroFecha"`.
+   - Se añadió `<div class="cards-grid" *ngIf="salas.length > 0">` con iteración dinámica:
+     ```html
+     <app-tarjeta-sala *ngFor="let s of salas" [sala]="s" (reservar)="onReservar($event)">
+     ```
+   - Se añadió mensaje de estado vacío: `<div class="no-salas-msg" *ngIf="salas.length === 0">`.
+
+3. **`frontend/src/app/app.scss` (Modificado):**
+   - Se añadieron estilos para `.filters-container`: `display: flex`, `gap: 2rem`, fondo `var(--bg-card)`, bordes con variables del sistema.
+   - Se añadió `.filter-group` con `flex-direction: column` para apilar etiqueta e input verticalmente.
+   - Los controles `select` e `input[type="date"]` heredan la paleta del proyecto (variables CSS globales) con estilo `focus` que resalta con `var(--accent-wood)`.
+   - Se añadió `.no-salas-msg` con estilo centrado y borde discontinuo para indicar ausencia de resultados.
+
+4. **Backend (Creados previamente como pre-requisito):**
+   - `backend/src/main/java/com/equipo6/reservas/services/SalaService.java` (Creado).
+   - `backend/src/main/java/com/equipo6/reservas/controllers/SalaController.java` (Creado).
+   - Endpoints habilitados: `GET /api/salas` y `GET /api/salas?capacidad=N`.
+
+### Lógica y Contexto
+- **Conexión Frontend ↔ Backend:** `SalaService` (Angular) apunta a `http://localhost:8080/api/salas`. El backend expone ese endpoint desde `SalaController`, que delega en `SalaService` (Java), que usa `SalaRepository.findAll()` o `findByCapacidadMinima()` según el parámetro recibido.
+- **Filtro de Capacidad (RF03):** El filtrado se realiza del lado del servidor mediante la JPQL query `findByCapacidadMinima()` en `SalaRepository`, garantizando que solo lleguen al cliente las salas que cumplen el criterio.
+- **Filtro de Fecha:** La variable `filtroFecha` queda almacenada en el estado del componente con la fecha actual del sistema como valor por defecto, lista para ser consumida por el Issue 14 (formulario de reserva) al momento de cargar los horarios disponibles de una sala.
+- **Manejo de Errores:** Si el backend no responde, se captura el error en el `subscribe` y se invoca `MensajeComponent` con tipo `'error'` para notificar al usuario de forma visual.
+- **Tipado Estricto:** El array `salas` está tipado como `Sala[]`, garantizando que cualquier discrepancia entre los campos del backend y del frontend sea detectada en tiempo de compilación.
+- **CORS:** La comunicación está habilitada gracias a `CorsConfig.java` (global) y las anotaciones `@CrossOrigin` en cada controller, permitiendo peticiones desde `http://localhost:4200`.
+

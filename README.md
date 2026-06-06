@@ -1,174 +1,180 @@
-# Sistema de Reserva de Salas — EQUIPO 6
+# Sistema de Reserva de Salas — ICIFG003 Equipo 6
 
-Sistema web para reservar salas de estudio en una biblioteca universitaria.
-Backend con **Spring Boot 3.2.5** + **PostgreSQL** y frontend con **Angular 21**.
-
----
-
-## Tecnologías y Versiones
-
-### Backend
-| Herramienta | Versión |
-|---|---|
-| Java | 17+ |
-| Spring Boot | 3.2.5 |
-| Maven | (wrapper incluido) |
-| PostgreSQL | 13+ |
-
-### Frontend
-| Herramienta | Versión |
-|---|---|
-| Node.js | 20.x o 22.x |
-| npm | 10+ |
-| Angular CLI | 21.2.7 |
+> Sistema web para reservar salas de estudio en una biblioteca universitaria.
+> **Spring Boot 3.2.5** (Backend) + **Angular 21** (Frontend) + **PostgreSQL** (Base de datos).
 
 ---
 
-## Estructura del Proyecto
+## 🚀 Inicio Rápido (TL;DR)
 
-```
-/
-├── backend/              # Spring Boot (API REST)
-│   ├── src/main/java/    # Código fuente Java
-│   └── pom.xml           # Dependencias Maven
-├── frontend/             # Angular (SPA)
-│   ├── src/app/          # Componentes, servicios, interfaces
-│   └── package.json
-├── database/             # Scripts SQL
-│   ├── 01_schema.sql     # DDL (creación de tablas)
-│   └── 02_seed.sql       # Datos de prueba
-├── docs/                 # Documentación del proyecto
-└── package.json          # Script raíz (inicio simultáneo)
-```
+> **Sigue este orden exacto. Si saltas un paso, el sistema no arrancará.**
+
+### Paso 0 — Requisitos mínimos instalados
+| Herramienta | Versión mínima | Verificar con |
+|---|---|---|
+| Java | 17 | `java -version` |
+| Node.js | 20 | `node -v` |
+| npm | 10 | `npm -v` |
+| PostgreSQL | 13 | `psql --version` |
 
 ---
 
-## Guía de Instalación y Ejecución
+### Paso 1 — Crear y poblar la base de datos
 
-### 1. Requisitos Previos
+Abre **pgAdmin** o una terminal `psql` y ejecuta:
 
-Instalar en el sistema:
-
-```bash
-# Java 17+
-sudo apt install openjdk-17-jdk
-
-# PostgreSQL
-sudo apt install postgresql postgresql-client
-
-# Node.js y npm (vía nvm recomendado)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-nvm install 20
+```sql
+-- 1. Crear la base de datos (solo la primera vez)
+CREATE DATABASE reserva_salas_db;
 ```
 
-Verificar versiones:
+Luego, desde la raíz del proyecto:
 
 ```bash
-java -version            # >= 17
-node -v                  # >= 20
-npm -v                   # >= 10
-psql --version           # >= 13
-```
-
-### 2. Crear Base de Datos
-
-```bash
-# Iniciar PostgreSQL si no está corriendo
-sudo systemctl start postgresql
-
-# Crear la base de datos
-psql -U postgres -h localhost -c "CREATE DATABASE reserva_salas_db;"
-
-# Ejecutar schema (tablas)
+# Crear las tablas
 psql -U postgres -h localhost -d reserva_salas_db -f database/01_schema.sql
 
-# Ejecutar seed (datos de prueba)
+# Insertar datos de prueba
 psql -U postgres -h localhost -d reserva_salas_db -f database/02_seed.sql
 ```
 
-> Si tu usuario de PostgreSQL tiene contraseña, usa `PGPASSWORD=tuclave` al inicio:
-> `PGPASSWORD=1234 psql -U postgres -h localhost ...`
+> Si tienes contraseña en PostgreSQL, antepón `PGPASSWORD=tu_clave`:
+> ```bash
+> PGPASSWORD=1234 psql -U postgres -h localhost -d reserva_salas_db -f database/01_schema.sql
+> ```
 
-### 3. Configurar Backend
+---
 
-Editar `backend/src/main/resources/application.properties` con tus credenciales:
+### Paso 2 — Configurar las credenciales del backend
+
+Abre `backend/src/main/resources/application.properties` y ajusta:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/reserva_salas_db
 spring.datasource.username=postgres
-spring.datasource.password=1234
+spring.datasource.password=TU_CONTRASEÑA_AQUI
 ```
 
-El backend usa `hibernate.ddl-auto=validate`, por lo que las tablas deben crearse
-previamente con el script `01_schema.sql`.
+---
 
-### 4. Ejecutar Backend
-
-```bash
-cd backend
-chmod +x mvnw          # solo primera vez
-./mvnw spring-boot:run
-```
-
-La API queda disponible en `http://localhost:8080/api/`.
-
-Endpoints disponibles:
-- `GET /api/reservas` — lista todas las reservas
-- `POST /api/reservas` — crear una nueva reserva (con validaciones)
-
-### 5. Ejecutar Frontend
+### Paso 3 — Instalar dependencias
 
 ```bash
+# En la RAÍZ del proyecto (instala 'concurrently')
+npm install
+
+# En la carpeta FRONTEND (instala Angular y sus módulos)
 cd frontend
 npm install
-npx ng serve
+cd ..
 ```
 
-Abrir en el navegador: `http://localhost:4200`
+---
 
-### 6. Ejecutar ambos a la vez (opcional)
+### Paso 4 — Levantar todo el sistema
 
 ```bash
-npm install            # instalar dependencias raíz
-npm run dev            # levanta backend + frontend simultáneamente
+# Desde la RAÍZ del proyecto (levanta backend + frontend simultáneamente)
+npm run dev
+```
+
+| URL | Descripción |
+|---|---|
+| `http://localhost:4200` | Aplicación Angular (Frontend) |
+| `http://localhost:8080/api` | API REST Spring Boot (Backend) |
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+/
+├── backend/                  # API REST — Spring Boot
+│   ├── src/main/java/        # Código fuente Java (controllers, services, models...)
+│   ├── src/main/resources/   # application.properties (credenciales BD)
+│   └── pom.xml               # Dependencias Maven
+│
+├── frontend/                 # SPA — Angular 21
+│   ├── src/app/
+│   │   ├── components/       # Componentes reutilizables (tarjeta-sala, menu-nav, mensaje)
+│   │   ├── services/         # Servicios HTTP (sala, estudiante, reserva)
+│   │   ├── interfaces/       # Tipos TypeScript (Sala, Horario, Reserva, Estudiante...)
+│   │   └── environments/     # URL base del backend
+│   └── package.json
+│
+├── database/
+│   ├── 01_schema.sql         # DDL — Crea las 7 tablas del MER
+│   └── 02_seed.sql           # Datos de prueba (6 salas, 6 estudiantes, 30 horarios...)
+│
+├── docs/
+│   ├── KANBAN_ISSUES.md      # Tablero de Issues con estado de cada tarea
+│   ├── Implementacion_Lista.md # Registro técnico detallado de cada Issue completado
+│   ├── ESPECIFICACIONES_SOLEMNE2.md
+│   └── SOLEMNE2_ICIFG003_SEC2.md
+│
+└── package.json              # Script raíz con 'npm run dev' para levantar todo
 ```
 
 ---
 
-## Vista del Frontend
+## 🔌 Endpoints de la API
 
-Al abrir `http://localhost:4200` se ve:
+### Salas
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/salas` | Lista todas las salas |
+| GET | `/api/salas?capacidad=N` | Filtra salas por capacidad mínima (RF03) |
+| GET | `/api/salas/{id}` | Obtiene una sala por ID |
+| POST | `/api/salas` | Crea una nueva sala |
+| PUT | `/api/salas/{id}` | Actualiza una sala |
+| DELETE | `/api/salas/{id}` | Elimina una sala |
 
-| Elemento | Descripción |
+### Estudiantes
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/estudiantes` | Lista todos los estudiantes |
+| GET | `/api/estudiantes/{id}` | Obtiene un estudiante por ID |
+| POST | `/api/estudiantes` | Crea un nuevo estudiante |
+
+### Horarios
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/horarios?sala=N` | Lista horarios de una sala (RF05) |
+| GET | `/api/horarios/disponibles?sala=N&fecha=YYYY-MM-DD` | Horarios libres de una sala en una fecha (RF05) |
+
+### Reservas
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/reservas` | Lista todas las reservas |
+| GET | `/api/reservas?sala=N&fecha=YYYY-MM-DD` | Reservas de una sala en una fecha (RF04) |
+| POST | `/api/reservas` | Crea una reserva (con validaciones RF05) |
+
+---
+
+## 🌐 Vista del Frontend
+
+| Sección | Descripción |
 |---|---|
-| **Navbar** | Logo "Biblioteca Central" + menú (Inicio, Reservar Salas, Mis Reservas). Se vuelve más delgado al hacer scroll. |
-| **Carrusel Hero** | 3 imágenes de bibliotecas con fade automático cada 10s. Flechas para navegar y puntos indicadores. |
-| **Salas Disponibles** | Sección con tarjetas de salas (actualmente datos estáticos de ejemplo). |
-| **Aside** | Panel lateral con normativas de la biblioteca. |
+| **Navbar** | Logo + menú responsivo con hamburguesa en móvil. Se comprime al hacer scroll. |
+| **Carrusel Hero** | Imágenes de biblioteca con transición automática cada 10s. |
+| **Filtros** | Selector de capacidad mínima + datepicker de fecha. |
+| **Tarjetas de Salas** | Datos reales desde la BD. Se filtran dinámicamente sin recargar la página. |
+| **Panel Lateral (Aside)** | Normativa de la biblioteca. |
 | **Footer** | Pie de página con enlaces. |
-| **Floater** | Botón redondo en esquina inferior derecha para contacto y horarios. |
+| **Floater** | Botón de contacto y horarios de atención. |
 
-El layout es responsive:
-- **Escritorio** (>1024px): grid de 2 columnas (main + aside)
-- **Tablet** (768-1023px): aside más angosto
-- **Móvil** (<768px): todo en 1 columna, menú vertical
-
----
-
-## Scripts de Base de Datos
-
-| Script | Propósito |
-|---|---|
-| `database/01_schema.sql` | Crea 7 tablas: CARRERA, ESTUDIANTE, EDIFICIO, SALA, HORARIO_DISPONIBLE, ESTADO_RESERVA, RESERVA con PKs, FKs y restricciones. |
-| `database/02_seed.sql` | Pobla con datos de prueba: 4 carreras, 2 edificios, 6 salas, 6 estudiantes, 30 horarios, 2 estados y 10 reservas. |
+**Breakpoints responsive:**
+- 🖥️ **Escritorio** (>1024px): grid 2 columnas (main + aside)
+- 📱 **Tablet** (768–1023px): aside más compacto
+- 📲 **Móvil** (<768px): 1 columna, menú hamburguesa
 
 ---
 
-## Integrantes — Equipo 6
+## 👥 Integrantes — Equipo 6
 
-| Nombre | Rol |
+| Nombre | Responsabilidades |
 |---|---|
-| Joshua | Backend + Frontend |
-| Subaru | Backend + Documentación |
-| Lucas | Base de Datos |
-| Victor | Backend |
+| **Joshua** | Backend (Issues 1, 7), Frontend (Issues 10, 13) |
+| **Subaru** | Backend (Issues 2, 8), Frontend (Issue 11) |
+| **Lucas** | Base de Datos (Issue 3), Frontend (Issues 9, 12) |
+| **Victor** | Backend (Issues 4, 5, 6) |

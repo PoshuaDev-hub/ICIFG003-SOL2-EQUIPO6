@@ -37,26 +37,35 @@
     <div class="layout-body">
       <!-- Sección principal de Reservas -->
       <main class="lib-main">
-        <div class="cards-grid">
-          <!-- Tarjeta 1 -->
-          <article class="room-card">
-            <div class="card-info">
-              <h3>Sala de Lectura "Borges"</h3>
-              <p class="capacity">Capacidad: 4 personas</p>
-              <p class="desc">Mesa de roble, luz cálida natural y conexión eléctrica. Orientada al sur.</p>
-            </div>
-            <button class="btn-reserve" (click)="simularReserva()">Coordinar Reserva</button>
-          </article>
+        
+        <!-- Filtros Issue 13 -->
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="capacidadFilter">Capacidad Mínima:</label>
+            <select id="capacidadFilter" [(ngModel)]="filtroCapacidad" (change)="aplicarFiltros()">
+              <option [ngValue]="0">Todas las salas</option>
+              <option [ngValue]="4">4+ personas</option>
+              <option [ngValue]="8">8+ personas</option>
+              <option [ngValue]="12">12+ personas</option>
+              <option [ngValue]="20">20+ personas</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="fechaFilter">Fecha de Reserva:</label>
+            <input type="date" id="fechaFilter" [(ngModel)]="filtroFecha">
+          </div>
+        </div>
 
-          <!-- Tarjeta 2 -->
-          <article class="room-card">
-            <div class="card-info">
-              <h3>Sala de Ensayo "Mistral"</h3>
-              <p class="capacity">Capacidad: 8 personas</p>
-              <p class="desc">Aislamiento acústico, pantalla de proyección y mesa redonda. Ideal para debates.</p>
-            </div>
-            <button class="btn-reserve" (click)="simularReserva()">Coordinar Reserva</button>
-          </article>
+        <div class="cards-grid" *ngIf="salas.length > 0">
+          <app-tarjeta-sala 
+            *ngFor="let s of salas" 
+            [sala]="s" 
+            (reservar)="onReservar($event)">
+          </app-tarjeta-sala>
+        </div>
+        
+        <div class="no-salas-msg" *ngIf="salas.length === 0">
+          <p>No se encontraron salas con los filtros seleccionados.</p>
         </div>
         
         <router-outlet></router-outlet>

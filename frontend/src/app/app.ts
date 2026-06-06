@@ -1,17 +1,28 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MenuNavComponent } from './components/menu-nav/menu-nav';
 import { MensajeComponent } from './components/mensaje/mensaje';
+import { TarjetaSalaComponent } from './components/tarjeta-sala/tarjeta-sala';
+import { SalaService } from './services/sala.service';
+import { Sala } from './interfaces/sala.interface';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, MenuNavComponent, MensajeComponent],
+  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App implements OnInit, OnDestroy {
+  // --- Issue 13: Filtrado de Salas ---
+  salas: Sala[] = [];
+  filtroCapacidad: number = 0;
+  filtroFecha: string = new Date().toISOString().split('T')[0];
+
+  constructor(private salaService: SalaService) {}
+
   // --- Mensaje (éxito / error) ---
   mensajeVisible = false;
   mensajeTipo: 'exito' | 'error' = 'exito';
@@ -40,6 +51,33 @@ export class App implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.startCarousel();
+    this.cargarSalas();
+  }
+
+  // --- Métodos Issue 13 ---
+  cargarSalas() {
+    this.salaService.getSalas().subscribe({
+      next: (data) => this.salas = data,
+      error: (err) => {
+        console.error('Error cargando salas', err);
+        this.mostrarMensaje('error', 'No se pudieron cargar las salas desde el servidor.');
+      }
+    });
+  }
+
+  aplicarFiltros() {
+    if (this.filtroCapacidad > 0) {
+      this.salaService.getSalasPorCapacidad(this.filtroCapacidad).subscribe({
+        next: (data) => this.salas = data,
+        error: (err) => console.error('Error filtrando salas', err)
+      });
+    } else {
+      this.cargarSalas();
+    }
+  }
+
+  onReservar(idSala: number) {
+    this.mostrarMensaje('exito', `Seleccionada la sala ${idSala}. Formulario de reserva en construcción (Issue 14).`);
   }
 
   ngOnDestroy() {

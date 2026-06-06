@@ -210,10 +210,10 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Mostrar dinámicamente las salas y permitir buscar por capacidad y fecha.
 
 **Tareas a realizar:**
-- [ ] En el componente principal, consumir `SalaService` para obtener la lista.
-- [ ] Renderizar las salas iterando con `*ngFor` usando `<app-tarjeta-sala>`.
-- [ ] Crear los filtros UI (botones o select) para capacidad y un Datepicker para fecha.
-- [ ] Implementar lógica en Angular para filtrar la lista mostrada en pantalla.
+- [x] En el componente principal, consumir `SalaService` para obtener la lista.
+- [x] Renderizar las salas iterando con `*ngFor` usando `<app-tarjeta-sala>`.
+- [x] Crear los filtros UI (botones o select) para capacidad y un Datepicker para fecha.
+- [x] Implementar lógica en Angular para filtrar la lista mostrada en pantalla.
 
 ---
 

@@ -125,6 +125,56 @@
 
 /* --- 📅 Sección Reservas (Main) --- */
 .lib-main {
+  .filters-container {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      label {
+        font-family: var(--font-ui);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      select, input[type="date"] {
+        padding: 0.8rem;
+        font-family: var(--font-ui);
+        font-size: 1rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        border-radius: 4px;
+        min-width: 200px;
+        
+        &:focus {
+          outline: none;
+          border-color: var(--accent-wood);
+        }
+      }
+    }
+  }
+
+  .no-salas-msg {
+    padding: 3rem;
+    text-align: center;
+    background: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
