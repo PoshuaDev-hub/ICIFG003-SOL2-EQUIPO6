@@ -115,10 +115,11 @@ La capa de presentación quedó completamente habilitada. El uso de DTOs asegura
 
 ---
 
-## 7. Implementar queries objetales (JPQL) y nativas (Issue 7)
-**Objetivo:** Desarrollar las consultas específicas necesarias para soportar los requerimientos avanzados del frontend (filtrado y cruce de datos).
+## Issue 7: [Sprint 3] Implementar queries objetales (JPQL) y nativas
 
-### Archivos Afectados
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
 * **`backend/src/main/java/com/equipo6/reservas/repositories/SalaRepository.java` (Modificado):**
   * Se agregó la consulta JPQL `@Query("SELECT s FROM Sala s WHERE s.capacidad >= :capacidad")` para filtrar salas según su capacidad mínima (RF02).
 * **`backend/src/main/java/com/equipo6/reservas/repositories/ReservaRepository.java` (Modificado):**
@@ -130,27 +131,6 @@ La capa de presentación quedó completamente habilitada. El uso de DTOs asegura
 
 ### Lógica y Contexto
 Todas las consultas necesarias para el filtrado dinámico del frontend están listas en la capa de persistencia. Se utilizaron `@Query` y `@Param` explícitos asegurando escalabilidad. Cada consulta fue documentada internamente para relacionarla de forma trazable con el requerimiento de negocio que satisface.
-
----
-
-## 10. Página principal: Layout CSS Grid y Semántica HTML (Issue 10)
-**Objetivo:** Crear la estructura y diseño general de la página principal según normativas HTML5, CSS Grid y dotar de un diseño premium responsivo a la aplicación.
-
-### Archivos Afectados
-* **`frontend/src/styles.scss` (Modificado):**
-  * Se definieron variables de colores CSS (Glassmorphism, sombras, índigo como color primario).
-  * Se importó la fuente global *Outfit* de Google Fonts para dar un acabado profesional.
-  * Reset básico de márgenes, paddings y `box-sizing`.
-* **`frontend/src/app/app.html` (Modificado):**
-  * Se borró el placeholder por defecto de Angular.
-  * Se incluyeron las etiquetas semánticas exigidas: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`.
-  * Se creó la jerarquía DOM para facilitar la aplicación de Grid.
-* **`frontend/src/app/app.scss` (Modificado):**
-  * Se implementó **CSS Grid** (`display: grid;`) en el layout global y en el contenedor del cuerpo (main y aside).
-  * Se configuraron los Media Queries solicitados: Escritorio (>1024px), Tablet (768-1023px) ajustando los paddings, y Móvil (<768px) donde la grilla pasa a 1 sola columna permitiendo que el `<aside>` caiga fluidamente bajo el `<main>`.
-
-### Lógica y Contexto
-Esta implementación es fundamental porque establece el esqueleto responsivo y la estética de toda la plataforma de aquí en adelante. Gracias a las variables CSS en `styles.scss`, los futuros componentes (como tarjetas de sala y formularios) podrán usar de manera consistente los colores y tipografías establecidas aquí, reduciendo código duplicado.
 
 ---
 
@@ -182,3 +162,72 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
   - No se puede reservar un horario que ya tenga una reserva Confirmada para la misma sala y fecha.
 - **Códigos HTTP:** Se utiliza `400 Bad Request` para errores de validación de campos y `409 Conflict` para conflictos de disponibilidad, siguiendo las buenas prácticas REST.
 - **Integridad referencial:** Las validaciones previenen la creación de reservas duplicadas o inválidas, manteniendo la consistencia de los datos en la base de datos.
+
+---
+
+## Issue 9: [Sprint 4] Crear servicios Angular (HttpClient) e Interfaces TS
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+1. **`frontend/src/environments/environment.ts` (Creado):**
+   - Se configuró `apiUrl: 'http://localhost:8080/api'` como constante de entorno, desacoplando la URL del backend del código de los servicios.
+
+2. **`frontend/src/environments/environment.prod.ts` (Creado):**
+   - Versión de producción del archivo de entorno, con el flag `production: true` y la misma `apiUrl`.
+
+3. **`frontend/src/app/interfaces/` (Creados — 6 archivos):**
+   - `carrera.interface.ts`: campos `id`, `nombreCarrera`, `facultad`.
+   - `edificio.interface.ts`: campos `id`, `nombreEdificio`, `direccion`.
+   - `sala.interface.ts`: campos del MER más referencia tipada a `Edificio`.
+   - `horario.interface.ts`: campos `id`, `idSala`, `horaInicio`, `horaTermino`.
+   - `estudiante.interface.ts`: campos del MER más referencia tipada a `Carrera`.
+   - `reserva.interface.ts`: interfaces `EstadoReserva`, `Reserva` y `ReservaRequest` (DTO de creación para el POST).
+
+4. **`frontend/src/app/services/sala.service.ts` (Creado):**
+   - `getSalas()`: obtiene todas las salas (RF02).
+   - `getSalasPorCapacidad(capacidad)`: filtra salas por query param `?capacidad=N` (RF03).
+   - `getSalaById(id)`: obtiene una sala por ID.
+   - `getHorariosDisponibles(idSala, fecha)`: trae horarios libres de una sala en una fecha (RF05).
+   - `getHorariosPorSala(idSala)`: trae todos los horarios de una sala (RF05).
+
+5. **`frontend/src/app/services/estudiante.service.ts` (Creado):**
+   - `getEstudiantes()`: obtiene el listado completo para el buscador (RF05).
+   - `buscarEstudiantes(termino)`: búsqueda por nombre o RUT con query param `?q=termino` (RF05).
+   - `getEstudianteById(id)`: obtiene un estudiante por ID.
+
+6. **`frontend/src/app/services/reserva.service.ts` (Creado):**
+   - `getReservasPorSalaYFecha(idSala, fecha)`: obtiene reservas filtradas por sala y fecha (RF04).
+   - `crearReserva(reserva)`: envía `POST /api/reservas` con el `ReservaRequest` DTO (RF05).
+   - `getReservas()`: obtiene todas las reservas.
+
+7. **`frontend/src/app/app.config.ts` (Modificado):**
+   - Se agregó `provideHttpClient(withFetch())` al array de `providers`, habilitando `HttpClient` globalmente (API funcional de Angular 21 que reemplaza el deprecado `HttpClientModule`).
+
+### Lógica y Contexto
+- **Separación de entornos:** Al hacer build de producción (`ng build --configuration production`), Angular reemplaza automáticamente `environment.ts` por `environment.prod.ts`, sin cambiar ningún servicio.
+- **Tipado estricto:** Las interfaces reflejan fielmente el MER del backend, garantizando que cualquier respuesta de la API quede tipada y los errores de contrato se detecten en tiempo de compilación.
+- **Servicios singleton:** Al usar `providedIn: 'root'`, los tres servicios se registran como singletons globales sin necesidad de declararlos en ningún módulo.
+- **Preparación para Issues 13, 14 y 15:** Cada método de servicio está diseñado para ser consumido directamente por los componentes de filtrado de salas (Issue 13), el formulario de reserva (Issue 14) y el panel de reservas por sala (Issue 15).
+
+---
+
+## Issue 10: [Sprint 4] Página principal: Layout CSS Grid y Semántica HTML
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+* **`frontend/src/styles.scss` (Modificado):**
+  * Se definieron variables de colores CSS (Glassmorphism, sombras, índigo como color primario).
+  * Se importó la fuente global *Outfit* de Google Fonts para dar un acabado profesional.
+  * Reset básico de márgenes, paddings y `box-sizing`.
+* **`frontend/src/app/app.html` (Modificado):**
+  * Se borró el placeholder por defecto de Angular.
+  * Se incluyeron las etiquetas semánticas exigidas: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`.
+  * Se creó la jerarquía DOM para facilitar la aplicación de Grid.
+* **`frontend/src/app/app.scss` (Modificado):**
+  * Se implementó **CSS Grid** (`display: grid;`) en el layout global y en el contenedor del cuerpo (main y aside).
+  * Se configuraron los Media Queries solicitados: Escritorio (>1024px), Tablet (768-1023px) ajustando los paddings, y Móvil (<768px) donde la grilla pasa a 1 sola columna permitiendo que el `<aside>` caiga fluidamente bajo el `<main>`.
+
+### Lógica y Contexto
+Esta implementación es fundamental porque establece el esqueleto responsivo y la estética de toda la plataforma de aquí en adelante. Gracias a las variables CSS en `styles.scss`, los futuros componentes (como tarjetas de sala y formularios) podrán usar de manera consistente los colores y tipografías establecidas aquí, reduciendo código duplicado.

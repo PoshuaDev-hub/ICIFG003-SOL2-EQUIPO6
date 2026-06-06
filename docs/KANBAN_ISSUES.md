@@ -146,10 +146,10 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Configurar la conexión base en el frontend para comunicarse con la API de Spring Boot.
 
 **Tareas a realizar:**
-- [ ] Configurar `environment.ts` con la URL base del backend.
-- [ ] Importar y configurar `HttpClientModule`.
-- [ ] Crear interfaces TypeScript (`Sala`, `Estudiante`, `Reserva`, `Horario`).
-- [ ] Crear los servicios Angular (`SalaService`, `ReservaService`, `EstudianteService`).
+- [x] Configurar `environment.ts` con la URL base del backend.
+- [x] Importar y configurar `HttpClientModule`.
+- [x] Crear interfaces TypeScript (`Sala`, `Estudiante`, `Reserva`, `Horario`).
+- [x] Crear los servicios Angular (`SalaService`, `ReservaService`, `EstudianteService`).
 
 ---
 
