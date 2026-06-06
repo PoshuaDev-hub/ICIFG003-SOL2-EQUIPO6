@@ -1,5 +1,6 @@
 package com.equipo6.reservas.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalTime;
@@ -16,6 +17,7 @@ public class HorarioDisponible {
 
     @ManyToOne
     @JoinColumn(name = "id_sala", nullable = false)
+    @JsonIgnoreProperties("horariosDisponibles")
     private Sala sala;
 
     @Column(name = "hora_inicio", nullable = false)

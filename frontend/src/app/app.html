@@ -100,7 +100,9 @@
   <!-- 📋 Formulario de Reserva (Issue 14) -->
   <app-formulario-reserva
     *ngIf="salaSeleccionada"
-    [idSala]="salaSeleccionada"
+    [idSala]="salaSeleccionada.id"
+    [salaNombre]="salaSeleccionada.nombreSala"
+    [fechaInicial]="filtroFecha"
     (reservaCreada)="onReservaCreada()"
     (cancelar)="onCancelarReserva()">
   </app-formulario-reserva>

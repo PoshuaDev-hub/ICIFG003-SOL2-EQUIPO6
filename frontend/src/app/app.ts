@@ -25,7 +25,7 @@ export class App implements OnInit, OnDestroy {
   constructor(private salaService: SalaService) {}
 
   // --- Issue 14: Formulario de Reserva ---
-  salaSeleccionada: number | null = null;
+  salaSeleccionada: Sala | null = null;
 
   // --- Mensaje (éxito / error) ---
   mensajeVisible = false;
@@ -81,7 +81,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   onReservar(idSala: number) {
-    this.salaSeleccionada = idSala;
+    const sala = this.salas.find(s => s.id === idSala);
+    if (sala) this.salaSeleccionada = sala;
   }
 
   onReservaCreada() {

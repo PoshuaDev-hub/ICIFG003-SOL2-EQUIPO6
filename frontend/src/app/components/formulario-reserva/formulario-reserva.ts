@@ -16,6 +16,8 @@ import { Horario } from '../../interfaces/horario.interface';
 })
 export class FormularioReservaComponent implements OnInit, OnChanges {
   @Input() idSala: number | null = null;
+  @Input() salaNombre: string = '';
+  @Input() fechaInicial: string = '';
   @Output() reservaCreada = new EventEmitter<void>();
   @Output() cancelar = new EventEmitter<void>();
 
@@ -35,10 +37,16 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initForm();
+    if (this.fechaInicial) {
+      this.form.patchValue({ fecha: this.fechaInicial });
+    }
+    if (this.idSala && this.form.value.fecha) {
+      this.cargarHorarios();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['idSala'] && !changes['idSala'].firstChange && this.idSala) {
+    if (changes['idSala'] && !changes['idSala'].firstChange && this.idSala && this.form?.value?.fecha) {
       this.cargarHorarios();
     }
   }

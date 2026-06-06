@@ -7,7 +7,7 @@
       </button>
     </div>
 
-    <p class="sala-info" *ngIf="idSala">Reservando sala ID: {{ idSala }}</p>
+    <p class="sala-info" *ngIf="salaNombre">Reservando: <strong>{{ salaNombre }}</strong></p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
 
