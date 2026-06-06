@@ -18,7 +18,7 @@ export class SalaService {
     return this.http.get<Sala[]>(this.baseUrl);
   }
 
-  // RF03: Filtrar salas por capacidad mínima
+  // RF03: Filtrar salas por capacidad exacta
   getSalasPorCapacidad(capacidad: number): Observable<Sala[]> {
     const params = new HttpParams().set('capacidad', capacidad.toString());
     return this.http.get<Sala[]>(this.baseUrl, { params });

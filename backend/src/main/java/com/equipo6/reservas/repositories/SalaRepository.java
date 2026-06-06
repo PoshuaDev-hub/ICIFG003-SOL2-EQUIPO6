@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SalaRepository extends JpaRepository<Sala, Integer> {
     
-    // JPQL Objetal: Requerimiento de filtrar salas por capacidad (RF02)
-    @Query("SELECT s FROM Sala s WHERE s.capacidad >= :capacidad")
-    List<Sala> findByCapacidadMinima(@Param("capacidad") Integer capacidad);
+    // JPQL: Filtrar salas por capacidad exacta (RF02)
+    @Query("SELECT s FROM Sala s WHERE s.capacidad = :capacidad")
+    List<Sala> findByCapacidadExacta(@Param("capacidad") Integer capacidad);
 }

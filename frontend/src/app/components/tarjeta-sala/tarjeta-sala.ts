@@ -14,7 +14,6 @@ export class TarjetaSalaComponent {
   @Output() reservar = new EventEmitter<number>();
 
   getImagenSala(): string {
-    const id = (this.sala.id % 5) + 1;
-    return `https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80`;
+    return `https://picsum.photos/seed/sala${this.sala.id}/400/300`;
   }
 }

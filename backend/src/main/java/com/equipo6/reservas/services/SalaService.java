@@ -30,9 +30,9 @@ public class SalaService {
      * @param capacidad Capacidad mínima
      * @return Lista de salas filtradas
      */
-    public List<Sala> obtenerPorCapacidadMinima(Integer capacidad) {
-        log.info("Obteniendo salas con capacidad mínima de: {}", capacidad);
-        return salaRepository.findByCapacidadMinima(capacidad);
+    public List<Sala> obtenerPorCapacidadExacta(Integer capacidad) {
+        log.info("Obteniendo salas con capacidad exacta de: {}", capacidad);
+        return salaRepository.findByCapacidadExacta(capacidad);
     }
 
     /**
