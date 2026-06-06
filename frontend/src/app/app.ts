@@ -21,6 +21,7 @@ export class App implements OnInit, OnDestroy {
   salas: Sala[] = [];
   filtroCapacidad: number = 0;
   filtroFecha: string = new Date().toISOString().split('T')[0];
+  hoy: string = this.filtroFecha;
 
   constructor(private salaService: SalaService) {}
 

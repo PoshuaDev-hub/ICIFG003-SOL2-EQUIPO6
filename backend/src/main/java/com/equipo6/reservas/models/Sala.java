@@ -1,5 +1,6 @@
 package com.equipo6.reservas.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -34,6 +35,7 @@ public class Sala {
 
     @ManyToOne
     @JoinColumn(name = "id_edificio", nullable = false)
+    @JsonIgnoreProperties("salas")
     private Edificio edificio;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)

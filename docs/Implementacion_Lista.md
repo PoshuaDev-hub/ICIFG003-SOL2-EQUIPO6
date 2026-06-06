@@ -448,3 +448,9 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 
 5. **`formulario-reserva.html`** -- Muestra "Reservando: **Nombre Sala**" en lugar de "Reservando sala ID: X".
 
+6. **`Sala.java`** -- Se agrego `@JsonIgnoreProperties("salas")` en el campo `edificio` para romper la recursion infinita `Sala ↔ Edificio`. Sin esto, GET /api/salas lanzaba StackOverflowError y no se mostraban todas las salas.
+
+7. **`Estudiante.java`** -- Se agrego `@JsonIgnoreProperties("estudiantes")` en el campo `carrera` para romper la recursion infinita `Estudiante ↔ Carrera`. Sin esto, la busqueda de estudiantes en el autocomplete podia fallar.
+
+8. **`app.html` y `formulario-reserva.html`** -- Se agrego `[min]="hoy"` y `[attr.min]="hoyMin"` respectivamente en los inputs de tipo date para evitar seleccionar fechas pasadas desde el calendario nativo del navegador.
+

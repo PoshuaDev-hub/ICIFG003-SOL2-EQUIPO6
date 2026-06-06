@@ -1,5 +1,6 @@
 package com.equipo6.reservas.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -34,5 +35,6 @@ public class Estudiante {
 
     @ManyToOne
     @JoinColumn(name = "id_carrera", nullable = false)
+    @JsonIgnoreProperties("estudiantes")
     private Carrera carrera;
 }

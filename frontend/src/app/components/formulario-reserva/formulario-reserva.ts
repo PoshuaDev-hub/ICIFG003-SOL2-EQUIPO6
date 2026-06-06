@@ -27,6 +27,7 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
   estudianteSeleccionado: Estudiante | null = null;
   submitted = false;
   cargandoHorarios = false;
+  hoyMin: string = new Date().toISOString().split('T')[0];
 
   constructor(
     private fb: FormBuilder,

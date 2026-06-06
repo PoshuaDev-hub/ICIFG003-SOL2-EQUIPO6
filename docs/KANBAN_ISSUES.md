@@ -234,9 +234,12 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 
 **Fixes post-implementación:**
 - [x] Corregir serialización circular `HorarioDisponible ↔ Sala` (`@JsonIgnoreProperties`)
+- [x] Corregir serialización circular `Sala ↔ Edificio` (`@JsonIgnoreProperties`)
+- [x] Corregir serialización circular `Estudiante ↔ Carrera` (`@JsonIgnoreProperties`)
 - [x] Precargar fecha del filtro en el formulario (`fechaInicial`)
 - [x] Mostrar nombre de la sala en el modal en vez del ID genérico
 - [x] Auto-cargar horarios al abrir el modal con fecha ya seteada
+- [x] `min` de fecha hoy en inputs date (filtro y formulario) para evitar selección manual de fechas pasadas
 
 ---
 

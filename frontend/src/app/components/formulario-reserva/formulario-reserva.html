@@ -34,7 +34,7 @@
       <!-- Fecha -->
       <div class="form-group">
         <label for="fechaInput">Fecha de Reserva</label>
-        <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()">
+        <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()" [attr.min]="hoyMin">
         <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['required']">
           La fecha es requerida.
         </span>
