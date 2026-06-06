@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { MenuNavComponent } from './components/menu-nav/menu-nav';
 import { MensajeComponent } from './components/mensaje/mensaje';
 import { TarjetaSalaComponent } from './components/tarjeta-sala/tarjeta-sala';
+import { FormularioReservaComponent } from './components/formulario-reserva/formulario-reserva';
 import { SalaService } from './services/sala.service';
 import { Sala } from './interfaces/sala.interface';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent],
+  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -22,6 +23,9 @@ export class App implements OnInit, OnDestroy {
   filtroFecha: string = new Date().toISOString().split('T')[0];
 
   constructor(private salaService: SalaService) {}
+
+  // --- Issue 14: Formulario de Reserva ---
+  salaSeleccionada: number | null = null;
 
   // --- Mensaje (éxito / error) ---
   mensajeVisible = false;
@@ -77,7 +81,16 @@ export class App implements OnInit, OnDestroy {
   }
 
   onReservar(idSala: number) {
-    this.mostrarMensaje('exito', `Seleccionada la sala ${idSala}. Formulario de reserva en construcción (Issue 14).`);
+    this.salaSeleccionada = idSala;
+  }
+
+  onReservaCreada() {
+    this.salaSeleccionada = null;
+    this.mostrarMensaje('exito', 'Reserva creada exitosamente.');
+  }
+
+  onCancelarReserva() {
+    this.salaSeleccionada = null;
   }
 
   ngOnDestroy() {
@@ -112,9 +125,7 @@ export class App implements OnInit, OnDestroy {
     this.startCarousel();
   }
 
-  simularReserva() {
-    this.mostrarMensaje('exito', 'Reserva registrada correctamente. Recibirás una confirmación pronto.');
-  }
+
 
   // --- 3. Floater Widget ---
   isFloaterOpen = false;

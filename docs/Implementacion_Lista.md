@@ -372,3 +372,67 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 - **Tipado Estricto:** El array `salas` está tipado como `Sala[]`, garantizando que cualquier discrepancia entre los campos del backend y del frontend sea detectada en tiempo de compilación.
 - **CORS:** La comunicación está habilitada gracias a `CorsConfig.java` (global) y las anotaciones `@CrossOrigin` en cada controller, permitiendo peticiones desde `http://localhost:4200`.
 
+---
+
+## Issue 14: [Sprint 5] Formulario de solicitud de reserva (RF05)
+
+**Estado:** Completado ✅
+
+### Archivos Creados
+
+1. **`frontend/src/app/components/formulario-reserva/formulario-reserva.ts` (Creado):**
+   - Componente standalone importando `ReactiveFormsModule`, `CommonModule`.
+   - `@Input() idSala: number | null` — recibe la sala seleccionada desde `App`.
+   - `@Output() reservaCreada` — notifica al padre cuando la reserva se creó exitosamente.
+   - `@Output() cancelar` — permite cerrar el modal desde el padre.
+   - Formulario reactivo con `FormBuilder` y validaciones:
+     - `estudiante`: requerido (input con autocomplete).
+     - `fecha`: requerido, validador personalizado `fechaNoAnteriorValidator`.
+     - `idHorario`: requerido (select cargado dinamicamente).
+     - `observaciones`: requerido, `minLength(15)`.
+   - `buscarEstudiantes(termino)`: llama a `EstudianteService.buscarEstudiantes()` si el termino tiene >= 2 caracteres.
+   - `seleccionarEstudiante(est)`: asigna el estudiante y limpia la lista de autocomplete.
+   - `onFechaChange()` / `cargarHorarios()`: obtiene horarios disponibles desde `SalaService.getHorariosDisponibles()`.
+   - `onSubmit()`: construye el body con `idEstado: 1` (Confirmada) y llama a `ReservaService.crearReserva()`.
+   - `resetForm()`: limpia todos los campos y el estado despues de crear una reserva.
+
+2. **`frontend/src/app/components/formulario-reserva/formulario-reserva.html` (Creado):**
+   - Modal con overlay semitransparente.
+   - Header con titulo "Nueva Reserva" y boton cerrar con SVG.
+   - Buscador de estudiante con input + lista de autocomplete.
+   - Selector de fecha con disparo de carga de horarios al cambiar.
+   - Selector de horario cargado dinamicamente y mensaje "No hay horarios disponibles".
+   - Textarea para observaciones con placeholder "Minimo 15 caracteres...".
+   - Mensajes de error especificos por cada validacion.
+   - Botones "Cancelar" y "Confirmar Reserva" con estado disabled si el formulario es invalido.
+
+3. **`frontend/src/app/components/formulario-reserva/formulario-reserva.scss` (Creado):**
+   - Overlay con flex centrado y fondo semitransparente.
+   - Modal con max-width 520px, sombra flotante, scroll interno.
+   - Flexbox en form-group para apilar label + input.
+   - Autocomplete posicionado absolutamente debajo del input.
+   - Estados focus con color variable accent-wood.
+   - Botones con colores diferenciados y disabled con opacidad reducida.
+
+### Archivos Modificados
+
+4. **`frontend/src/app/app.ts` (Modificado):**
+   - Se importo `FormularioReservaComponent`.
+   - Se agrego `salaSeleccionada: number | null = null` para controlar visibilidad del formulario.
+   - `onReservar(idSala)` ahora asigna `this.salaSeleccionada = idSala` (abre el modal).
+   - Se agregaron `onReservaCreada()` y `onCancelarReserva()`.
+   - Se elimino `simularReserva()` (reemplazado por el formulario real).
+
+5. **`frontend/src/app/app.html` (Modificado):**
+   - Se agrego `<app-formulario-reserva>` con `*ngIf="salaSeleccionada"`.
+
+6. **`.gitignore` (Creado):**
+   - Se creo `.gitignore` raiz para ignorar `node_modules/` y `package-lock.json`.
+
+### Logica y Contexto
+- **Reactive Forms:** Se eligio `ReactiveFormsModule` sobre `FormsModule` porque permite validacion sincrona mas expresiva, validadores personalizados (como `fechaNoAnteriorValidator`) y mejor escalabilidad para formularios complejos.
+- **Autocomplete de estudiante:** El input de estudiante dispara busquedas contra el backend solo cuando el usuario escribe al menos 2 caracteres, evitando llamadas innecesarias. Al seleccionar un resultado, el input se rellena con "Nombre Apellido - RUT" y el objeto `Estudiante` completo queda almacenado para el envio.
+- **Horarios dinamicos:** Al cambiar la fecha o al abrir el formulario con una sala preseleccionada, se consulta `GET /api/horarios/disponibles?sala=X&fecha=Y` que retorna solo los horarios sin reservas confirmadas.
+- **Envio a la API:** El body se construye con `idEstado: 1` (Confirmada) y se envia como `POST /api/reservas`. Errores del backend como conflicto de horario se capturan pero aun no se muestran en MensajeComponent.
+- **UX del modal:** El overlay captura clics fuera del formulario para cerrarlo. El modal tiene scroll interno para no desbordar la pantalla en movil.
+

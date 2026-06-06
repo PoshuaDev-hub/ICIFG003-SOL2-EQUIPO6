@@ -1,0 +1,182 @@
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 30, 22, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.form-modal {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 0;
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--text-main);
+    }
+
+    .btn-cerrar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0.25rem;
+      line-height: 1;
+
+      &:hover { color: var(--text-main); }
+    }
+  }
+
+  .sala-info {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--accent-wood);
+    font-weight: 500;
+  }
+
+  .reserva-form {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    position: relative;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    input, select, textarea {
+      padding: 0.75rem;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: var(--accent-wood);
+      }
+
+      &::placeholder {
+        color: var(--text-muted);
+        opacity: 0.6;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .autocomplete {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-top: none;
+      max-height: 160px;
+      overflow-y: auto;
+
+      li {
+        padding: 0.65rem 0.75rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+
+        &:hover {
+          background: var(--bg-main);
+          color: var(--text-main);
+        }
+
+        &:last-child { border-bottom: none; }
+      }
+    }
+
+    .error-msg {
+      font-size: 0.8rem;
+      color: #b91c1c;
+      margin-top: 0.15rem;
+    }
+
+    .info-msg {
+      font-size: 0.8rem;
+      color: var(--accent-wood);
+      margin-top: 0.15rem;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--accent-wood);
+      transition: all 0.3s;
+    }
+
+    .btn-cancelar {
+      background: transparent;
+      color: var(--text-muted);
+      border-color: var(--border-color);
+
+      &:hover {
+        color: var(--text-main);
+        border-color: var(--text-muted);
+      }
+    }
+
+    .btn-enviar {
+      background: var(--accent-wood);
+      color: var(--bg-main);
+      border-color: var(--accent-wood);
+
+      &:hover {
+        background: var(--accent-hover);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+<section class="form-overlay" (click)="cancelar.emit()">
+  <div class="form-modal" (click)="$event.stopPropagation()">
+    <div class="form-header">
+      <h3>Nueva Reserva</h3>
+      <button class="btn-cerrar" (click)="cancelar.emit()" aria-label="Cerrar formulario">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <p class="sala-info" *ngIf="idSala">Reservando sala ID: {{ idSala }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
+
+      <!-- Estudiante -->
+      <div class="form-group">
+        <label for="estudianteInput">Estudiante</label>
+        <input
+          id="estudianteInput"
+          type="text"
+          formControlName="estudiante"
+          (input)="buscarEstudiantes($any($event.target).value)"
+          placeholder="Buscar por nombre o RUT..."
+          autocomplete="off">
+        <ul class="autocomplete" *ngIf="estudiantesEncontrados.length > 0">
+          <li *ngFor="let est of estudiantesEncontrados" (click)="seleccionarEstudiante(est)" role="option">
+            {{ est.nombre }} {{ est.apellido }} — {{ est.rut }}
+          </li>
+        </ul>
+        <span class="error-msg" *ngIf="submitted && form.controls['estudiante'].invalid">
+          Debes seleccionar un estudiante válido.
+        </span>
+      </div>
+
+      <!-- Fecha -->
+      <div class="form-group">
+        <label for="fechaInput">Fecha de Reserva</label>
+        <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()">
+        <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['required']">
+          La fecha es requerida.
+        </span>
+        <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['fechaNoAnterior']">
+          La fecha no puede ser anterior al día actual.
+        </span>
+      </div>
+
+      <!-- Horario -->
+      <div class="form-group">
+        <label for="horarioSelect">Horario</label>
+        <select id="horarioSelect" formControlName="idHorario">
+          <option [ngValue]="null" disabled>Seleccione un horario</option>
+          <option *ngFor="let h of horariosDisponibles" [ngValue]="h.id">
+            {{ h.horaInicio }} — {{ h.horaTermino }}
+          </option>
+        </select>
+        <span class="info-msg" *ngIf="cargandoHorarios">Cargando horarios...</span>
+        <span class="info-msg" *ngIf="!cargandoHorarios && horariosDisponibles.length === 0 && form.value.fecha && idSala">
+          No hay horarios disponibles para esta sala en la fecha seleccionada.
+        </span>
+        <span class="error-msg" *ngIf="submitted && form.controls['idHorario'].invalid">
+          Debes seleccionar un horario.
+        </span>
+      </div>
+
+      <!-- Observaciones -->
+      <div class="form-group">
+        <label for="obsInput">Observaciones</label>
+        <textarea id="obsInput" formControlName="observaciones" rows="3" placeholder="Mínimo 15 caracteres..."></textarea>
+        <span class="error-msg" *ngIf="submitted && form.controls['observaciones'].errors?.['required']">
+          Las observaciones son requeridas.
+        </span>
+        <span class="error-msg" *ngIf="submitted && form.controls['observaciones'].errors?.['minlength']">
+          Las observaciones deben tener al menos 15 caracteres.
+        </span>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
+        <button type="submit" class="btn-enviar" [disabled]="submitted && form.invalid">Confirmar Reserva</button>
+      </div>
+    </form>
+  </div>
+</section>

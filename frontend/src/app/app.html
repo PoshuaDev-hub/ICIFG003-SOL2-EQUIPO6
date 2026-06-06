@@ -97,6 +97,14 @@
     </div>
   </footer>
 
+  <!-- 📋 Formulario de Reserva (Issue 14) -->
+  <app-formulario-reserva
+    *ngIf="salaSeleccionada"
+    [idSala]="salaSeleccionada"
+    (reservaCreada)="onReservaCreada()"
+    (cancelar)="onCancelarReserva()">
+  </app-formulario-reserva>
+
   <!-- 💬 Componente de mensajes (éxito / error) -->
   <app-mensaje
     [visible]="mensajeVisible"

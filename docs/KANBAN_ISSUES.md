@@ -226,11 +226,11 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Construir el formulario para registrar nuevas reservas con todas sus validaciones en tiempo real.
 
 **Tareas a realizar:**
-- [ ] Usar **Reactive Forms** de Angular para construir el formulario.
-- [ ] Crear autocompletado o buscador para el estudiante.
-- [ ] Cargar los horarios disponibles dinámicamente según la sala elegida.
-- [ ] Aplicar validaciones frontend (requeridos, correo, mínimo 15 caracteres).
-- [ ] Enviar datos a la API e invocar `MensajeComponent` con el resultado.
+- [x] Usar **Reactive Forms** de Angular para construir el formulario.
+- [x] Crear autocompletado o buscador para el estudiante.
+- [x] Cargar los horarios disponibles dinámicamente según la sala elegida.
+- [x] Aplicar validaciones frontend (requeridos, correo, mínimo 15 caracteres).
+- [x] Enviar datos a la API e invocar `MensajeComponent` con el resultado.
 
 ---
 
