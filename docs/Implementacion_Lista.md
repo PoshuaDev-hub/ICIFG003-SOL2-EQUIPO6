@@ -97,6 +97,7 @@ Se mapeó exitosamente el modelo físico de la base de datos a objetos Java. La 
 
 ### Lógica y Contexto
 Se separó la capa de acceso a datos de la capa de lógica de negocio, cumpliendo con la arquitectura limpia. Los servicios ahora actúan como intermediarios que pueden procesar validaciones antes de contactar a los repositorios, preparando el terreno para la inyección de datos desde los controladores.
+**(Actualización Sprint 5):** Se crearon los servicios faltantes `SalaService.java`, `EstudianteService.java` y `HorarioService.java` para proveer todas las operaciones CRUD y exponer los endpoints requeridos por el frontend.
 
 ---
 
@@ -112,6 +113,7 @@ Se separó la capa de acceso a datos de la capa de lógica de negocio, cumpliend
 
 ### Lógica y Contexto
 La capa de presentación quedó completamente habilitada. El uso de DTOs asegura que la API solo transfiera las referencias necesarias (como los IDs) hacia el exterior, evitando exponer el modelo completo de la base de datos y previniendo problemas de serialización JSON. Además, la configuración CORS garantiza que el frontend y el backend interactúen sin bloqueos del navegador.
+**(Actualización Sprint 5):** Se crearon los controladores faltantes `SalaController.java`, `EstudianteController.java` y `HorarioController.java` con sus respectivos endpoints REST (GET, POST, PUT, DELETE) siguiendo la arquitectura establecida y la inyección de dependencias hacia los nuevos servicios creados.
 
 ---
 
