@@ -14,7 +14,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/estudiantes")
-@CrossOrigin(origins = "http://localhost:4200")
 public class EstudianteController {
 
     @Autowired
@@ -26,6 +25,23 @@ public class EstudianteController {
     @GetMapping
     public ResponseEntity<List<Estudiante>> listarEstudiantes() {
         return ResponseEntity.ok(estudianteService.obtenerTodos());
+    }
+
+    /**
+     * Endpoint para buscar estudiantes por nombre, apellido o RUT.
+     */
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Estudiante>> buscarEstudiantes(@RequestParam String q) {
+        return ResponseEntity.ok(estudianteService.buscar(q));
+    }
+
+    @GetMapping("/buscar/rut")
+    public ResponseEntity<?> buscarEstudiantePorRut(@RequestParam String rut) {
+        List<Estudiante> resultados = estudianteService.buscarPorRutExacto(rut);
+        if (resultados.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Estudiante no encontrado con RUT: " + rut));
+        }
+        return ResponseEntity.ok(resultados.get(0));
     }
 
     /**

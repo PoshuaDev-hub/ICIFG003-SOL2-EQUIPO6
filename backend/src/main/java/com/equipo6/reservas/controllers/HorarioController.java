@@ -16,7 +16,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/horarios")
-@CrossOrigin(origins = "http://localhost:4200")
 public class HorarioController {
 
     @Autowired

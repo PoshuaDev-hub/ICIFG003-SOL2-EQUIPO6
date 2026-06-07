@@ -16,7 +16,4 @@ public interface HorarioDisponibleRepository extends JpaRepository<HorarioDispon
 
     @Query("SELECT h FROM HorarioDisponible h JOIN FETCH h.sala WHERE h.sala.id = :salaId AND NOT EXISTS (SELECT 1 FROM Reserva r WHERE r.horario.id = h.id AND r.sala.id = :salaId AND r.fechaReserva = :fecha AND r.estado.nombreEstado = 'Confirmada')")
     List<HorarioDisponible> findHorariosDisponibles(@Param("salaId") Integer salaId, @Param("fecha") LocalDate fecha);
-
-    @Query("SELECT CASE WHEN COUNT(h) > 0 THEN true ELSE false END FROM HorarioDisponible h WHERE h.sala.id = :salaId AND NOT EXISTS (SELECT 1 FROM Reserva r WHERE r.horario.id = h.id AND r.sala.id = :salaId AND r.fechaReserva = :fecha AND r.estado.nombreEstado = 'Confirmada')")
-    boolean existsDisponible(@Param("salaId") Integer salaId, @Param("fecha") LocalDate fecha);
 }

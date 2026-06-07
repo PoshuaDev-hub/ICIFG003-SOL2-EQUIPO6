@@ -7,13 +7,14 @@ import { MensajeComponent } from './components/mensaje/mensaje';
 import { TarjetaSalaComponent } from './components/tarjeta-sala/tarjeta-sala';
 import { FormularioReservaComponent } from './components/formulario-reserva/formulario-reserva';
 import { ListadoReservasComponent } from './components/listado-reservas/listado-reservas';
+import { BuscadorReservasComponent } from './components/buscador-reservas/buscador-reservas';
 import { SalaService } from './services/sala.service';
 import { Sala } from './interfaces/sala.interface';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent, ListadoReservasComponent],
+  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent, ListadoReservasComponent, BuscadorReservasComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -23,6 +24,7 @@ export class App implements OnInit, OnDestroy {
   filtroCapacidad: number = 0;
   filtroFecha: string = new Date().toISOString().split('T')[0];
   hoy: string = this.filtroFecha;
+  cargandoSalas = false;
 
   constructor(private salaService: SalaService) {}
 
@@ -32,13 +34,27 @@ export class App implements OnInit, OnDestroy {
   // --- Issue 15: Listado de reservas por sala (RF04) ---
   salaParaListado: Sala | null = null;
 
+  mostrarBuscadorReservas = false;
+
   onVerReservas(idSala: number) {
     const sala = this.salas.find(s => s.id === idSala);
     if (sala) this.salaParaListado = sala;
   }
 
+  trackPorId(_index: number, sala: Sala): number {
+    return sala.id;
+  }
+
   onCerrarListado() {
     this.salaParaListado = null;
+  }
+
+  abrirBuscadorReservas() {
+    this.mostrarBuscadorReservas = true;
+  }
+
+  cerrarBuscadorReservas() {
+    this.mostrarBuscadorReservas = false;
   }
 
   // --- Mensaje (éxito / error) ---
@@ -74,20 +90,32 @@ export class App implements OnInit, OnDestroy {
 
   // --- Métodos Issue 13 ---
   cargarSalas() {
+    this.cargandoSalas = true;
     this.salaService.getSalas().subscribe({
-      next: (data) => this.salas = data,
+      next: (data) => {
+        this.salas = data;
+        this.cargandoSalas = false;
+      },
       error: (err) => {
         console.error('Error cargando salas', err);
+        this.cargandoSalas = false;
         this.mostrarMensaje('error', 'No se pudieron cargar las salas desde el servidor.');
       }
     });
   }
 
   aplicarFiltros() {
+    this.cargandoSalas = true;
     if (this.filtroCapacidad > 0) {
       this.salaService.getSalasPorCapacidad(this.filtroCapacidad).subscribe({
-        next: (data) => this.salas = data,
-        error: (err) => console.error('Error filtrando salas', err)
+        next: (data) => {
+          this.salas = data;
+          this.cargandoSalas = false;
+        },
+        error: (err) => {
+          console.error('Error filtrando salas', err);
+          this.cargandoSalas = false;
+        }
       });
     } else {
       this.cargarSalas();

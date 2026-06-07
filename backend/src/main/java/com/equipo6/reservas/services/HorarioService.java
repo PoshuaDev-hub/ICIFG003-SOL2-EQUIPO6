@@ -5,6 +5,7 @@ import com.equipo6.reservas.repositories.HorarioDisponibleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class HorarioService {
 
     @Autowired
@@ -44,7 +46,7 @@ public class HorarioService {
      */
     public List<HorarioDisponible> obtenerDisponibles(Integer salaId, LocalDate fecha) {
         log.info("Obteniendo horarios disponibles para la sala ID: {} en la fecha: {}", salaId, fecha);
-        return horarioRepository.findHorariosDisponiblesNativos(salaId, fecha);
+        return horarioRepository.findHorariosDisponibles(salaId, fecha);
     }
 
     /**
@@ -62,6 +64,7 @@ public class HorarioService {
      * @param horario Entidad horario a crear
      * @return Horario creado
      */
+    @Transactional
     public HorarioDisponible crearHorario(HorarioDisponible horario) {
         log.info("Creando nuevo horario");
         return horarioRepository.save(horario);
@@ -73,6 +76,7 @@ public class HorarioService {
      * @param horarioActualizado Datos nuevos del horario
      * @return Horario actualizado
      */
+    @Transactional
     public HorarioDisponible actualizarHorario(Integer id, HorarioDisponible horarioActualizado) {
         log.info("Actualizando horario con ID: {}", id);
         return horarioRepository.findById(id).map(horario -> {
@@ -87,6 +91,7 @@ public class HorarioService {
      * Elimina un horario por su ID.
      * @param id ID del horario a eliminar
      */
+    @Transactional
     public void eliminarHorario(Integer id) {
         log.info("Eliminando horario con ID: {}", id);
         horarioRepository.deleteById(id);

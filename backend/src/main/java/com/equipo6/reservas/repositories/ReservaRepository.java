@@ -24,4 +24,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     // JPQL: Verificar si existe una reserva confirmada para misma sala+fecha+horario (Issue 8)
     @Query("SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END FROM Reserva r WHERE r.sala.id = :salaId AND r.fechaReserva = :fecha AND r.horario.id = :horarioId AND r.estado.nombreEstado = 'Confirmada'")
     boolean existsReservaConfirmada(@Param("salaId") Integer salaId, @Param("fecha") LocalDate fecha, @Param("horarioId") Integer horarioId);
+
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.estudiante e WHERE e.rut = :rut")
+    List<Reserva> findByEstudianteRut(@Param("rut") String rut);
 }

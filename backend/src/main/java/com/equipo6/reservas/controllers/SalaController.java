@@ -14,15 +14,11 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/salas")
-@CrossOrigin(origins = "http://localhost:4200")
 public class SalaController {
 
     @Autowired
     private SalaService salaService;
 
-    /**
-     * Endpoint para listar todas las salas o filtrar por capacidad mínima.
-     */
     @GetMapping
     public ResponseEntity<List<Sala>> listarSalas(@RequestParam(required = false) Integer capacidad) {
         if (capacidad != null && capacidad > 0) {
@@ -31,9 +27,6 @@ public class SalaController {
         return ResponseEntity.ok(salaService.obtenerTodas());
     }
 
-    /**
-     * Endpoint para obtener una sala específica por su ID.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerSala(@PathVariable Integer id) {
         return salaService.obtenerPorId(id)
@@ -41,18 +34,12 @@ public class SalaController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    /**
-     * Endpoint para crear una nueva sala.
-     */
     @PostMapping
     public ResponseEntity<Sala> crearSala(@RequestBody Sala sala) {
         Sala nuevaSala = salaService.crearSala(sala);
         return new ResponseEntity<>(nuevaSala, HttpStatus.CREATED);
     }
 
-    /**
-     * Endpoint para actualizar una sala existente.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarSala(@PathVariable Integer id, @RequestBody Sala sala) {
         try {
@@ -63,9 +50,6 @@ public class SalaController {
         }
     }
 
-    /**
-     * Endpoint para eliminar una sala.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarSala(@PathVariable Integer id) {
         salaService.eliminarSala(id);

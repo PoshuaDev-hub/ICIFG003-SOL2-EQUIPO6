@@ -8,9 +8,13 @@ public class ReservaDTO {
     private Integer id;
     private LocalDate fechaReserva;
     private String observacion;
-    // En lugar de enviar los objetos completos, enviamos solo los IDs
     private Integer idEstudiante;
     private Integer idSala;
     private Integer idHorario;
     private Integer idEstado;
+    private String nombreEstudiante;
+    private String nombreSala;
+    private String horaInicio;
+    private String horaTermino;
+    private String nombreEstado;
 }

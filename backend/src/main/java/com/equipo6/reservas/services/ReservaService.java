@@ -3,15 +3,19 @@ package com.equipo6.reservas.services;
 import com.equipo6.reservas.dtos.ReservaDTO;
 import com.equipo6.reservas.models.*;
 import com.equipo6.reservas.repositories.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@Transactional(readOnly = true)
 public class ReservaService {
 
     @Autowired
@@ -22,7 +26,10 @@ public class ReservaService {
     @Autowired private HorarioDisponibleRepository horarioRepository;
     @Autowired private EstadoReservaRepository estadoRepository;
 
+    @Transactional
     public ReservaDTO crearReserva(ReservaDTO dto) {
+        log.info("Creando reserva: sala={}, fecha={}, horario={}, estudiante={}",
+                dto.getIdSala(), dto.getFechaReserva(), dto.getIdHorario(), dto.getIdEstudiante());
         validarFecha(dto.getFechaReserva());
         validarObservacion(dto.getObservacion());
 
@@ -49,6 +56,11 @@ public class ReservaService {
 
         Reserva reservaGuardada = reservaRepository.save(reserva);
         dto.setId(reservaGuardada.getId());
+        dto.setNombreEstudiante(estudiante.getNombre() + " " + estudiante.getApellido());
+        dto.setNombreSala(sala.getNombreSala());
+        dto.setHoraInicio(horario.getHoraInicio().toString());
+        dto.setHoraTermino(horario.getHoraTermino().toString());
+        dto.setNombreEstado(estado.getNombreEstado());
 
         return dto;
     }
@@ -60,7 +72,7 @@ public class ReservaService {
     }
 
     private void validarObservacion(String observacion) {
-        if (observacion == null || observacion.trim().length() < 15) {
+        if (observacion != null && observacion.trim().length() < 15) {
             throw new IllegalArgumentException("La observación debe tener al menos 15 caracteres.");
         }
     }
@@ -73,16 +85,31 @@ public class ReservaService {
     }
 
     public List<ReservaDTO> obtenerTodas() {
-        return reservaRepository.findAll().stream().map(reserva -> {
-            ReservaDTO dto = new ReservaDTO();
-            dto.setId(reserva.getId());
-            dto.setFechaReserva(reserva.getFechaReserva());
-            dto.setObservacion(reserva.getObservacion());
-            dto.setIdEstudiante(reserva.getEstudiante().getId());
-            dto.setIdSala(reserva.getSala().getId());
-            dto.setIdHorario(reserva.getHorario().getId());
-            dto.setIdEstado(reserva.getEstado().getIdEstado());
-            return dto;
-        }).collect(Collectors.toList());
+        return reservaRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<ReservaDTO> obtenerPorSalaYFecha(Integer idSala, LocalDate fecha) {
+        return reservaRepository.findReservasPorSalaYFecha(idSala, fecha).stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    private ReservaDTO toDto(Reserva reserva) {
+        ReservaDTO dto = new ReservaDTO();
+        dto.setId(reserva.getId());
+        dto.setFechaReserva(reserva.getFechaReserva());
+        dto.setObservacion(reserva.getObservacion());
+        dto.setIdEstudiante(reserva.getEstudiante().getId());
+        dto.setIdSala(reserva.getSala().getId());
+        dto.setIdHorario(reserva.getHorario().getId());
+        dto.setIdEstado(reserva.getEstado().getIdEstado());
+        dto.setNombreEstudiante(reserva.getEstudiante().getNombre() + " " + reserva.getEstudiante().getApellido());
+        dto.setNombreSala(reserva.getSala().getNombreSala());
+        dto.setHoraInicio(reserva.getHorario().getHoraInicio().toString());
+        dto.setHoraTermino(reserva.getHorario().getHoraTermino().toString());
+        dto.setNombreEstado(reserva.getEstado().getNombreEstado());
+        return dto;
+    }
+
+    public List<ReservaDTO> obtenerPorRut(String rut) {
+        return reservaRepository.findByEstudianteRut(rut).stream().map(this::toDto).collect(Collectors.toList());
     }
 }
