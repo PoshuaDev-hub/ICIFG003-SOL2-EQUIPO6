@@ -18,7 +18,7 @@ public class Reserva {
     @Column(name = "fecha_reserva", nullable = false)
     private LocalDate fechaReserva;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 255)
     private String observacion;
 
     @Column(name = "fecha_creacion", nullable = false)

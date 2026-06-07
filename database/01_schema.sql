@@ -56,10 +56,19 @@ CREATE TABLE ESTADO_RESERVA (
 CREATE TABLE RESERVA (
     id SERIAL PRIMARY KEY,
     fecha_reserva DATE NOT NULL,
-    observacion VARCHAR(255) NOT NULL,
+    observacion VARCHAR(255),
     fecha_creacion TIMESTAMP NOT NULL,
     id_estudiante INT REFERENCES ESTUDIANTE(id),
     id_sala INT REFERENCES SALA(id),
     id_horario INT REFERENCES HORARIO_DISPONIBLE(id),
     id_estado INT REFERENCES ESTADO_RESERVA(id_estado)
 );
+
+-- Índices para rendimiento de búsquedas frecuentes
+CREATE INDEX idx_estudiante_nombre ON ESTUDIANTE (nombre);
+CREATE INDEX idx_estudiante_apellido ON ESTUDIANTE (apellido);
+CREATE INDEX idx_estudiante_rut ON ESTUDIANTE (rut);
+CREATE INDEX idx_horario_sala ON HORARIO_DISPONIBLE (id_sala);
+CREATE INDEX idx_reserva_sala_fecha ON RESERVA (id_sala, fecha_reserva);
+CREATE INDEX idx_reserva_horario ON RESERVA (id_horario);
+CREATE INDEX idx_reserva_estudiante ON RESERVA (id_estudiante);

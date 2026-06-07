@@ -15,7 +15,7 @@ public class HorarioDisponible {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sala", nullable = false)
     @JsonIgnoreProperties("horariosDisponibles")
     private Sala sala;
