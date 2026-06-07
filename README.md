@@ -19,40 +19,41 @@
 
 ---
 
-### Paso 1 — Crear y poblar la base de datos
+### Paso 1 — Crear la base de datos
 
-Abre **pgAdmin** o una terminal `psql` y ejecuta:
-
-```sql
--- 1. Crear la base de datos (solo la primera vez)
-CREATE DATABASE reserva_salas_db;
-```
-
-Luego, desde la raíz del proyecto:
+Crea un usuario en PostgreSQL:
 
 ```bash
-# Crear las tablas
-psql -U postgres -h localhost -d reserva_salas_db -f database/01_schema.sql
-
-# Insertar datos de prueba
-psql -U postgres -h localhost -d reserva_salas_db -f database/02_seed.sql
+sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD '1234';"
+sudo -u postgres psql -c "ALTER USER postgres WITH SUPERUSER;"
 ```
 
-> Si tienes contraseña en PostgreSQL, antepón `PGPASSWORD=tu_clave`:
-> ```bash
-> PGPASSWORD=1234 psql -U postgres -h localhost -d reserva_salas_db -f database/01_schema.sql
-> ```
+Crea la base de datos:
+
+```bash
+sudo -u postgres psql -c "CREATE DATABASE reserva_salas_db OWNER postgres;"
+```
+
+Carga el esquema y los datos de prueba:
+
+```bash
+PGPASSWORD=1234 psql -U postgres -h localhost -d reserva_salas_db -f database/01_schema.sql
+
+PGPASSWORD=1234 psql -U postgres -h localhost -d reserva_salas_db -f database/02_seed.sql
+```
+
+El archivo `02_seed.sql` inserta: 4 carreras, 2 edificios, 6 salas, 2 estados de reserva, 6 estudiantes, 30 horarios (5 por sala) y 10 reservas iniciales.
 
 ---
 
-### Paso 2 — Configurar las credenciales del backend
+### Paso 2 — Verificar las credenciales del backend
 
-Abre `backend/src/main/resources/application.properties` y ajusta:
+Abre `backend/src/main/resources/application.properties` y confirma que coincidan con las credenciales que creaste:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/reserva_salas_db
 spring.datasource.username=postgres
-spring.datasource.password=TU_CONTRASEÑA_AQUI
+spring.datasource.password=1234
 ```
 
 ---
