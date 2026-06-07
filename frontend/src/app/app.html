@@ -57,9 +57,9 @@
         </div>
 
         <div class="cards-grid" *ngIf="salas.length > 0">
-          <app-tarjeta-sala
-            *ngFor="let s of salas"
-            [sala]="s"
+          <app-tarjeta-sala 
+            *ngFor="let s of salas" 
+            [sala]="s" 
             (reservar)="onReservar($event)"
             (verReservas)="onVerReservas($event)">
           </app-tarjeta-sala>
