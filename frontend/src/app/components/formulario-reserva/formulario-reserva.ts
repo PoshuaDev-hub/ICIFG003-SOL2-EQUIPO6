@@ -27,6 +27,8 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
   estudianteSeleccionado: Estudiante | null = null;
   submitted = false;
   cargandoHorarios = false;
+  enviando = false;
+  errorMsg: string = '';
   hoyMin: string = new Date().toISOString().split('T')[0];
 
   constructor(
@@ -107,7 +109,14 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
 
   onSubmit() {
     this.submitted = true;
-    if (this.form.invalid || !this.estudianteSeleccionado || !this.idSala) return;
+    this.errorMsg = '';
+
+    if (this.form.invalid) return;
+    if (!this.estudianteSeleccionado) {
+      this.errorMsg = 'Debes seleccionar un estudiante de la lista de sugerencias.';
+      return;
+    }
+    if (!this.idSala) return;
 
     const body = {
       fechaReserva: this.form.value.fecha,
@@ -118,13 +127,23 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
       idEstado: 1
     };
 
+    this.enviando = true;
     this.reservaService.crearReserva(body).subscribe({
       next: () => {
+        this.enviando = false;
         this.reservaCreada.emit();
         this.resetForm();
       },
       error: (err) => {
+        this.enviando = false;
         console.error('Error creando reserva', err);
+        if (err.status === 400) {
+          this.errorMsg = 'Datos inválidos. Revisa los campos e intenta de nuevo.';
+        } else if (err.status === 409) {
+          this.errorMsg = 'Conflicto de horario: ya existe una reserva en ese mismo bloque.';
+        } else {
+          this.errorMsg = 'Error del servidor. Intenta de nuevo más tarde.';
+        }
       }
     });
   }

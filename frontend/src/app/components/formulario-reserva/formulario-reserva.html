@@ -73,10 +73,15 @@
         </span>
       </div>
 
+      <!-- Error general -->
+      <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+
       <!-- Botones -->
       <div class="form-actions">
         <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
-        <button type="submit" class="btn-enviar" [disabled]="submitted && form.invalid">Confirmar Reserva</button>
+        <button type="submit" class="btn-enviar" [disabled]="enviando || (submitted && form.invalid)">
+          {{ enviando ? 'Enviando...' : 'Confirmar Reserva' }}
+        </button>
       </div>
     </form>
   </div>
