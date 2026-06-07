@@ -1,7 +1,7 @@
 <div class="lib-layout">
   
-  <!-- 🧭 Navbar (componente reutilizable con hamburguesa) -->
-  <app-menu-nav></app-menu-nav>
+  <!-- 🧭 Navbar -->
+  <app-menu-nav (misReservasClick)="abrirBuscadorReservas()"></app-menu-nav>
 
   <!-- 🖼️ Carrusel Hero (debajo del navbar) -->
   <section class="hero-carousel">
@@ -56,16 +56,20 @@
           </div>
         </div>
 
-        <div class="cards-grid" *ngIf="salas.length > 0">
+        <div class="loading-msg" *ngIf="cargandoSalas">
+          <p>Cargando salas...</p>
+        </div>
+
+        <div class="cards-grid" *ngIf="!cargandoSalas && salas.length > 0">
           <app-tarjeta-sala 
-            *ngFor="let s of salas" 
+            *ngFor="let s of salas; trackBy: trackPorId" 
             [sala]="s" 
             (reservar)="onReservar($event)"
             (verReservas)="onVerReservas($event)">
           </app-tarjeta-sala>
         </div>
         
-        <div class="no-salas-msg" *ngIf="salas.length === 0">
+        <div class="no-salas-msg" *ngIf="!cargandoSalas && salas.length === 0">
           <p>No se encontraron salas con los filtros seleccionados.</p>
         </div>
         
@@ -116,6 +120,12 @@
     [fecha]="filtroFecha"
     (cerrar)="onCerrarListado()">
   </app-listado-reservas>
+
+  <!-- 🔍 Buscador de reservas por RUT -->
+  <app-buscador-reservas
+    *ngIf="mostrarBuscadorReservas"
+    (cerrar)="cerrarBuscadorReservas()">
+  </app-buscador-reservas>
 
   <!-- 💬 Componente de mensajes (éxito / error) -->
   <app-mensaje

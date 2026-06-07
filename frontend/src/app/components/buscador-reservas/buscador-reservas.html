@@ -1,0 +1,53 @@
+<section class="buscador-overlay" (click)="cerrar.emit()">
+  <div class="buscador-modal" (click)="$event.stopPropagation()">
+    <div class="buscador-header">
+      <h3>Mis Reservas</h3>
+      <button class="btn-cerrar" (click)="cerrar.emit()" aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="buscar-input-group">
+      <label for="rutBuscar">Ingresa tu RUT</label>
+      <div class="input-row">
+        <input id="rutBuscar" type="text" [(ngModel)]="rut" placeholder="12345678-5" (keyup.enter)="buscar()">
+        <button class="btn-buscar" (click)="buscar()" [disabled]="!rut.trim()">Buscar</button>
+      </div>
+    </div>
+
+    <p class="cargando-msg" *ngIf="cargando">Buscando reservas...</p>
+    <p class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+    <div class="tabla-wrapper" *ngIf="buscado && !cargando && reservas.length > 0">
+      <p class="contador">Reservas encontradas: <strong>{{ reservas.length }}</strong></p>
+      <table class="tabla-reservas">
+        <thead>
+          <tr>
+            <th>Sala</th>
+            <th>Fecha</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of reservas">
+            <td>{{ r.nombreSala }}</td>
+            <td>{{ r.fechaReserva }}</td>
+            <td>{{ r.horaInicio }}</td>
+            <td>{{ r.horaTermino }}</td>
+            <td>
+              <span class="estado-badge" [class.confirmada]="r.nombreEstado === 'Confirmada'" [class.cancelada]="r.nombreEstado === 'Cancelada'">
+                {{ r.nombreEstado }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sin-reservas" *ngIf="buscado && !cargando && reservas.length === 0 && !errorMsg">
+      No se encontraron reservas para este RUT.
+    </p>
+  </div>
+</section>

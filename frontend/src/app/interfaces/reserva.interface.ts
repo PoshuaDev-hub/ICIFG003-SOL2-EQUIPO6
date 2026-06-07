@@ -26,3 +26,18 @@ export interface ReservaRequest {
   idHorario: number;
   idEstado: number;
 }
+
+export interface ReservaDTO {
+  id: number;
+  fechaReserva: string;
+  observacion: string;
+  idEstudiante: number;
+  idSala: number;
+  idHorario: number;
+  idEstado: number;
+  nombreEstudiante: string;
+  nombreSala: string;
+  horaInicio: string;
+  horaTermino: string;
+  nombreEstado: string;
+}

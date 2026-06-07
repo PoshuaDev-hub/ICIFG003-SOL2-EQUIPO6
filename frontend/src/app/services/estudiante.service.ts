@@ -12,25 +12,12 @@ export class EstudianteService {
 
   constructor(private http: HttpClient) {}
 
-  // RF05: Obtener todos los estudiantes para el buscador
-  getEstudiantes(): Observable<Estudiante[]> {
-    return this.http.get<Estudiante[]>(this.baseUrl);
+  buscarEstudiantePorRut(rut: string): Observable<Estudiante> {
+    const params = new HttpParams().set('rut', rut);
+    return this.http.get<Estudiante>(`${this.baseUrl}/buscar/rut`, { params });
   }
 
-  // RF05: Buscar estudiantes por nombre o RUT
-  buscarEstudiantes(termino: string): Observable<Estudiante[]> {
-    const params = new HttpParams().set('q', termino);
-    return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar`, { params });
-  }
-
-  // RF05: Buscar un estudiante por RUT exacto
-  buscarEstudiantePorRut(rut: string): Observable<Estudiante[]> {
-    const params = new HttpParams().set('q', rut);
-    return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar`, { params });
-  }
-
-  // RF05: Obtener un estudiante por ID
-  getEstudianteById(id: number): Observable<Estudiante> {
-    return this.http.get<Estudiante>(`${this.baseUrl}/${id}`);
+  crearEstudiante(rut: string, nombre: string, apellido: string): Observable<Estudiante> {
+    return this.http.post<Estudiante>(this.baseUrl, { rut, nombre, apellido });
   }
 }

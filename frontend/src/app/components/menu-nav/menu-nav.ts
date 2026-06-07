@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class MenuNavComponent {
   isScrolled = false;
   isMenuOpen = false;
+  @Output() misReservasClick = new EventEmitter<void>();
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

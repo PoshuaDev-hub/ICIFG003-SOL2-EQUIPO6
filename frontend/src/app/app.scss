@@ -166,6 +166,29 @@
     }
   }
 
+  .loading-msg {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-left: .6rem;
+      border: 2px solid var(--accent-wood);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+    }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
   .no-salas-msg {
     padding: 3rem;
     text-align: center;
@@ -179,42 +202,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2.5rem;
-    
-    .room-card {
-      background: var(--bg-card);
-      padding: 2.5rem;
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-soft);
-      }
-      
-      h3 { font-size: 1.6rem; color: var(--text-main); }
-      .capacity { font-weight: 600; color: var(--accent-wood); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-      .desc { color: var(--text-muted); line-height: 1.6; font-size: 1rem; }
-      
-      .btn-reserve {
-        margin-top: auto;
-        padding: 1rem;
-        background: transparent;
-        color: var(--accent-wood);
-        border: 1px solid var(--accent-wood);
-        font-family: var(--font-ui);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        
-        &:hover {
-          background: var(--accent-wood);
-          color: var(--bg-main);
-        }
-      }
-    }
   }
 }
 

@@ -1,6 +1,6 @@
 export interface Horario {
   id: number;
-  idSala: number;
   horaInicio: string;
   horaTermino: string;
+  sala?: { id: number };
 }

@@ -16,7 +16,7 @@
     <ul>
       <li><a href="#" class="active" (click)="closeMenu()">Inicio</a></li>
       <li><a href="#salas" (click)="closeMenu()">Reservar Salas</a></li>
-      <li><a href="#actividad" (click)="closeMenu()">Mis Reservas</a></li>
+      <li><a href="#" (click)="misReservasClick.emit(); closeMenu(); $event.preventDefault()">Mis Reservas</a></li>
     </ul>
   </nav>
 
