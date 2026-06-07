@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReservaService } from '../../services/reserva.service';
-import { Reserva } from '../../interfaces/reserva.interface';
+import { ReservaDTO } from '../../interfaces/reserva.interface';
 
 @Component({
   selector: 'app-listado-reservas',
@@ -16,7 +16,7 @@ export class ListadoReservasComponent implements OnChanges {
   @Input({ required: true }) fecha!: string;
   @Output() cerrar = new EventEmitter<void>();
 
-  reservas: Reserva[] = [];
+  reservas: ReservaDTO[] = [];
   cargando = false;
 
   constructor(private reservaService: ReservaService) {}
@@ -27,7 +27,6 @@ export class ListadoReservasComponent implements OnChanges {
     }
   }
 
-  // RF04: Listado de reservas por sala y fecha
   cargarReservas() {
     this.cargando = true;
     this.reservaService.getReservasPorSalaYFecha(this.idSala, this.fecha).subscribe({
