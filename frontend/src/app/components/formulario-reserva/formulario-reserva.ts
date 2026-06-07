@@ -56,11 +56,17 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
 
   private initForm() {
     this.form = this.fb.group({
-      estudiante: ['', Validators.required],
+      estudiante: ['', [Validators.required, this.rutValidator]],
       fecha: ['', [Validators.required, this.fechaNoAnteriorValidator]],
       idHorario: [null, Validators.required],
       observaciones: ['', [Validators.required, Validators.minLength(15)]]
     });
+  }
+
+  private rutValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+    const rutRegex = /^\d{1,8}-[\dkK]$/;
+    return rutRegex.test(control.value.trim()) ? null : { rutInvalido: true };
   }
 
   private fechaNoAnteriorValidator(control: AbstractControl): ValidationErrors | null {
@@ -112,40 +118,59 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
     this.errorMsg = '';
 
     if (this.form.invalid) return;
-    if (!this.estudianteSeleccionado) {
-      this.errorMsg = 'Debes seleccionar un estudiante de la lista de sugerencias.';
-      return;
-    }
     if (!this.idSala) return;
+    const salaId: number = this.idSala;
 
-    const body = {
-      fechaReserva: this.form.value.fecha,
-      observacion: this.form.value.observaciones,
-      idEstudiante: this.estudianteSeleccionado.id,
-      idSala: this.idSala,
-      idHorario: this.form.value.idHorario,
-      idEstado: 1
+    const rut = this.form.value.estudiante.trim();
+
+    const enviarConEstudiante = (idEstudiante: number) => {
+      const body = {
+        fechaReserva: this.form.value.fecha,
+        observacion: this.form.value.observaciones,
+        idEstudiante,
+        idSala: salaId,
+        idHorario: this.form.value.idHorario,
+        idEstado: 1
+      };
+
+      this.enviando = true;
+      this.reservaService.crearReserva(body).subscribe({
+        next: () => {
+          this.enviando = false;
+          this.reservaCreada.emit();
+          this.resetForm();
+        },
+        error: (err) => {
+          this.enviando = false;
+          console.error('Error creando reserva', err);
+          if (err.status === 400) {
+            this.errorMsg = 'Datos inválidos. Revisa los campos e intenta de nuevo.';
+          } else if (err.status === 409) {
+            this.errorMsg = 'Conflicto de horario: ya existe una reserva en ese mismo bloque.';
+          } else {
+            this.errorMsg = 'Error del servidor. Intenta de nuevo más tarde.';
+          }
+        }
+      });
     };
 
-    this.enviando = true;
-    this.reservaService.crearReserva(body).subscribe({
-      next: () => {
-        this.enviando = false;
-        this.reservaCreada.emit();
-        this.resetForm();
-      },
-      error: (err) => {
-        this.enviando = false;
-        console.error('Error creando reserva', err);
-        if (err.status === 400) {
-          this.errorMsg = 'Datos inválidos. Revisa los campos e intenta de nuevo.';
-        } else if (err.status === 409) {
-          this.errorMsg = 'Conflicto de horario: ya existe una reserva en ese mismo bloque.';
-        } else {
-          this.errorMsg = 'Error del servidor. Intenta de nuevo más tarde.';
+    if (this.estudianteSeleccionado) {
+      enviarConEstudiante(this.estudianteSeleccionado.id);
+    } else {
+      this.estudianteService.buscarEstudiantePorRut(rut).subscribe({
+        next: (data) => {
+          if (data.length === 1) {
+            this.estudianteSeleccionado = data[0];
+            enviarConEstudiante(data[0].id);
+          } else {
+            this.errorMsg = 'Estudiante no encontrado. Verifica el RUT ingresado.';
+          }
+        },
+        error: () => {
+          this.errorMsg = 'Error al buscar el estudiante. Intenta de nuevo.';
         }
-      }
-    });
+      });
+    }
   }
 
   resetForm() {

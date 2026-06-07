@@ -23,6 +23,12 @@ export class EstudianteService {
     return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar`, { params });
   }
 
+  // RF05: Buscar un estudiante por RUT exacto
+  buscarEstudiantePorRut(rut: string): Observable<Estudiante[]> {
+    const params = new HttpParams().set('q', rut);
+    return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar`, { params });
+  }
+
   // RF05: Obtener un estudiante por ID
   getEstudianteById(id: number): Observable<Estudiante> {
     return this.http.get<Estudiante>(`${this.baseUrl}/${id}`);

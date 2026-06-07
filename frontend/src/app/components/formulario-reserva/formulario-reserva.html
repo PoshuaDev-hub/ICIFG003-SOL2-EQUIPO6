@@ -26,8 +26,11 @@
             {{ est.nombre }} {{ est.apellido }} — {{ est.rut }}
           </li>
         </ul>
-        <span class="error-msg" *ngIf="submitted && form.controls['estudiante'].invalid">
-          Debes seleccionar un estudiante válido.
+        <span class="error-msg" *ngIf="submitted && form.controls['estudiante'].errors?.['required']">
+          El RUT del estudiante es requerido.
+        </span>
+        <span class="error-msg" *ngIf="submitted && form.controls['estudiante'].errors?.['rutInvalido']">
+          Ingresa un RUT válido (ej: 12345678-5).
         </span>
       </div>
 
