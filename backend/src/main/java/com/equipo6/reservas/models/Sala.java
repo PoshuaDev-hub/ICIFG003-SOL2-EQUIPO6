@@ -1,5 +1,6 @@
 package com.equipo6.reservas.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,5 +40,6 @@ public class Sala {
     private Edificio edificio;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<HorarioDisponible> horariosDisponibles;
 }
