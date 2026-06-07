@@ -1,0 +1,51 @@
+<div class="listado-overlay">
+  <div class="listado-modal">
+    <div class="listado-header">
+      <div>
+        <h3>Reservas de {{ salaNombre }}</h3>
+        <p class="fecha-info">Fecha consultada: {{ fecha }}</p>
+      </div>
+      <button class="btn-cerrar" (click)="cerrar.emit()" aria-label="Cerrar listado de reservas">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <p class="contador">Reservas realizadas: <strong>{{ reservas.length }}</strong></p>
+
+    <p class="cargando-msg" *ngIf="cargando">Cargando reservas...</p>
+
+    <div class="tabla-wrapper" *ngIf="!cargando && reservas.length > 0">
+      <table class="tabla-reservas">
+        <thead>
+          <tr>
+            <th>Sala</th>
+            <th>N&deg; Reserva</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of reservas">
+            <td>{{ r.sala.nombreSala }}</td>
+            <td>{{ r.id }}</td>
+            <td>{{ r.horario.horaInicio }}</td>
+            <td>{{ r.horario.horaTermino }}</td>
+            <td>
+              <span
+                class="estado-badge"
+                [class.confirmada]="r.estado.nombreEstado === 'Confirmada'"
+                [class.cancelada]="r.estado.nombreEstado === 'Cancelada'">
+                {{ r.estado.nombreEstado }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sin-reservas" *ngIf="!cargando && reservas.length === 0">
+      No hay reservas registradas para esta sala en la fecha seleccionada.
+    </p>
+  </div>
+</div>

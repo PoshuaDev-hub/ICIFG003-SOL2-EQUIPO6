@@ -57,10 +57,11 @@
         </div>
 
         <div class="cards-grid" *ngIf="salas.length > 0">
-          <app-tarjeta-sala 
-            *ngFor="let s of salas" 
-            [sala]="s" 
-            (reservar)="onReservar($event)">
+          <app-tarjeta-sala
+            *ngFor="let s of salas"
+            [sala]="s"
+            (reservar)="onReservar($event)"
+            (verReservas)="onVerReservas($event)">
           </app-tarjeta-sala>
         </div>
         
@@ -106,6 +107,15 @@
     (reservaCreada)="onReservaCreada()"
     (cancelar)="onCancelarReserva()">
   </app-formulario-reserva>
+
+  <!-- 📊 Listado de reservas por sala (Issue 15 / RF04) -->
+  <app-listado-reservas
+    *ngIf="salaParaListado"
+    [idSala]="salaParaListado.id"
+    [salaNombre]="salaParaListado.nombreSala"
+    [fecha]="filtroFecha"
+    (cerrar)="onCerrarListado()">
+  </app-listado-reservas>
 
   <!-- 💬 Componente de mensajes (éxito / error) -->
   <app-mensaje

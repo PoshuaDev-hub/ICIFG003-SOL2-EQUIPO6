@@ -6,13 +6,14 @@ import { MenuNavComponent } from './components/menu-nav/menu-nav';
 import { MensajeComponent } from './components/mensaje/mensaje';
 import { TarjetaSalaComponent } from './components/tarjeta-sala/tarjeta-sala';
 import { FormularioReservaComponent } from './components/formulario-reserva/formulario-reserva';
+import { ListadoReservasComponent } from './components/listado-reservas/listado-reservas';
 import { SalaService } from './services/sala.service';
 import { Sala } from './interfaces/sala.interface';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent],
+  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent, ListadoReservasComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -27,6 +28,18 @@ export class App implements OnInit, OnDestroy {
 
   // --- Issue 14: Formulario de Reserva ---
   salaSeleccionada: Sala | null = null;
+
+  // --- Issue 15: Listado de reservas por sala (RF04) ---
+  salaParaListado: Sala | null = null;
+
+  onVerReservas(idSala: number) {
+    const sala = this.salas.find(s => s.id === idSala);
+    if (sala) this.salaParaListado = sala;
+  }
+
+  onCerrarListado() {
+    this.salaParaListado = null;
+  }
 
   // --- Mensaje (éxito / error) ---
   mensajeVisible = false;

@@ -13,11 +13,19 @@
     <p class="sala-horario">
       <span class="label">Horario:</span> 08:00 - 15:30
     </p>
-    <button
-      class="btn-reservar"
-      (click)="reservar.emit(sala.id)"
-      [attr.aria-label]="'Reservar ' + sala.nombreSala">
-      Reservar
-    </button>
+    <div class="sala-acciones">
+      <button
+        class="btn-reservar"
+        (click)="reservar.emit(sala.id)"
+        [attr.aria-label]="'Reservar ' + sala.nombreSala">
+        Reservar
+      </button>
+      <button
+        class="btn-ver-reservas"
+        (click)="verReservas.emit(sala.id)"
+        [attr.aria-label]="'Ver reservas de ' + sala.nombreSala">
+        Ver reservas
+      </button>
+    </div>
   </div>
 </article>

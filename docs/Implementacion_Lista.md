@@ -454,3 +454,56 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 
 8. **`app.html` y `formulario-reserva.html`** -- Se agrego `[min]="hoy"` y `[attr.min]="hoyMin"` respectivamente en los inputs de tipo date para evitar seleccionar fechas pasadas desde el calendario nativo del navegador.
 
+---
+
+## Issue 15: [Sprint 5] Listado de reservas por sala (RF04)
+
+**Estado:** Completado ✅
+
+### Archivos Creados
+
+1. **`frontend/src/app/components/listado-reservas/listado-reservas.ts` (Creado):**
+   - Componente standalone que importa `CommonModule`.
+   - `@Input() idSala`, `@Input() salaNombre`, `@Input() fecha` -- reciben la sala y la fecha consultadas desde `App`.
+   - `@Output() cerrar` -- notifica al padre para cerrar el panel.
+   - `ngOnChanges`: cada vez que cambia `idSala` o `fecha` (con ambos valores presentes) dispara `cargarReservas()`.
+   - `cargarReservas()`: consume `ReservaService.getReservasPorSalaYFecha(idSala, fecha)` y guarda el resultado en `reservas: Reserva[]`.
+
+2. **`frontend/src/app/components/listado-reservas/listado-reservas.html` (Creado):**
+   - Modal con overlay semitransparente (mismo patron que `formulario-reserva`).
+   - Header con nombre de la sala, fecha consultada y boton cerrar con SVG en linea.
+   - Contador dinamico "Reservas realizadas: **N**" enlazado a `reservas.length`.
+   - Tabla con columnas Sala, Nº Reserva, Inicio, Fin y Estado (badge de color segun `Confirmada`/`Cancelada`).
+   - Mensajes de estado: "Cargando reservas..." y "No hay reservas registradas para esta sala en la fecha seleccionada."
+
+3. **`frontend/src/app/components/listado-reservas/listado-reservas.scss` (Creado):**
+   - Overlay y modal reutilizando las variables CSS del proyecto (`--bg-card`, `--shadow-float`, `--border-color`, etc.).
+   - Tabla con `border-collapse`, encabezados en mayusculas y hover por fila.
+   - Badges de estado con colores semanticos (verde para Confirmada, rojo para Cancelada).
+   - Media query para reducir el padding y el tamaño de fuente de la tabla en movil (<768px).
+
+### Archivos Modificados
+
+4. **`frontend/src/app/components/tarjeta-sala/tarjeta-sala.ts` y `.html` (Modificado):**
+   - Se agrego `@Output() verReservas = new EventEmitter<number>()`.
+   - Se agrego un segundo boton "Ver reservas" junto al boton "Reservar", agrupados en `.sala-acciones` (Flexbox).
+
+5. **`frontend/src/app/components/tarjeta-sala/tarjeta-sala.scss` (Modificado):**
+   - Se reemplazo el estilo unico `.btn-reservar` por estilos compartidos para ambos botones (`flex: 1` para repartir el ancho) y un estilo secundario `.btn-ver-reservas` con borde neutro.
+
+6. **`frontend/src/app/app.ts` (Modificado):**
+   - Se importo `ListadoReservasComponent`.
+   - Se agrego `salaParaListado: Sala | null = null`.
+   - `onVerReservas(idSala)`: busca la sala en `this.salas` y la asigna a `salaParaListado` (abre el panel).
+   - `onCerrarListado()`: limpia `salaParaListado` (cierra el panel).
+
+7. **`frontend/src/app/app.html` (Modificado):**
+   - Se agrego `(verReservas)="onVerReservas($event)"` a `<app-tarjeta-sala>`.
+   - Se agrego `<app-listado-reservas>` con `*ngIf="salaParaListado"`, pasando `idSala`, `salaNombre` y `fecha` (reutilizando `filtroFecha` del filtro de Issue 13).
+
+### Logica y Contexto
+- **Reutilizacion de servicios:** El panel consume directamente `ReservaService.getReservasPorSalaYFecha(idSala, fecha)`, creado en Issue 9, sin necesidad de logica adicional en el servicio.
+- **Activacion por sala + fecha:** El boton "Ver reservas" de cada `TarjetaSalaComponent` abre el panel para esa sala, usando la fecha ya seleccionada en el filtro global (`filtroFecha`). Si el usuario cambia la fecha mientras el panel esta abierto, `ngOnChanges` vuelve a consultar la API automaticamente.
+- **Contador dinamico:** "Reservas realizadas: N" se calcula directamente desde `reservas.length`, sin estado adicional, garantizando que siempre refleje el resultado mas reciente de la API.
+- **Consistencia visual:** El panel reutiliza el patron de modal con overlay de `formulario-reserva` (mismas variables CSS y estructura), manteniendo coherencia visual entre ambos paneles flotantes del sistema.
+

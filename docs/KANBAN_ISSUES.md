@@ -252,10 +252,10 @@ Para cualquier diseño visual, botones o menú, se DEBE utilizar **exclusivament
 **Objetivo:** Mostrar las reservas existentes al consultar una sala en un día específico.
 
 **Tareas a realizar:**
-- [ ] Crear un panel/tabla que se active al seleccionar una fecha y una sala.
-- [ ] Llamar al API para obtener las reservas de ese cruce.
-- [ ] Mostrar Sala, Nº Reserva, Inicio, Fin, y Estado.
-- [ ] Mantener un contador dinámico "Reservas realizadas: N".
+- [x] Crear un panel/tabla que se active al seleccionar una fecha y una sala.
+- [x] Llamar al API para obtener las reservas de ese cruce.
+- [x] Mostrar Sala, Nº Reserva, Inicio, Fin, y Estado.
+- [x] Mantener un contador dinámico "Reservas realizadas: N".
 
 ---
 

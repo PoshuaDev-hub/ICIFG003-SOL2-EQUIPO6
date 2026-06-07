@@ -12,6 +12,7 @@ import { Sala } from '../../interfaces/sala.interface';
 export class TarjetaSalaComponent {
   @Input({ required: true }) sala!: Sala;
   @Output() reservar = new EventEmitter<number>();
+  @Output() verReservas = new EventEmitter<number>();
 
   getImagenSala(): string {
     return `https://picsum.photos/seed/sala${this.sala.id}/400/300`;

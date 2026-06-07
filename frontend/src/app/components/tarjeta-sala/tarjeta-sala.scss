@@ -54,26 +54,47 @@
       margin: 0;
     }
 
-    .btn-reservar {
+    .sala-acciones {
       margin-top: 0.5rem;
-      padding: 0.85rem 1.5rem;
-      background: transparent;
-      color: var(--accent-wood);
-      border: 1px solid var(--accent-wood);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-reservar,
+    .btn-ver-reservas {
+      flex: 1;
+      padding: 0.85rem 1rem;
       font-family: var(--font-ui);
       font-weight: 600;
       font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.3s ease;
 
+      &:focus-visible {
+        outline: 2px solid var(--accent-wood);
+        outline-offset: 2px;
+      }
+    }
+
+    .btn-reservar {
+      background: transparent;
+      color: var(--accent-wood);
+      border: 1px solid var(--accent-wood);
+
       &:hover {
         background: var(--accent-wood);
         color: var(--bg-main);
       }
+    }
 
-      &:focus-visible {
-        outline: 2px solid var(--accent-wood);
-        outline-offset: 2px;
+    .btn-ver-reservas {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+
+      &:hover {
+        color: var(--text-main);
+        border-color: var(--text-muted);
       }
     }
   }
