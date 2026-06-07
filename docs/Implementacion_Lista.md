@@ -507,3 +507,238 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 - **Contador dinamico:** "Reservas realizadas: N" se calcula directamente desde `reservas.length`, sin estado adicional, garantizando que siempre refleje el resultado mas reciente de la API.
 - **Consistencia visual:** El panel reutiliza el patron de modal con overlay de `formulario-reserva` (mismas variables CSS y estructura), manteniendo coherencia visual entre ambos paneles flotantes del sistema.
 
+---
+
+## Issue 16: [Sprint 5] Pruebas globales, Accesibilidad y Readme
+
+**Estado:** Pendiente ⬜
+
+**Responsable:** Joshua
+
+### Descripción
+**Objetivo:** Garantizar que el sistema cumpla con el 100% de la rúbrica y esté listo para entrega.
+
+### Tareas pendientes
+- [ ] Probar el flujo completo desde el navegador.
+- [ ] Verificar adaptabilidad responsiva en los 3 breakpoints solicitados (F12 > Device Toolbar).
+- [ ] Auditar accesibilidad (uso de `labels`, `alt`, tabulación con teclado).
+- [ ] Completar el archivo `README.md` del repositorio con instrucciones de compilación y pruebas.
+- [ ] Preparar repositorio para el clon en directo del viernes.
+
+---
+
+## Issue 17: [Hotfix] Optimización de rendimiento, corrección de bugs críticos y simplificación del formulario
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+
+#### Base de Datos
+1. **`database/01_schema.sql` (Modificado):**
+   - Se agregaron 7 índices para optimizar las consultas más frecuentes:
+     - `idx_estudiante_nombre` en `ESTUDIANTE(nombre)`.
+     - `idx_estudiante_apellido` en `ESTUDIANTE(apellido)`.
+     - `idx_estudiante_rut` en `ESTUDIANTE(rut)`.
+     - `idx_horario_sala` en `HORARIO_DISPONIBLE(id_sala)`.
+     - `idx_reserva_sala_fecha` compuesto en `RESERVA(id_sala, fecha_reserva)`.
+     - `idx_reserva_horario` en `RESERVA(id_horario)`.
+     - `idx_reserva_estudiante` en `RESERVA(id_estudiante)`.
+   - Columna `observacion` en `RESERVA` cambiada de `NOT NULL` a nullable (observaciones ahora opcional).
+
+#### Backend — Repositories
+2. **`SalaRepository.java` (Modificado):**
+   - `JOIN FETCH s.edificio` en `findByCapacidadExacta()` — elimina N+1 al serializar salas con su edificio.
+
+3. **`HorarioDisponibleRepository.java` (Modificado):**
+   - Convertida de Native Query a JPQL con `JOIN FETCH h.sala` y subquery `NOT EXISTS` — más rápida que `NOT IN` y evita `LazyInitializationException` tras `open-in-view=false`.
+
+4. **`EstudianteRepository.java` (Modificado):**
+   - `@Query` explícita con `CONCAT('%', :termino, '%')`.
+   - Nuevo método `findByRutExacto()` para búsqueda exacta por RUT.
+
+5. **`CarreraRepository.java` (Creado):**
+   - Repositorio simple para asignar carrera por defecto al registrar estudiantes.
+
+#### Backend — Models
+6. **`HorarioDisponible.java` (Modificado):**
+   - `@ManyToOne(fetch = FetchType.LAZY)` en campo `sala` (antes `EAGER` por defecto).
+
+7. **`Reserva.java` (Modificado):**
+   - `observacion` ahora nullable (`@Column(nullable = true)`).
+
+#### Backend — Services
+8. **`ReservaService.java` (Modificado):**
+   - `@Transactional(readOnly = true)` a nivel de clase.
+   - `crearReserva()` con `@Transactional` propio para escritura.
+   - `obtenerPorSalaYFecha()` — resuelve bug donde `GET /api/reservas?salax&fecha=y` ignoraba los parámetros.
+   - `validarObservacion()` relajada: permite `null` o vacío (observaciones opcional).
+   - `toDto()` privado — convierte entidad `Reserva` a `ReservaDTO` con campos planos.
+   - Agregado logging con `@Slf4j`.
+
+9. **`EstudianteService.java` (Modificado):**
+   - `@Transactional(readOnly = true)` a nivel de clase.
+   - `crearEstudiante()` auto-completa `correo` (formato `rut@usm.cl`), `fechaRegistro` (hoy), `carrera` (id=1 por defecto).
+
+10. **`SalaService.java`, `HorarioService.java` (Modificados):**
+    - `@Transactional(readOnly = true)` a nivel de clase; métodos de escritura sobrescriben con su propia anotación.
+
+#### Backend — Controllers
+11. **`ReservaController.java` (Modificado):**
+    - `GET /api/reservas` acepta `sala` (Integer) y `fecha` (LocalDate) opcionales — filtra correctamente.
+
+12. **`EstudianteController.java` (Modificado):**
+    - Nuevo endpoint `GET /api/estudiantes/buscar/rut?rut=XX`.
+
+13. **`SalaController.java`, `EstudianteController.java`, `HorarioController.java` (Modificados):**
+    - Eliminadas anotaciones `@CrossOrigin` redundantes (ya hay `CorsConfig` global).
+
+#### Backend — Configuración
+14. **`application.properties` (Modificado):**
+    - `spring.jpa.open-in-view=false`.
+    - Eliminado `spring.jpa.show-sql` y dialecto explícito.
+    - `hibernate.jdbc.batch_size=20`.
+
+#### Frontend — Configuración Angular
+15. **`main.ts` (Modificado):**
+    - `import 'zone.js'` al inicio del archivo para habilitar detección de cambios basada en zone.js en Angular 21+.
+
+16. **`app.config.ts` (Modificado):**
+    - Agregado `provideZoneChangeDetection()` a los providers.
+
+#### Frontend — Servicios
+17. **`sala.service.ts` (Modificado):**
+    - Eliminados métodos sin uso: `getSalaById()`, `getHorariosPorSala()`.
+
+18. **`estudiante.service.ts` (Modificado):**
+    - Eliminados métodos sin uso: `getEstudiantes()`, `buscarEstudiantes()`, `getEstudianteById()`.
+    - `buscarEstudiantePorRut()` retorna `Observable<Estudiante>` (endpoint exacto).
+
+19. **`reserva.service.ts` (Modificado):**
+    - Eliminado método sin uso `getReservas()`.
+    - `crearReserva()` retorna `Observable<ReservaDTO>`.
+
+#### Frontend — Componente FormularioReserva (reescritura completa)
+20. **`formulario-reserva.ts` (Reescrito):**
+    - Eliminado buscador con autocomplete, debounce, Subject, switchMap, etc.
+    - Nuevo flujo de dos pasos:
+      - **Paso 1 (reserva):** campos RUT, fecha, horario, observaciones (opcional).
+      - **Paso 2 (registro):** si el RUT no existe en BD, se muestra formulario de registro con RUT pre-cargado + nombre + apellido.
+    - `validarEstudiante()`: llama a `GET /api/estudiantes/buscar/rut?rut=X`; si 404 → modo registro.
+    - `registrarYReservar()`: crea estudiante, luego crea reserva.
+    - `volverAReserva()`: resetea `submitted = false` para habilitar botón.
+    - Observaciones sin validadores (opcional).
+
+21. **`formulario-reserva.html` (Reescrito):**
+    - Input de RUT con patrón de validación (dígito verificador).
+    - Inputs de Nombre y Apellido (solo en modo registro).
+    - Textarea de observaciones sin `minlength`.
+    - Mensaje de éxito "Estudiante registrado correctamente. Confirma la reserva."
+
+22. **`formulario-reserva.scss` (Modificado):**
+    - Eliminado bloque CSS `.autocomplete` (ya no se usa).
+
+#### Frontend — Componente TarjetaSala (imágenes de stock)
+23. **`tarjeta-sala.ts` (Modificado):**
+    - Array `IMAGENES_SALA` con 8 URLs de Unsplash.
+    - Getter `imagenSala`: selecciona imagen según `sala.id % 8` (determinístico por sala).
+
+24. **`tarjeta-sala.html` (Modificado):**
+    - Reemplazado monograma placeholder por `<img [src]="imagenSala" loading="lazy">`.
+
+25. **`tarjeta-sala.scss` (Modificado):**
+    - Eliminados estilos de placeholder monograma.
+    - Agregado `object-fit: cover` para imágenes.
+
+#### Frontend — Estilos globales
+26. **`app.scss` (Modificado):**
+    - Eliminado bloque CSS legacy `.room-card`/`.btn-reserve` (no usado).
+
+### Lógica y Contexto
+- **Simplificación del formulario:** Se eliminó el autocomplete con debounce porque el caso de uso real es que el estudiante ingresa su RUT (no busca por nombre). Si no existe, se registra automáticamente en dos clicks.
+- **Observaciones opcionales:** Se relajó tanto en backend (`validarObservacion()` acepta null/vacío) como en frontend (sin validators) y BD (`observacion` nullable).
+- **Imágenes determinísticas:** Cada sala siempre muestra la misma imagen (basada en `sala.id % 8`), evitando imágenes aleatorias y garantizando consistencia.
+- **Zone.js:** Angular 21+ requiere `import 'zone.js'` explícito y `provideZoneChangeDetection()` para que funcione la detección de cambios por zona (comportamiento legacy necesario para el flujo actual).
+- **LazyInitializationException:** Con `open-in-view=false`, cualquier acceso a lazy relationships fuera de una transacción falla. Se resolvió con `JOIN FETCH` en repositorios y `@Transactional(readOnly = true)` en servicios.
+
+---
+
+## Issue 18: [Sprint 6] Ver mis reservas por RUT + limpieza de código
+
+**Estado:** Completado ✅
+
+### Archivos Modificados / Creados
+
+#### Backend — DTO
+1. **`ReservaDTO.java` (Modificado):**
+   - Agregados campos display: `nombreEstudiante`, `nombreSala`, `horaInicio`, `horaTermino`, `nombreEstado`.
+   - El frontend ya no necesita dereferenciar objetos lazy; recibe strings planas.
+
+#### Backend — Repositories
+2. **`ReservaRepository.java` (Modificado):**
+   - Nuevo método `findByEstudianteRut(@Param("rut") String rut)` con JPQL `JOIN FETCH r.estudiante JOIN FETCH r.sala JOIN FETCH r.horario JOIN FETCH r.estado`.
+
+#### Backend — Services
+3. **`ReservaService.java` (Modificado):**
+   - `obtenerPorRut(rut)`: busca reservas por RUT del estudiante y las convierte a DTO.
+   - `toDto()` actualizado para poblar los nuevos campos display.
+
+#### Backend — Controllers
+4. **`ReservaController.java` (Modificado):**
+   - Nuevo endpoint `GET /api/reservas/mis-reservas?rut=XX`.
+
+#### Frontend — Interfaces
+5. **`reserva.interface.ts` (Modificado):**
+   - Nueva interfaz `ReservaDTO` con campos planos (`nombreEstudiante`, `nombreSala`, `horaInicio`, `horaTermino`, `nombreEstado`).
+
+#### Frontend — Servicios
+6. **`reserva.service.ts` (Modificado):**
+   - Nuevo método `getReservasPorRut(rut: string)`.
+   - Tipos actualizados para usar `ReservaDTO` en las operaciones relevantes.
+
+#### Frontend — Componente BuscadorReservas (nuevo)
+7. **`buscador-reservas/buscador-reservas.ts` (Creado):**
+   - Modal independiente con input de RUT y botón de búsqueda.
+   - `buscarReservas()`: llama a `reservaService.getReservasPorRut()`.
+   - `@Output() cerrar`: notifica al padre para cerrar el modal.
+
+8. **`buscador-reservas/buscador-reservas.html` (Creado):**
+   - Overlay + modal con header "Mis Reservas" y botón cerrar.
+   - Input de RUT con label accesible.
+   - Tabla de resultados (Sala, Fecha, Hora, Estado) o mensaje "No tienes reservas registradas."
+
+9. **`buscador-reservas/buscador-reservas.scss` (Creado):**
+   - Estilos consistentes con el sistema de diseño (mismas variables CSS que formulario-reserva y listado-reservas).
+
+#### Frontend — Componente MenuNav
+10. **`menu-nav.ts` (Modificado):**
+    - Nuevo `@Output() misReservasClick = new EventEmitter<void>()`.
+
+11. **`menu-nav.html` (Modificado):**
+    - Link "Mis Reservas" ahora ejecuta `misReservasClick.emit()` en vez de hacer scroll.
+
+#### Frontend — Componente ListadoReservas
+12. **`listado-reservas.html` (Modificado):**
+    - Agregada columna "Estudiante" en la tabla.
+    - Cambiado de campos anidados (`r.id`, `r.estado.nombre`, etc.) a campos planos del DTO (`r.nombreEstudiante`, `r.nombreEstado`, etc.).
+
+13. **`listado-reservas.ts` (Modificado):**
+    - Tipo actualizado para trabajar con `ReservaDTO`.
+
+#### Frontend — Componente App
+14. **`app.ts` (Modificado):**
+    - Nuevas propiedades: `mostrarBuscadorReservas`, `salaSeleccionada`, `filtroCapacidad`, `filtroFecha`, etc.
+    - Métodos `abrirBuscadorReservas()`, `cerrarBuscadorReservas()`.
+
+15. **`app.html` (Modificado):**
+    - Agregado `<app-buscador-reservas>` con `*ngIf="mostrarBuscadorReservas"`.
+    - Conectado evento `(misReservasClick)` del menú a `abrirBuscadorReservas()`.
+
+#### Frontend — Pruebas
+16. **`app.spec.ts` (Modificado):**
+    - Actualizado test para reflejar texto real del template.
+
+### Lógica y Contexto
+- **DTO plano:** `ReservaDTO` ahora incluye `nombreEstudiante`, `nombreSala`, `horaInicio`, `horaTermino`, `nombreEstado` como strings. Esto elimina la necesidad de que el frontend acceda a objetos lazy fuera de una transacción, evitando `LazyInitializationException`.
+- **"Mis Reservas":** Implementado como modal independiente reutilizable, invocado desde el menú de navegación mediante un evento `@Output()`.
+- **Limpieza de código:** Se eliminaron métodos y estilos no utilizados para reducir deuda técnica y mejorar mantenibilidad. Los `@CrossOrigin` redundantes se removieron porque `CorsConfig.java` ya maneja CORS globalmente.
+
