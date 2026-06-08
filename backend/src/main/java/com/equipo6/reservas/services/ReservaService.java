@@ -72,7 +72,7 @@ public class ReservaService {
     }
 
     private void validarObservacion(String observacion) {
-        if (observacion != null && observacion.trim().length() < 15) {
+        if (observacion != null && !observacion.trim().isEmpty() && observacion.trim().length() < 15) {
             throw new IllegalArgumentException("La observación debe tener al menos 15 caracteres.");
         }
     }
