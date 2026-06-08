@@ -135,6 +135,9 @@ npm run dev
 |---|---|---|
 | GET | `/api/estudiantes` | Lista todos los estudiantes |
 | GET | `/api/estudiantes/{id}` | Obtiene un estudiante por ID |
+| GET | `/api/estudiantes/ranking` | Obtiene el ranking de estudiantes con cantidad de reservas (Query Nativa) (RF05/Issue 7) |
+| GET | `/api/estudiantes/buscar/rut?rut=XX` | Busca estudiante por RUT exacto |
+| GET | `/api/estudiantes/buscar?q=XX` | Busca estudiantes por nombre, apellido o RUT |
 | POST | `/api/estudiantes` | Crea un nuevo estudiante |
 
 ### Horarios
@@ -148,6 +151,7 @@ npm run dev
 |---|---|---|
 | GET | `/api/reservas` | Lista todas las reservas |
 | GET | `/api/reservas?sala=N&fecha=YYYY-MM-DD` | Reservas de una sala en una fecha (RF04) |
+| GET | `/api/reservas/mis-reservas?rut=XX` | Obtiene las reservas asociadas a un estudiante por su RUT |
 | POST | `/api/reservas` | Crea una reserva (con validaciones RF05) |
 
 ---

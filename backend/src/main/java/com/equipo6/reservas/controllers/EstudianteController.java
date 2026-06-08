@@ -76,6 +76,11 @@ public class EstudianteController {
         }
     }
 
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Map<String, Object>>> obtenerRanking() {
+        return ResponseEntity.ok(estudianteService.obtenerRankingReservas());
+    }
+
     /**
      * Endpoint para eliminar un estudiante.
      */

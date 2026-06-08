@@ -511,19 +511,41 @@ Esta implementación es fundamental porque establece el esqueleto responsivo y l
 
 ## Issue 16: [Sprint 5] Pruebas globales, Accesibilidad y Readme
 
-**Estado:** Pendiente ⬜
+**Estado:** Completado ✅
 
-**Responsable:** Joshua
+### Archivos Modificados / Creados
+1. **`backend/src/main/java/com/equipo6/reservas/models/Credencial.java` (Nuevo):**
+   - Se creó la clase JPA para la entidad `CREDENCIAL` con Lombok y su relación `@OneToOne` con `Estudiante`.
+2. **`backend/src/main/java/com/equipo6/reservas/repositories/CredencialRepository.java` (Nuevo):**
+   - Se creó la interfaz de repositorio correspondiente.
+3. **`backend/src/main/java/com/equipo6/reservas/models/Estudiante.java` (Modificado):**
+   - Se añadió el lado inverso de la relación `@OneToOne` hacia `Credencial`.
+4. **`database/01_schema.sql` (Modificado):**
+   - Se agregó la definición de la tabla `CREDENCIAL` y su borrado inicial.
+5. **`database/02_seed.sql` (Modificado):**
+   - Se agregó el truncado de `CREDENCIAL` y se poblaron 3 registros de prueba.
+6. **`backend/src/main/java/com/equipo6/reservas/repositories/EstudianteRepository.java` (Modificado):**
+   - Se añadió la consulta nativa de ranking de reservas por estudiante.
+7. **`backend/src/main/java/com/equipo6/reservas/services/EstudianteService.java` (Modificado):**
+   - Se implementó la lógica para mapear los resultados de la query nativa a DTOs JSON (Lista de Mapas).
+8. **`backend/src/main/java/com/equipo6/reservas/controllers/EstudianteController.java` (Modificado):**
+   - Se expuso el endpoint `GET /api/estudiantes/ranking` para devolver el ranking de reservas.
+9. **`README.md` (Modificado):**
+   - Se actualizaron las tablas de endpoints para documentar las nuevas operaciones de ranking, búsqueda y mis-reservas.
 
-### Descripción
-**Objetivo:** Garantizar que el sistema cumpla con el 100% de la rúbrica y esté listo para entrega.
+### Errores Detectados y Resueltos
 
-### Tareas pendientes
-- [ ] Probar el flujo completo desde el navegador.
-- [ ] Verificar adaptabilidad responsiva en los 3 breakpoints solicitados (F12 > Device Toolbar).
-- [ ] Auditar accesibilidad (uso de `labels`, `alt`, tabulación con teclado).
-- [ ] Completar el archivo `README.md` del repositorio con instrucciones de compilación y pruebas.
-- [ ] Preparar repositorio para el clon en directo del viernes.
+* **Conflicto de tipos de datos en la relación `@OneToOne` (Issue 4):**
+  - *Problema:* La instrucción inicial sugería mapear la clave foránea `estudiante_id` en la tabla `CREDENCIAL` como tipo `BIGINT`. Sin embargo, en el esquema de base de datos la tabla `ESTUDIANTE` tiene la clave primaria `id` como `SERIAL` (entero de 4 bytes). Al arrancar el backend, Hibernate fallaba en el chequeo de validación (`SchemaManagementException: wrong column type encountered in column estudiante_id; found int8, but expecting integer`).
+  - *Solución:* Se corrigió el tipo de columna de `estudiante_id` en `01_schema.sql` a `INT` para que coincida perfectamente con el tipo de datos físico del ID de Estudiante, garantizando que el backend levante sin errores y valide correctamente.
+
+* **Filtro de Capacidad de Salas (RF03 / Issue 13):**
+  - *Problema:* Se implementó inicialmente un filtro de capacidad por rangos ("Hasta 4", "Hasta 8", "Más de 8"). Sin embargo, tras alineación interna del equipo, se determinó mantener el comportamiento de filtrado exacto (`s.capacidad = :capacidad`). Esto evita que un grupo pequeño de 4 personas pueda visualizar y reservar salas medianas de 8 personas, garantizando un mejor uso de los recursos de la biblioteca.
+  - *Solución:* Se revirtió la consulta del repositorio y los bindings de Angular para usar nuevamente el filtrado de capacidad exacta que ya estaba implementado y funcionando en producción.
+
+* **Inconsistencia de nombres en la Query Nativa de Ranking (Issue 7):**
+  - *Problema:* La query nativa sugerida en la instrucción intentaba hacer la unión con `LEFT JOIN RESERVA r ON e.id = r.estudiante_id`. Sin embargo, en nuestro esquema físico real de base de datos (`01_schema.sql`), el nombre de la columna en la tabla `RESERVA` que referencia a estudiante es `id_estudiante`, no `estudiante_id`.
+  - *Solución:* Se ajustó la consulta nativa en `EstudianteRepository.java` para utilizar `LEFT JOIN RESERVA r ON e.id = r.id_estudiante`, evitando un error sintáctico de base de datos.
 
 ---
 

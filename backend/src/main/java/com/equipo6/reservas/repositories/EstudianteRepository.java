@@ -15,4 +15,14 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 
     @Query("SELECT e FROM Estudiante e WHERE e.rut = :rut")
     List<Estudiante> findByRutExacto(@Param("rut") String rut);
+
+    @Query(
+        value = "SELECT e.rut, e.nombre, e.apellido, COUNT(r.id) AS total_reservas " +
+                "FROM ESTUDIANTE e " +
+                "LEFT JOIN RESERVA r ON e.id = r.id_estudiante " +
+                "GROUP BY e.id, e.rut, e.nombre, e.apellido " +
+                "ORDER BY total_reservas DESC",
+        nativeQuery = true
+    )
+    List<Object[]> findEstudiantesConTotalReservas();
 }

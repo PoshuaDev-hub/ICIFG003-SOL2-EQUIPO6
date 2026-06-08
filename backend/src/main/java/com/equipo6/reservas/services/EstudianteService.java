@@ -105,4 +105,17 @@ public class EstudianteService {
         log.info("Eliminando estudiante con ID: {}", id);
         estudianteRepository.deleteById(id);
     }
+
+    public List<java.util.Map<String, Object>> obtenerRankingReservas() {
+        log.info("Obteniendo ranking de estudiantes con total de reservas");
+        List<Object[]> resultados = estudianteRepository.findEstudiantesConTotalReservas();
+        return resultados.stream().map(fila -> {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("rut", fila[0]);
+            map.put("nombre", fila[1]);
+            map.put("apellido", fila[2]);
+            map.put("total_reservas", fila[3]);
+            return map;
+        }).toList();
+    }
 }
