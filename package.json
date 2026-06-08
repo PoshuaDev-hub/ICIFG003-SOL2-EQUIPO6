@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Sistema Web de Reserva de Salas de Estudio",
   "scripts": {
+    "install:all": "npm install && npm install --prefix frontend",
+    "db:init": "psql -U postgres -d reserva_salas_db -f database/01_schema.sql",
+    "db:seed": "psql -U postgres -d reserva_salas_db -f database/02_seed.sql",
+    "db:setup": "npm run db:init && npm run db:seed",
     "dev:backend": "cd backend && .\\mvnw.cmd spring-boot:run",
     "dev:frontend": "cd frontend && npm start",
     "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\""

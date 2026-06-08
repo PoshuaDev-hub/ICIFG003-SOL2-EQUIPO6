@@ -18,6 +18,14 @@
 | PostgreSQL | 13 | `psql --version` |
 
 ---
+### Inicio rapido del proyecto
+Ejecutar en la ra
+```bash
+npm run install:all
+psql -U postgres -c "CREATE DATABASE reserva_salas_db;"
+npm run db:setup
+npm run dev
+```
 
 ### Paso 1 — Crear la base de datos
 
