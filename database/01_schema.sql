@@ -1,5 +1,6 @@
 -- Script de DDL actualizado según MER especificado
 DROP TABLE IF EXISTS RESERVA;
+DROP TABLE IF EXISTS CREDENCIAL;
 DROP TABLE IF EXISTS HORARIO_DISPONIBLE;
 DROP TABLE IF EXISTS SALA;
 DROP TABLE IF EXISTS ESTUDIANTE;
@@ -72,3 +73,12 @@ CREATE INDEX idx_horario_sala ON HORARIO_DISPONIBLE (id_sala);
 CREATE INDEX idx_reserva_sala_fecha ON RESERVA (id_sala, fecha_reserva);
 CREATE INDEX idx_reserva_horario ON RESERVA (id_horario);
 CREATE INDEX idx_reserva_estudiante ON RESERVA (id_estudiante);
+
+CREATE TABLE CREDENCIAL (
+  id BIGSERIAL PRIMARY KEY,
+  numero_credencial VARCHAR(20) NOT NULL UNIQUE,
+  fecha_vencimiento DATE NOT NULL,
+  estudiante_id INT NOT NULL UNIQUE,
+  CONSTRAINT fk_credencial_estudiante
+    FOREIGN KEY (estudiante_id) REFERENCES ESTUDIANTE(id)
+);

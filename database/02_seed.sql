@@ -18,7 +18,7 @@
 --    de modo que el script puede re-ejecutarse sin romper las FKs.
 -- =====================================================================
 
-TRUNCATE TABLE RESERVA, HORARIO_DISPONIBLE, SALA, EDIFICIO,
+TRUNCATE TABLE RESERVA, CREDENCIAL, HORARIO_DISPONIBLE, SALA, EDIFICIO,
                ESTADO_RESERVA, ESTUDIANTE, CARRERA RESTART IDENTITY CASCADE;
 
 -- =====================================================================
@@ -96,5 +96,13 @@ INSERT INTO RESERVA (fecha_reserva, observacion, fecha_creacion, id_estudiante, 
   ('2026-06-12', 'Trabajo colaborativo de análisis de datos del proyecto.',   '2026-06-04 14:10:00', 2, 2, 7,  1),
   ('2026-06-08', 'Reserva anulada por disponibilidad de otra sala libre.',    '2026-06-02 17:45:00', 3, 1, 3,  2),
   ('2026-06-09', 'Sesión de repaso de bases de datos relacionales SQL.',      '2026-06-04 15:00:00', 4, 3, 12, 1);
+
+-- =====================================================================
+-- 8. CREDENCIAL  (al menos 3 filas con datos de prueba)
+-- =====================================================================
+INSERT INTO CREDENCIAL (numero_credencial, fecha_vencimiento, estudiante_id) VALUES
+  ('CRED-123456', '2028-12-31', 1),
+  ('CRED-654321', '2029-06-30', 2),
+  ('CRED-987654', '2028-08-15', 3);
 
 -- Fin del seed.

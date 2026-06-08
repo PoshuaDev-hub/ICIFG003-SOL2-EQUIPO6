@@ -37,4 +37,8 @@ public class Estudiante {
     @JoinColumn(name = "id_carrera", nullable = false)
     @JsonIgnoreProperties("estudiantes")
     private Carrera carrera;
+
+    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("estudiante")
+    private Credencial credencial;
 }
