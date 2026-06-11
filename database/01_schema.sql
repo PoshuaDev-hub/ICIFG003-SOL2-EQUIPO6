@@ -76,7 +76,7 @@ CREATE INDEX idx_reserva_estudiante ON RESERVA (id_estudiante);
 
 CREATE TABLE CREDENCIAL (
   id BIGSERIAL PRIMARY KEY,
-  numero_credencial VARCHAR(20) NOT NULL UNIQUE,
+  numero_credencial VARCHAR(20) NOT NULL,
   fecha_vencimiento DATE NOT NULL,
   estudiante_id INT NOT NULL UNIQUE,
   CONSTRAINT fk_credencial_estudiante

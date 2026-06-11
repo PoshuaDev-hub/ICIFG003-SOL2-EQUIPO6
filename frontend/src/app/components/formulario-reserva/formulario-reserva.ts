@@ -38,7 +38,7 @@ export class FormularioReservaComponent implements OnInit, OnChanges {
     private salaService: SalaService,
     private reservaService: ReservaService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initForm();

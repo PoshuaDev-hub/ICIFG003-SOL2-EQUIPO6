@@ -8,10 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/reservas")
 public class ReservaController {
@@ -76,12 +79,18 @@ public class ReservaController {
 
     @PatchMapping("/{id}/observacion")
     public ResponseEntity<?> actualizarObservacion(@PathVariable Integer id, @RequestBody Map<String, String> body) {
+        log.info("Petición PATCH para actualizar observación de reserva ID: {}, cuerpo: {}", id, body);
         try {
-            String observacion = body.get("observacion");
+            String observacion = body != null ? body.get("observacion") : null;
             ReservaDTO actualizada = reservaService.actualizarObservacion(id, observacion);
+            log.info("Observación de reserva ID {} actualizada con éxito", id);
             return ResponseEntity.ok(actualizada);
         } catch (IllegalArgumentException e) {
+            log.error("Error al actualizar observación para reserva ID {}: {}", id, e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error inesperado al actualizar observación para reserva ID {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error interno al actualizar la observación."));
         }
     }
 
