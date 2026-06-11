@@ -1,0 +1,68 @@
+<section class="login-overlay" (click)="cerrar.emit()">
+  <div class="login-modal" (click)="$event.stopPropagation()">
+
+    <div class="login-header">
+      <div class="login-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div>
+        <h3>Iniciar Sesión</h3>
+        <p class="login-subtitle">Accede a tu cuenta de Biblioteca Central</p>
+      </div>
+      <button class="btn-cerrar" (click)="cerrar.emit()" aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <!-- Tabs tipo login -->
+    <div class="tipo-tabs">
+      <button id="loginTabRut" class="tab-btn" [class.active]="tipo === 'rut'" (click)="seleccionarTipo('rut')" type="button">RUT</button>
+      <button id="loginTabCorreo" class="tab-btn" [class.active]="tipo === 'correo'" (click)="seleccionarTipo('correo')" type="button">Correo</button>
+      <button id="loginTabTelefono" class="tab-btn" [class.active]="tipo === 'telefono'" (click)="seleccionarTipo('telefono')" type="button">Teléfono</button>
+    </div>
+
+    <!-- Formulario -->
+    <div class="login-form">
+      <div class="form-group">
+        <label [for]="'loginId'">{{ labelIdentificador }}</label>
+        <input
+          id="loginId"
+          [type]="inputType"
+          [(ngModel)]="identificador"
+          (ngModelChange)="onIdentificadorChange($event)"
+          [placeholder]="placeholder"
+          (keyup.enter)="login()"
+          autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="loginPass">Contraseña</label>
+        <div class="password-row">
+          <input
+            id="loginPass"
+            [type]="mostrarPass ? 'text' : 'password'"
+            [(ngModel)]="contrasena"
+            placeholder="Ingresa tu contraseña"
+            (keyup.enter)="login()"
+            autocomplete="current-password">
+          <button type="button" class="toggle-pass" (click)="mostrarPass = !mostrarPass" [attr.aria-label]="mostrarPass ? 'Ocultar' : 'Mostrar'">
+            <svg *ngIf="!mostrarPass" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg *ngIf="mostrarPass" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <p class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+      <button id="btnLogin" class="btn-login" (click)="login()" [disabled]="cargando || !identificador.trim() || !contrasena.trim()">
+        <svg *ngIf="!cargando" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        {{ cargando ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+      </button>
+
+      <div class="registro-link">
+        ¿No tienes cuenta? <button type="button" class="btn-link-registro" (click)="irARegistro()">Regístrate aquí</button>
+      </div>
+    </div>
+
+  </div>
+</section>

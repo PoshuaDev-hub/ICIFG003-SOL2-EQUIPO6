@@ -25,6 +25,7 @@ public class ReservaService {
     @Autowired private SalaRepository salaRepository;
     @Autowired private HorarioDisponibleRepository horarioRepository;
     @Autowired private EstadoReservaRepository estadoRepository;
+    @Autowired private CredencialRepository credencialRepository;
 
     @Transactional
     public ReservaDTO crearReserva(ReservaDTO dto) {
@@ -109,7 +110,43 @@ public class ReservaService {
         return dto;
     }
 
-    public List<ReservaDTO> obtenerPorRut(String rut) {
+    public List<ReservaDTO> obtenerPorRut(String rut, String contrasena) {
+        // Verificar credencial antes de devolver reservas
+        boolean credencialValida = credencialRepository.findByRutYContrasena(rut, contrasena).isPresent();
+        if (!credencialValida) return java.util.Collections.emptyList();
         return reservaRepository.findByEstudianteRut(rut).stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<ReservaDTO> obtenerPorCorreo(String correo, String contrasena) {
+        boolean valida = credencialRepository.findByCorreoYContrasena(correo, contrasena).isPresent();
+        if (!valida) return java.util.Collections.emptyList();
+        return reservaRepository.findByEstudianteCorreo(correo).stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<ReservaDTO> obtenerPorTelefono(String telefono, String contrasena) {
+        boolean valida = credencialRepository.findByTelefonoYContrasena(telefono, contrasena).isPresent();
+        if (!valida) return java.util.Collections.emptyList();
+        return reservaRepository.findByEstudianteTelefono(telefono).stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ReservaDTO actualizarObservacion(Integer id, String observacion) {
+        validarObservacion(observacion);
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva con ID " + id + " no encontrada."));
+        reserva.setObservacion(observacion);
+        return toDto(reservaRepository.save(reserva));
+    }
+
+    @Transactional
+    public void cancelarReserva(Integer id) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva con ID " + id + " no encontrada."));
+        // Marcar como cancelada (estado 2) en lugar de eliminar físicamente
+        estadoRepository.findById(2).ifPresentOrElse(
+            reserva::setEstado,
+            () -> reservaRepository.deleteById(id)
+        );
+        if (reserva.getId() != null) reservaRepository.save(reserva);
     }
 }

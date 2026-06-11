@@ -23,8 +23,27 @@ export class ReservaService {
     return this.http.post<ReservaDTO>(this.baseUrl, reserva);
   }
 
-  getReservasPorRut(rut: string): Observable<ReservaDTO[]> {
-    const params = new HttpParams().set('rut', rut);
+  // Búsqueda por RUT ahora requiere contraseña
+  getReservasPorRut(rut: string, contrasena: string): Observable<ReservaDTO[]> {
+    const params = new HttpParams().set('rut', rut).set('contrasena', contrasena);
     return this.http.get<ReservaDTO[]>(`${this.baseUrl}/mis-reservas`, { params });
+  }
+
+  getReservasPorCorreo(correo: string, contrasena: string): Observable<ReservaDTO[]> {
+    const params = new HttpParams().set('correo', correo).set('contrasena', contrasena);
+    return this.http.get<ReservaDTO[]>(`${this.baseUrl}/mis-reservas/correo`, { params });
+  }
+
+  getReservasPorTelefono(telefono: string, contrasena: string): Observable<ReservaDTO[]> {
+    const params = new HttpParams().set('telefono', telefono).set('contrasena', contrasena);
+    return this.http.get<ReservaDTO[]>(`${this.baseUrl}/mis-reservas/telefono`, { params });
+  }
+
+  actualizarObservacion(id: number, observacion: string): Observable<ReservaDTO> {
+    return this.http.patch<ReservaDTO>(`${this.baseUrl}/${id}/observacion`, { observacion });
+  }
+
+  cancelarReserva(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -27,4 +27,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 
     @Query("SELECT r FROM Reserva r JOIN FETCH r.estudiante e WHERE e.rut = :rut")
     List<Reserva> findByEstudianteRut(@Param("rut") String rut);
+
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.estudiante e WHERE e.correo = :correo")
+    List<Reserva> findByEstudianteCorreo(@Param("correo") String correo);
+
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.estudiante e WHERE e.telefono = :telefono")
+    List<Reserva> findByEstudianteTelefono(@Param("telefono") String telefono);
 }

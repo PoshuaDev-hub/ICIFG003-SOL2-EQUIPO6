@@ -1,0 +1,173 @@
+<section class="registro-overlay" (click)="cerrar.emit()">
+  <div class="registro-modal" (click)="$event.stopPropagation()">
+
+    <div class="registro-header">
+      <div class="registro-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+      </div>
+      <div>
+        <h3>Crear Cuenta</h3>
+        <p class="registro-subtitle">Regístrate para reservar salas de estudio y gestionar tus reservas.</p>
+      </div>
+      <button class="btn-cerrar" (click)="cerrar.emit()" aria-label="Cerrar modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="registrar()" class="registro-form" novalidate>
+      
+      <!-- RUT -->
+      <div class="form-group">
+        <label for="reg-rut">RUT <span class="required-mark">*</span></label>
+        <input 
+          type="text" 
+          id="reg-rut" 
+          formControlName="rut" 
+          placeholder="12345678-9" 
+          [class.invalid]="submitted && form.get('rut')?.invalid"
+        />
+        <div class="field-error" *ngIf="submitted && form.get('rut')?.errors?.['required']">
+          El RUT es obligatorio.
+        </div>
+        <div class="field-error" *ngIf="submitted && form.get('rut')?.errors?.['pattern']">
+          Formato de RUT inválido (ej: 12345678-9 o 12345678-K).
+        </div>
+      </div>
+
+      <!-- Nombre y Apellido -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="reg-nombre">Nombre <span class="required-mark">*</span></label>
+          <input 
+            type="text" 
+            id="reg-nombre" 
+            formControlName="nombre" 
+            placeholder="Juan" 
+            [class.invalid]="submitted && form.get('nombre')?.invalid"
+          />
+          <div class="field-error" *ngIf="submitted && form.get('nombre')?.errors?.['required']">
+            Obligatorio.
+          </div>
+        </div>
+
+        <div class="form-group flex-1">
+          <label for="reg-apellido">Apellido <span class="required-mark">*</span></label>
+          <input 
+            type="text" 
+            id="reg-apellido" 
+            formControlName="apellido" 
+            placeholder="Pérez" 
+            [class.invalid]="submitted && form.get('apellido')?.invalid"
+          />
+          <div class="field-error" *ngIf="submitted && form.get('apellido')?.errors?.['required']">
+            Obligatorio.
+          </div>
+        </div>
+      </div>
+
+      <!-- Correo -->
+      <div class="form-group">
+        <label for="reg-correo">Correo Electrónico <span class="required-mark">*</span></label>
+        <input 
+          type="email" 
+          id="reg-correo" 
+          formControlName="correo" 
+          placeholder="juan.perez@correo.cl" 
+          [class.invalid]="submitted && form.get('correo')?.invalid"
+        />
+        <div class="field-error" *ngIf="submitted && form.get('correo')?.errors?.['required']">
+          El correo es obligatorio.
+        </div>
+        <div class="field-error" *ngIf="submitted && form.get('correo')?.errors?.['email']">
+          Correo electrónico no válido.
+        </div>
+      </div>
+
+      <!-- Teléfono (Opcional) -->
+      <div class="form-group">
+        <label for="reg-telefono">Teléfono <span class="text-muted-sub">(Opcional)</span></label>
+        <input 
+          type="tel" 
+          id="reg-telefono" 
+          formControlName="telefono" 
+          placeholder="+56912345678" 
+        />
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label for="reg-pass">Contraseña de usuario <span class="required-mark">*</span></label>
+        <div class="password-row">
+          <input 
+            [type]="mostrarPass ? 'text' : 'password'" 
+            id="reg-pass" 
+            formControlName="contrasena" 
+            placeholder="Mínimo 6 caracteres" 
+            [class.invalid]="submitted && form.get('contrasena')?.invalid"
+          />
+          <button type="button" class="toggle-pass" (click)="mostrarPass = !mostrarPass" aria-label="Ver contraseña">
+            <svg *ngIf="!mostrarPass" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg *ngIf="mostrarPass" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </button>
+        </div>
+        <div class="field-error" *ngIf="submitted && form.get('contrasena')?.errors?.['required']">
+          La contraseña es obligatoria.
+        </div>
+        <div class="field-error" *ngIf="submitted && form.get('contrasena')?.errors?.['minlength']">
+          Debe tener al menos 6 caracteres.
+        </div>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div class="form-group">
+        <label for="reg-confirm-pass">Confirmar Contraseña <span class="required-mark">*</span></label>
+        <div class="password-row">
+          <input 
+            [type]="mostrarConfirmPass ? 'text' : 'password'" 
+            id="reg-confirm-pass" 
+            formControlName="confirmarContrasena" 
+            placeholder="Repite la contraseña" 
+            [class.invalid]="submitted && (form.get('confirmarContrasena')?.invalid || form.errors?.['contrasenaNoCoincide'])"
+          />
+          <button type="button" class="toggle-pass" (click)="mostrarConfirmPass = !mostrarConfirmPass" aria-label="Ver contraseña">
+            <svg *ngIf="!mostrarConfirmPass" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg *ngIf="mostrarConfirmPass" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </button>
+        </div>
+        <div class="field-error" *ngIf="submitted && form.get('confirmarContrasena')?.errors?.['required']">
+          Debes confirmar la contraseña.
+        </div>
+        <div class="field-error" *ngIf="submitted && form.errors?.['contrasenaNoCoincide']">
+          Las contraseñas no coinciden.
+        </div>
+      </div>
+
+      <div class="error-msg" *ngIf="errorMsg">
+        {{ errorMsg }}
+      </div>
+
+      <div class="exito-msg" *ngIf="exitoMsg">
+        {{ exitoMsg }}
+      </div>
+
+      <button type="submit" class="btn-registro" [disabled]="enviando">
+        <span *ngIf="!enviando">Registrarse</span>
+        <span *ngIf="enviando">Registrando...</span>
+      </button>
+
+      <div class="login-link">
+        ¿Ya tienes cuenta? <button type="button" class="btn-link-login" (click)="irALogin()">Inicia sesión aquí</button>
+      </div>
+    </form>
+  </div>
+</section>

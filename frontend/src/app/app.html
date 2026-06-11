@@ -1,7 +1,12 @@
 <div class="lib-layout">
   
   <!-- 🧭 Navbar -->
-  <app-menu-nav (misReservasClick)="abrirBuscadorReservas()"></app-menu-nav>
+  <app-menu-nav
+    (misReservasClick)="abrirBuscadorReservas()"
+    (loginClick)="mostrarLogin = true"
+    (registroClick)="mostrarRegistro = true"
+    (miCuentaClick)="mostrarMiCuenta = true">
+  </app-menu-nav>
 
   <!-- 🖼️ Carrusel Hero (debajo del navbar) -->
   <section class="hero-carousel">
@@ -126,6 +131,26 @@
     *ngIf="mostrarBuscadorReservas"
     (cerrar)="cerrarBuscadorReservas()">
   </app-buscador-reservas>
+
+  <!-- 🔑 Modales de Autenticación y Cuenta -->
+  <app-login
+    *ngIf="mostrarLogin"
+    (cerrar)="mostrarLogin = false"
+    (loginExitoso)="mostrarMiCuenta = true; mostrarLogin = false"
+    (irARegistroClick)="mostrarRegistro = true">
+  </app-login>
+
+  <app-registro
+    *ngIf="mostrarRegistro"
+    (cerrar)="mostrarRegistro = false"
+    (registroExitoso)="mostrarLogin = true; mostrarRegistro = false"
+    (irALoginClick)="mostrarLogin = true">
+  </app-registro>
+
+  <app-mi-cuenta
+    *ngIf="mostrarMiCuenta"
+    (cerrar)="mostrarMiCuenta = false">
+  </app-mi-cuenta>
 
   <!-- 💬 Componente de mensajes (éxito / error) -->
   <app-mensaje

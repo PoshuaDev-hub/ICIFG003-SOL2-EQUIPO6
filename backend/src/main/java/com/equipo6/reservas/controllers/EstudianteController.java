@@ -55,12 +55,33 @@ public class EstudianteController {
     }
 
     /**
-     * Endpoint para crear un nuevo estudiante.
+     * Endpoint para crear un nuevo estudiante (con contraseña para credencial).
      */
     @PostMapping
-    public ResponseEntity<Estudiante> crearEstudiante(@RequestBody Estudiante estudiante) {
-        Estudiante nuevoEstudiante = estudianteService.crearEstudiante(estudiante);
-        return new ResponseEntity<>(nuevoEstudiante, HttpStatus.CREATED);
+    public ResponseEntity<Estudiante> crearEstudiante(@RequestBody Map<String, Object> body) {
+        Estudiante estudiante = new Estudiante();
+        estudiante.setRut((String) body.get("rut"));
+        estudiante.setNombre((String) body.get("nombre"));
+        estudiante.setApellido((String) body.get("apellido"));
+        estudiante.setCorreo((String) body.get("correo"));
+        if (body.get("telefono") != null) estudiante.setTelefono((String) body.get("telefono"));
+        String contrasena = (String) body.get("contrasena");
+        Estudiante nuevo = estudianteService.crearEstudiante(estudiante, contrasena);
+        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+    }
+
+    /**
+     * Actualizar sólo el teléfono de un estudiante.
+     */
+    @PatchMapping("/{id}/telefono")
+    public ResponseEntity<?> actualizarTelefono(@PathVariable Integer id, @RequestBody Map<String, String> body) {
+        try {
+            String telefono = body.get("telefono");
+            Estudiante actualizado = estudianteService.actualizarTelefono(id, telefono);
+            return ResponseEntity.ok(actualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        }
     }
 
     /**

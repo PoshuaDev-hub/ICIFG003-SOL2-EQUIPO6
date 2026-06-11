@@ -30,8 +30,36 @@ public class ReservaController {
     }
 
     @GetMapping("/mis-reservas")
-    public ResponseEntity<List<ReservaDTO>> misReservas(@RequestParam String rut) {
-        return ResponseEntity.ok(reservaService.obtenerPorRut(rut));
+    public ResponseEntity<List<ReservaDTO>> misReservas(
+            @RequestParam String rut,
+            @RequestParam String contrasena) {
+        List<ReservaDTO> reservas = reservaService.obtenerPorRut(rut, contrasena);
+        if (reservas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(reservas);
+        }
+        return ResponseEntity.ok(reservas);
+    }
+
+    @GetMapping("/mis-reservas/correo")
+    public ResponseEntity<List<ReservaDTO>> misReservasPorCorreo(
+            @RequestParam String correo,
+            @RequestParam String contrasena) {
+        List<ReservaDTO> reservas = reservaService.obtenerPorCorreo(correo, contrasena);
+        if (reservas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(reservas);
+        }
+        return ResponseEntity.ok(reservas);
+    }
+
+    @GetMapping("/mis-reservas/telefono")
+    public ResponseEntity<List<ReservaDTO>> misReservasPorTelefono(
+            @RequestParam String telefono,
+            @RequestParam String contrasena) {
+        List<ReservaDTO> reservas = reservaService.obtenerPorTelefono(telefono, contrasena);
+        if (reservas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(reservas);
+        }
+        return ResponseEntity.ok(reservas);
     }
 
     @PostMapping
@@ -43,6 +71,27 @@ public class ReservaController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PatchMapping("/{id}/observacion")
+    public ResponseEntity<?> actualizarObservacion(@PathVariable Integer id, @RequestBody Map<String, String> body) {
+        try {
+            String observacion = body.get("observacion");
+            ReservaDTO actualizada = reservaService.actualizarObservacion(id, observacion);
+            return ResponseEntity.ok(actualizada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> cancelarReserva(@PathVariable Integer id) {
+        try {
+            reservaService.cancelarReserva(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         }
     }
 }

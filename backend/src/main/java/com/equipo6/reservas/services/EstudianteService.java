@@ -1,8 +1,10 @@
 package com.equipo6.reservas.services;
 
 import com.equipo6.reservas.models.Carrera;
+import com.equipo6.reservas.models.Credencial;
 import com.equipo6.reservas.models.Estudiante;
 import com.equipo6.reservas.repositories.CarreraRepository;
+import com.equipo6.reservas.repositories.CredencialRepository;
 import com.equipo6.reservas.repositories.EstudianteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class EstudianteService {
 
     @Autowired
     private CarreraRepository carreraRepository;
+
+    @Autowired
+    private CredencialRepository credencialRepository;
 
     /**
      * Obtiene todos los estudiantes registrados.
@@ -49,7 +54,7 @@ public class EstudianteService {
      * @return Estudiante creado
      */
     @Transactional
-    public Estudiante crearEstudiante(Estudiante estudiante) {
+    public Estudiante crearEstudiante(Estudiante estudiante, String contrasena) {
         if (estudiante.getCorreo() == null || estudiante.getCorreo().isBlank()) {
             estudiante.setCorreo(estudiante.getRut() + "@usm.cl");
         }
@@ -60,7 +65,15 @@ public class EstudianteService {
             carreraRepository.findById(1).ifPresent(estudiante::setCarrera);
         }
         log.info("Creando nuevo estudiante: {}", estudiante.getNombre());
-        return estudianteRepository.save(estudiante);
+        Estudiante guardado = estudianteRepository.save(estudiante);
+        // Crear credencial con la contraseña elegida por el usuario
+        String numCred = (contrasena != null && !contrasena.isBlank()) ? contrasena : guardado.getRut();
+        Credencial credencial = new Credencial();
+        credencial.setNumeroCredencial(numCred);
+        credencial.setFechaVencimiento(LocalDate.now().plusYears(4));
+        credencial.setEstudiante(guardado);
+        credencialRepository.save(credencial);
+        return guardado;
     }
 
     /**
@@ -106,6 +119,14 @@ public class EstudianteService {
         estudianteRepository.deleteById(id);
     }
 
+    @Transactional
+    public Estudiante actualizarTelefono(Integer id, String telefono) {
+        return estudianteRepository.findById(id).map(est -> {
+            est.setTelefono(telefono);
+            return estudianteRepository.save(est);
+        }).orElseThrow(() -> new IllegalArgumentException("Estudiante con ID " + id + " no encontrado."));
+    }
+
     public List<java.util.Map<String, Object>> obtenerRankingReservas() {
         log.info("Obteniendo ranking de estudiantes con total de reservas");
         List<Object[]> resultados = estudianteRepository.findEstudiantesConTotalReservas();
@@ -117,5 +138,26 @@ public class EstudianteService {
             map.put("total_reservas", fila[3]);
             return map;
         }).toList();
+    }
+
+    @Transactional(readOnly = false)
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationReadyEvent.class)
+    public void inicializarCredencialesFaltantes() {
+        try {
+            log.info("Inicializando credenciales faltantes para estudiantes existentes...");
+            List<Estudiante> todos = estudianteRepository.findAll();
+            for (Estudiante est : todos) {
+                if (credencialRepository.findByEstudianteId(est.getId()).isEmpty()) {
+                    log.info("Creando credencial por defecto (RUT) para estudiante ID: {}", est.getId());
+                    Credencial c = new Credencial();
+                    c.setNumeroCredencial(est.getRut());
+                    c.setFechaVencimiento(LocalDate.now().plusYears(4));
+                    c.setEstudiante(est);
+                    credencialRepository.save(c);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error al inicializar credenciales faltantes", e);
+        }
     }
 }

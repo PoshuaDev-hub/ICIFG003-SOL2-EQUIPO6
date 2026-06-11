@@ -57,6 +57,31 @@
     gap: 1.25rem;
   }
 
+  .error-msg {
+    font-size: 0.85rem;
+    color: #b91c1c;
+    font-weight: 500;
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: var(--accent-wood);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0 0.25rem;
+      font-size: inherit;
+      font-family: inherit;
+      &:hover { color: var(--accent-hover); }
+    }
+  }
+
+  .success-msg {
+    font-size: 0.85rem;
+    color: #15803d;
+    font-weight: 500;
+  }
+
   .form-group {
     display: flex;
     flex-direction: column;
@@ -69,6 +94,37 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
+
+      .required-mark {
+        color: #b91c1c;
+        margin-left: 2px;
+        font-weight: 700;
+      }
+    }
+
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input {
+        flex: 1;
+        padding-right: 2.5rem !important;
+      }
+
+      .toggle-pass {
+        position: absolute;
+        right: 0.6rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-muted);
+        padding: 0.25rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        &:hover { color: var(--text-main); }
+      }
     }
 
     input, select, textarea {

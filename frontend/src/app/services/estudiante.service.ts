@@ -17,7 +17,18 @@ export class EstudianteService {
     return this.http.get<Estudiante>(`${this.baseUrl}/buscar/rut`, { params });
   }
 
-  crearEstudiante(rut: string, nombre: string, apellido: string): Observable<Estudiante> {
-    return this.http.post<Estudiante>(this.baseUrl, { rut, nombre, apellido });
+  crearEstudiante(
+    rut: string,
+    nombre: string,
+    apellido: string,
+    correo: string,
+    contrasena: string,
+    telefono?: string
+  ): Observable<Estudiante> {
+    return this.http.post<Estudiante>(this.baseUrl, { rut, nombre, apellido, correo, contrasena, telefono });
+  }
+
+  actualizarTelefono(id: number, telefono: string): Observable<Estudiante> {
+    return this.http.patch<Estudiante>(`${this.baseUrl}/${id}/telefono`, { telefono });
   }
 }

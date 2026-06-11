@@ -1,120 +1,122 @@
 <section class="form-overlay" (click)="cancelar.emit()">
   <div class="form-modal" (click)="$event.stopPropagation()">
     <div class="form-header">
-      <h3>Nueva Reserva</h3>
+      <h3>{{ modo === 'reserva' ? 'Nueva Reserva' : 'Crear Cuenta' }}</h3>
       <button class="btn-cerrar" (click)="cancelar.emit()" aria-label="Cerrar formulario">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
 
-    <p class="sala-info" *ngIf="salaNombre">Reservando: <strong>{{ salaNombre }}</strong></p>
+    <p class="sala-info" *ngIf="salaNombre && modo === 'reserva'">Reservando: <strong>{{ salaNombre }}</strong></p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
 
       <!-- ====== MODO RESERVA ====== -->
       <ng-container *ngIf="modo === 'reserva'">
 
-        <!-- RUT -->
         <div class="form-group">
-          <label for="rutInput">RUT</label>
+          <label for="rutInput">RUT <span class="required-mark">*</span></label>
           <input id="rutInput" type="text" formControlName="rut" placeholder="12345678-5" autocomplete="off">
-          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['required']">
-            El RUT es requerido.
-          </span>
-          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['pattern']">
-            Ingresa un RUT válido (ej: 12345678-5).
-          </span>
+          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['required']">El RUT es requerido.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['pattern']">Ingresa un RUT válido (ej: 12345678-5).</span>
         </div>
 
-        <!-- Fecha -->
         <div class="form-group">
-          <label for="fechaInput">Fecha de Reserva</label>
+          <label for="correoInput">Correo Electrónico <span class="required-mark">*</span></label>
+          <input id="correoInput" type="email" formControlName="correo" placeholder="correo@ejemplo.cl" autocomplete="email">
+          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['required']">El correo es requerido.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['email']">Ingresa un correo válido.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="fechaInput">Fecha de Reserva <span class="required-mark">*</span></label>
           <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()" [attr.min]="hoyMin">
-          <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['required']">
-            La fecha es requerida.
-          </span>
-          <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['fechaNoAnterior']">
-            La fecha no puede ser anterior al día actual.
-          </span>
+          <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['required']">La fecha es requerida.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['fechaNoAnterior']">La fecha no puede ser anterior al día actual.</span>
         </div>
 
-        <!-- Horario -->
         <div class="form-group">
-          <label for="horarioSelect">Horario</label>
+          <label for="horarioSelect">Horario <span class="required-mark">*</span></label>
           <select id="horarioSelect" formControlName="idHorario">
             <option [ngValue]="null" disabled>Seleccione un horario</option>
-            <option *ngFor="let h of horariosDisponibles" [ngValue]="h.id">
-              {{ h.horaInicio }} — {{ h.horaTermino }}
-            </option>
+            <option *ngFor="let h of horariosDisponibles" [ngValue]="h.id">{{ h.horaInicio }} — {{ h.horaTermino }}</option>
           </select>
           <span class="info-msg" *ngIf="cargandoHorarios">Cargando horarios...</span>
-          <span class="info-msg" *ngIf="!cargandoHorarios && horariosDisponibles.length === 0 && form.value.fecha && idSala">
-            No hay horarios disponibles para esta sala en la fecha seleccionada.
-          </span>
-          <span class="error-msg" *ngIf="submitted && form.controls['idHorario'].invalid">
-            Debes seleccionar un horario.
-          </span>
+          <span class="info-msg" *ngIf="!cargandoHorarios && horariosDisponibles.length === 0 && form.value.fecha && idSala">No hay horarios disponibles.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['idHorario'].invalid">Debes seleccionar un horario.</span>
         </div>
 
-        <!-- Observaciones -->
         <div class="form-group">
           <label for="obsInput">Observaciones (opcional)</label>
           <textarea id="obsInput" formControlName="observaciones" rows="3" placeholder="Comentarios adicionales..."></textarea>
         </div>
 
-        <!-- Error + boton registro -->
         <div class="error-msg" *ngIf="errorMsg === 'Estudiante no encontrado.'">
-          Estudiante no encontrado.
-          <button type="button" class="btn-link" (click)="irARegistro()">Registrarse</button>
+          Estudiante no encontrado. ¿No tienes cuenta?
+          <button type="button" class="btn-link" (click)="irARegistro()">Regístrate aquí</button>
         </div>
         <div class="error-msg" *ngIf="errorMsg && errorMsg !== 'Estudiante no encontrado.' && errorMsg !== 'Estudiante registrado correctamente. Confirma la reserva.'">{{ errorMsg }}</div>
         <div class="success-msg" *ngIf="errorMsg === 'Estudiante registrado correctamente. Confirma la reserva.'">{{ errorMsg }}</div>
 
-        <!-- Botones -->
         <div class="form-actions">
           <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
-          <button type="submit" class="btn-enviar" [disabled]="enviando || (submitted && form.invalid)">
-            {{ enviando ? 'Enviando...' : 'Confirmar Reserva' }}
-          </button>
+          <button type="submit" class="btn-enviar" [disabled]="enviando">{{ enviando ? 'Enviando...' : 'Confirmar Reserva' }}</button>
         </div>
       </ng-container>
 
       <!-- ====== MODO REGISTRO ====== -->
       <ng-container *ngIf="modo === 'registro'">
-        <p class="sala-info">Regístrate para continuar con la reserva</p>
+        <p class="sala-info">Crea tu cuenta para continuar con la reserva</p>
 
-        <!-- RUT (solo lectura) -->
         <div class="form-group">
           <label for="rutRegInput">RUT</label>
           <input id="rutRegInput" type="text" formControlName="rut" readonly>
         </div>
 
-        <!-- Nombre -->
         <div class="form-group">
-          <label for="nombreInput">Nombre</label>
-          <input id="nombreInput" type="text" formControlName="nombre" placeholder="Nombre" autocomplete="off">
-          <span class="error-msg" *ngIf="submitted && form.controls['nombre'].errors?.['required']">
-            El nombre es requerido.
-          </span>
+          <label for="nombreInput">Nombre <span class="required-mark">*</span></label>
+          <input id="nombreInput" type="text" formControlName="nombre" placeholder="Nombre" autocomplete="given-name">
+          <span class="error-msg" *ngIf="submitted && form.controls['nombre'].errors?.['required']">El nombre es requerido.</span>
         </div>
 
-        <!-- Apellido -->
         <div class="form-group">
-          <label for="apellidoInput">Apellido</label>
-          <input id="apellidoInput" type="text" formControlName="apellido" placeholder="Apellido" autocomplete="off">
-          <span class="error-msg" *ngIf="submitted && form.controls['apellido'].errors?.['required']">
-            El apellido es requerido.
-          </span>
+          <label for="apellidoInput">Apellido <span class="required-mark">*</span></label>
+          <input id="apellidoInput" type="text" formControlName="apellido" placeholder="Apellido" autocomplete="family-name">
+          <span class="error-msg" *ngIf="submitted && form.controls['apellido'].errors?.['required']">El apellido es requerido.</span>
         </div>
 
-        <div class="error-msg" *ngIf="errorMsg && errorMsg !== 'Estudiante registrado correctamente. Confirma la reserva.'">{{ errorMsg }}</div>
+        <div class="form-group">
+          <label for="correoRegInput">Correo Electrónico <span class="required-mark">*</span></label>
+          <input id="correoRegInput" type="email" formControlName="correo" placeholder="correo@ejemplo.cl" autocomplete="email">
+          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['required']">El correo es requerido.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['email']">Ingresa un correo válido.</span>
+        </div>
 
-        <!-- Botones -->
+        <div class="form-group">
+          <label for="telefonoInput">Teléfono (opcional)</label>
+          <input id="telefonoInput" type="tel" formControlName="telefono" placeholder="+56912345678" autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label for="contrasenaInput">Contraseña <span class="required-mark">*</span></label>
+          <div class="password-wrapper">
+            <input id="contrasenaInput" [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+            <button type="button" class="toggle-pass" (click)="mostrarContrasena = !mostrarContrasena" [attr.aria-label]="mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <svg *ngIf="!mostrarContrasena" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg *ngIf="mostrarContrasena" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <span class="error-msg" *ngIf="submitted && form.controls['contrasena'].errors?.['required']">La contraseña es requerida.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['contrasena'].errors?.['minlength']">Mínimo 6 caracteres.</span>
+        </div>
+
+
+
+        <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+
         <div class="form-actions">
           <button type="button" class="btn-cancelar" (click)="volverAReserva()">Volver</button>
-          <button type="submit" class="btn-enviar" [disabled]="enviando">
-            {{ enviando ? 'Registrando...' : 'Registrar' }}
-          </button>
+          <button type="submit" class="btn-enviar" [disabled]="enviando">{{ enviando ? 'Registrando...' : 'Crear Cuenta' }}</button>
         </div>
       </ng-container>
 

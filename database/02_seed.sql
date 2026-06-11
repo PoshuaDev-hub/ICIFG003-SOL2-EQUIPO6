@@ -101,8 +101,8 @@ INSERT INTO RESERVA (fecha_reserva, observacion, fecha_creacion, id_estudiante, 
 -- 8. CREDENCIAL  (al menos 3 filas con datos de prueba)
 -- =====================================================================
 INSERT INTO CREDENCIAL (numero_credencial, fecha_vencimiento, estudiante_id) VALUES
-  ('CRED-123456', '2028-12-31', 1),
-  ('CRED-654321', '2029-06-30', 2),
-  ('CRED-987654', '2028-08-15', 3);
+  ('123456', '2028-12-31', 1),
+  ('654321', '2029-06-30', 2),
+  ('987654', '2028-08-15', 3);
 
 -- Fin del seed.

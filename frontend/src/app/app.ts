@@ -8,13 +8,22 @@ import { TarjetaSalaComponent } from './components/tarjeta-sala/tarjeta-sala';
 import { FormularioReservaComponent } from './components/formulario-reserva/formulario-reserva';
 import { ListadoReservasComponent } from './components/listado-reservas/listado-reservas';
 import { BuscadorReservasComponent } from './components/buscador-reservas/buscador-reservas';
+import { LoginComponent } from './components/login/login';
+import { RegistroComponent } from './components/registro/registro';
+import { MiCuentaComponent } from './components/mi-cuenta/mi-cuenta';
 import { SalaService } from './services/sala.service';
+import { AuthService } from './services/auth.service';
 import { Sala } from './interfaces/sala.interface';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, MenuNavComponent, MensajeComponent, TarjetaSalaComponent, FormularioReservaComponent, ListadoReservasComponent, BuscadorReservasComponent],
+  imports: [
+    RouterOutlet, CommonModule, FormsModule, 
+    MenuNavComponent, MensajeComponent, TarjetaSalaComponent, 
+    FormularioReservaComponent, ListadoReservasComponent, BuscadorReservasComponent,
+    LoginComponent, RegistroComponent, MiCuentaComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -26,15 +35,22 @@ export class App implements OnInit, OnDestroy {
   hoy: string = this.filtroFecha;
   cargandoSalas = false;
 
-  constructor(private salaService: SalaService) {}
+  // Modales
+  mostrarLogin = false;
+  mostrarRegistro = false;
+  mostrarMiCuenta = false;
+  mostrarBuscadorReservas = false;
+
+  constructor(
+    private salaService: SalaService,
+    public authService: AuthService
+  ) {}
 
   // --- Issue 14: Formulario de Reserva ---
   salaSeleccionada: Sala | null = null;
 
   // --- Issue 15: Listado de reservas por sala (RF04) ---
   salaParaListado: Sala | null = null;
-
-  mostrarBuscadorReservas = false;
 
   onVerReservas(idSala: number) {
     const sala = this.salas.find(s => s.id === idSala);
@@ -50,7 +66,11 @@ export class App implements OnInit, OnDestroy {
   }
 
   abrirBuscadorReservas() {
-    this.mostrarBuscadorReservas = true;
+    if (this.authService.isLoggedIn()) {
+      this.mostrarMiCuenta = true;
+    } else {
+      this.mostrarBuscadorReservas = true;
+    }
   }
 
   cerrarBuscadorReservas() {

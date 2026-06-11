@@ -16,6 +16,12 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
     @Query("SELECT e FROM Estudiante e WHERE e.rut = :rut")
     List<Estudiante> findByRutExacto(@Param("rut") String rut);
 
+    @Query("SELECT e FROM Estudiante e WHERE e.correo = :correo")
+    List<Estudiante> findByCorreoExacto(@Param("correo") String correo);
+
+    @Query("SELECT e FROM Estudiante e WHERE e.telefono = :telefono")
+    List<Estudiante> findByTelefonoExacto(@Param("telefono") String telefono);
+
     @Query(
         value = "SELECT e.rut, e.nombre, e.apellido, COUNT(r.id) AS total_reservas " +
                 "FROM ESTUDIANTE e " +
