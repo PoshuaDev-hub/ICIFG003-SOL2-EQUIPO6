@@ -3,6 +3,7 @@ package com.equipo6.reservas.controllers;
 import com.equipo6.reservas.models.Estudiante;
 import com.equipo6.reservas.repositories.CredencialRepository;
 import com.equipo6.reservas.repositories.EstudianteRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -31,7 +33,10 @@ public class AuthController {
         String contrasena = body.get("contrasena");
         String tipo = body.getOrDefault("tipo", "rut");
 
+        log.info("Intento de login - tipo: {}, identificador: {}", tipo, identificador);
+
         if (identificador == null || identificador.isBlank() || contrasena == null || contrasena.isBlank()) {
+            log.warn("Login fallido: identificador o contraseña vacíos");
             return ResponseEntity.badRequest().body(Map.of("error", "Identificador y contraseña son requeridos."));
         }
 

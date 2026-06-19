@@ -1,78 +1,100 @@
 # Registro de Implementación de Issues - Proyecto 3
 
-Este documento detalla los archivos modificados y la lógica implementada tras la finalización de cada Issue del Proyecto 3. El objetivo es mantener al equipo sincronizado y facilitar la revisión del código.
-
 ---
 
 ## Issue 1: [Gestión] Reasignación de roles, respaldo, taggeo y estructura de ramas Git
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- (solo git operations)
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- **Tag `v2.0-solemne2`** creado en el commit HEAD (`bff4b9c`) y subido a GitHub. Sirve como punto de respaldo (REQ1) del estado final del Solemne 2 antes de comenzar cambios del Proyecto 3 (REQ2). Un tag es una marca en el historial de git que permite volver a este punto exacto en el futuro.
+- **Rama `DEV`** creada desde `main` para desarrollo rápido de cambios (REQ3).
+- **Rama `QA`** creada desde `main` para pruebas de integración (REQ3). La versión final revisada se entrega desde QA.
+- Roles reasignados según experticia en `docs_p3/KANBAN_REQ.md` (REQ0).
 
 ---
 
 ## Issue 2: [Arquitectura] Dockerizar la aplicación completa localmente
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- `backend/Dockerfile` — Multi-stage: compila con Maven, ejecuta con JRE 17
+- `frontend/Dockerfile` — Multi-stage: compila Angular con Node 22, sirve con Nginx
+- `frontend/nginx.conf` — Proxy reverso para redirigir `/api/` al backend
+- `docker-compose.yml` — Orquestación de 3 servicios (db, backend, frontend)
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- **docker-compose.yml** define 3 servicios:
+  - `db`: MySQL 8.0 con persistencia en volumen, healthcheck para esperar a que esté listo
+  - `backend`: Spring Boot que espera a db vía `depends_on: condition: service_healthy`
+  - `frontend`: Angular servido por Nginx en puerto 4200, proxy `/api/` hacia backend
+- Comandos: `docker compose up` inicia todo, `docker compose down` detiene todo (REQ14, REQ15)
 
 ---
 
 ## Issue 3: [Backend] Migración de conexión de Base de Datos a MySQL
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- `backend/pom.xml` — Reemplazado driver PostgreSQL por MySQL (`mysql-connector-j`)
+- `backend/src/main/resources/application.properties` — Cambiada URL JDBC, credenciales, dialecto Hibernate
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- Se eliminó dependencia `postgresql` y se agregó `mysql-connector-j`
+- URL apunta a `jdbc:mysql://localhost:3306/reserva_salas_db?createDatabaseIfNotExist=true...`
+- Dialecto configurado a `org.hibernate.dialect.MySQLDialect`
 
 ---
 
 ## Issue 4: [Backend] Generación Automática de DDL por Hibernate
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- `backend/src/main/resources/application.properties` — `spring.jpa.hibernate.ddl-auto=update`
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- Con `ddl-auto=update`, Hibernate crea las tablas automáticamente desde las entidades JPA al arrancar el backend (REQ5, REQ7)
+- Ya no se necesita ejecutar `01_schema.sql` manualmente
+- Las tablas se crean con tipos compatibles con MySQL
 
 ---
 
 ## Issue 5: [Backend] Poblado de Datos Base Automático con data.sql
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- `backend/src/main/resources/data.sql` — Seed data en formato MySQL
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- Archivo `data.sql` con inserts de datos de prueba: carreras, edificios, salas, estados, estudiantes, horarios, reservas y credenciales
+- Se usa `INSERT IGNORE` para evitar duplicados en reinicios
+- Configurado `spring.sql.init.mode=always` y `spring.jpa.defer-datasource-initialization=true` para que se ejecute después de que Hibernate cree las tablas
 
 ---
 
 ## Issue 6: [Backend] Implementación de Logger en Archivo de Log
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
 
 ### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
+- `backend/src/main/resources/application.properties` — `logging.file.name=logs/backend.log`
+- `controllers/AuthController.java` — Agregado `@Slf4j` y logs en login
+- `controllers/ReservaController.java` — Agregados logs en listar, crear y cancelar
+- `controllers/EstudianteController.java` — Agregados logs en crear estudiante
+- `controllers/SalaController.java` — Agregado log en listar salas
+- `controllers/HorarioController.java` — Agregado log en listar horarios
 
 ### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
+- Logger SLF4J con anotación `@Slf4j` de Lombok en controladores
+- Los mensajes se escriben en `logs/backend.log` con formato: fecha, nivel, clase
+- Se registran: intentos de login, creación de reservas, cancelaciones, consultas
 
 ---
 
@@ -80,23 +102,11 @@ Este documento detalla los archivos modificados y la lógica implementada tras l
 
 **Estado:** Pendiente ⏳
 
-### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
-
-### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
-
 ---
 
 ## Issue 8: [Frontend] Optimizar Usabilidad y Reducir Datos Innecesarios
 
 **Estado:** Pendiente ⏳
-
-### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
-
-### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
 
 ---
 
@@ -104,32 +114,14 @@ Este documento detalla los archivos modificados y la lógica implementada tras l
 
 **Estado:** Pendiente ⏳
 
-### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
-
-### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
-
 ---
 
 ## Issue 10: [Backend / DB] Ingeniería Inversa y Generación de Diagrama MER
 
 **Estado:** Pendiente ⏳
 
-### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
-
-### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
-
 ---
 
 ## Issue 11: [Gestión] Integración Final, Verificación de Persistencia y Cierre de Entrega
 
 **Estado:** Pendiente ⏳
-
-### Archivos Modificados / Creados
-*(Indicar la lista de archivos modificados o creados aquí)*
-
-### Lógica y Contexto
-*(Explicar detalladamente qué se implementó y por qué)*
