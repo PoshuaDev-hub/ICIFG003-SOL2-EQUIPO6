@@ -3,7 +3,8 @@ package com.equipo6.reservas.services;
 import com.equipo6.reservas.dtos.ReservaDTO;
 import com.equipo6.reservas.models.*;
 import com.equipo6.reservas.repositories.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class ReservaService {
+
+    private Logger log = LoggerFactory.getLogger(ReservaService.class);
 
     @Autowired
     private ReservaRepository reservaRepository;

@@ -2,7 +2,8 @@ package com.equipo6.reservas.services;
 
 import com.equipo6.reservas.models.HorarioDisponible;
 import com.equipo6.reservas.repositories.HorarioDisponibleRepository;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class HorarioService {
+
+    private Logger log = LoggerFactory.getLogger(HorarioService.class);
 
     @Autowired
     private HorarioDisponibleRepository horarioRepository;
