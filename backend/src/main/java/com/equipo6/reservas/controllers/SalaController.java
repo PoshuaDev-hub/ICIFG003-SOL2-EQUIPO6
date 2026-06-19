@@ -21,6 +21,7 @@ public class SalaController {
 
     @GetMapping
     public ResponseEntity<List<Sala>> listarSalas(@RequestParam(required = false) Integer capacidad) {
+        log.info("Listar salas - filtro capacidad: {}", capacidad);
         if (capacidad != null && capacidad > 0) {
             return ResponseEntity.ok(salaService.obtenerPorCapacidadExacta(capacidad));
         }

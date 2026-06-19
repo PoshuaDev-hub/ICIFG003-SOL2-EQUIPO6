@@ -26,6 +26,7 @@ public class HorarioController {
      */
     @GetMapping
     public ResponseEntity<List<HorarioDisponible>> listarHorarios(@RequestParam(required = false) Integer sala) {
+        log.info("Listar horarios - sala: {}", sala);
         if (sala != null) {
             return ResponseEntity.ok(horarioService.obtenerPorSala(sala));
         }

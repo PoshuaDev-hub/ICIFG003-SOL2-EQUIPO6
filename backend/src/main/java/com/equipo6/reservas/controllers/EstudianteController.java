@@ -59,6 +59,7 @@ public class EstudianteController {
      */
     @PostMapping
     public ResponseEntity<Estudiante> crearEstudiante(@RequestBody Map<String, Object> body) {
+        log.info("Crear estudiante - RUT: {}", body.get("rut"));
         Estudiante estudiante = new Estudiante();
         estudiante.setRut((String) body.get("rut"));
         estudiante.setNombre((String) body.get("nombre"));
@@ -67,6 +68,7 @@ public class EstudianteController {
         if (body.get("telefono") != null) estudiante.setTelefono((String) body.get("telefono"));
         String contrasena = (String) body.get("contrasena");
         Estudiante nuevo = estudianteService.crearEstudiante(estudiante, contrasena);
+        log.info("Estudiante creado con ID: {}", nuevo.getId());
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 

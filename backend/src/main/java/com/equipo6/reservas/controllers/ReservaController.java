@@ -26,6 +26,7 @@ public class ReservaController {
     public ResponseEntity<List<ReservaDTO>> listarReservas(
             @RequestParam(required = false) Integer sala,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        log.info("Listar reservas - sala: {}, fecha: {}", sala, fecha);
         if (sala != null && fecha != null) {
             return ResponseEntity.ok(reservaService.obtenerPorSalaYFecha(sala, fecha));
         }
@@ -67,8 +68,12 @@ public class ReservaController {
 
     @PostMapping
     public ResponseEntity<?> crearReserva(@RequestBody ReservaDTO reservaDTO) {
+        log.info("Crear reserva - sala: {}, fecha: {}, horario: {}, estudiante: {}",
+                reservaDTO.getIdSala(), reservaDTO.getFechaReserva(),
+                reservaDTO.getIdHorario(), reservaDTO.getIdEstudiante());
         try {
             ReservaDTO nuevaReserva = reservaService.crearReserva(reservaDTO);
+            log.info("Reserva creada exitosamente con ID: {}", nuevaReserva.getId());
             return new ResponseEntity<>(nuevaReserva, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -96,8 +101,10 @@ public class ReservaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> cancelarReserva(@PathVariable Integer id) {
+        log.info("Cancelar reserva ID: {}", id);
         try {
             reservaService.cancelarReserva(id);
+            log.info("Reserva ID {} cancelada exitosamente", id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
