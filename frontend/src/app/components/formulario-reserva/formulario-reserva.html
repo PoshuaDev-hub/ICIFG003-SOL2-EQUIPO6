@@ -20,26 +20,30 @@
 
         <div class="form-group">
           <label for="rutInput">RUT <span class="required-mark">*</span></label>
-          <input id="rutInput" type="text" formControlName="rut" placeholder="12345678-5" autocomplete="off">
+          <input id="rutInput" type="text" formControlName="rut" placeholder="12345678-9" autocomplete="off"
+            [class.invalid]="submitted && form.controls['rut'].invalid">
+          <span class="info-msg" *ngIf="buscandoEstudiante">Buscando estudiante...</span>
+          <span class="success-inline" *ngIf="!buscandoEstudiante && estudianteEncontrado && form.controls['rut'].valid">
+            ✓ Estudiante encontrado, datos cargados.
+          </span>
           <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['required']">El RUT es
             requerido.</span>
-          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['pattern']">Ingresa un RUT válido
-            (ej: 12345678-5).</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['rut'].errors?.['pattern']">Formato inválido. Usa
+            12345678-9 (sin puntos, con guión).</span>
+          <span class="error-msg" *ngIf="submitted && !form.controls['rut'].errors?.['pattern'] && form.controls['rut'].errors?.['rutDv']">El
+            dígito verificador del RUT no es válido.</span>
         </div>
 
-        <div class="form-group">
-          <label for="correoInput">Correo Electrónico <span class="required-mark">*</span></label>
-          <input id="correoInput" type="email" formControlName="correo" placeholder="correo@ejemplo.cl"
-            autocomplete="email">
-          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['required']">El correo es
-            requerido.</span>
-          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['email']">Ingresa un correo
-            válido.</span>
+        <!-- REQ13: el correo se deduce del RUT (rut@usm.cl), no se pide al usuario -->
+        <div class="form-group" *ngIf="correoDeducido">
+          <label>Correo institucional</label>
+          <p class="correo-deducido" aria-live="polite">{{ correoDeducido }} <span class="badge-auto">automático</span></p>
         </div>
 
         <div class="form-group">
           <label for="fechaInput">Fecha de Reserva <span class="required-mark">*</span></label>
-          <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()" [attr.min]="hoyMin">
+          <input id="fechaInput" type="date" formControlName="fecha" (change)="onFechaChange()" [attr.min]="hoyMin"
+            [class.invalid]="submitted && form.controls['fecha'].invalid">
           <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['required']">La fecha es
             requerida.</span>
           <span class="error-msg" *ngIf="submitted && form.controls['fecha'].errors?.['fechaNoAnterior']">La fecha no
@@ -64,7 +68,11 @@
         <div class="form-group">
           <label for="obsInput">Observaciones (opcional)</label>
           <textarea id="obsInput" formControlName="observaciones" rows="3"
-            placeholder="Comentarios adicionales..."></textarea>
+            placeholder="Si agregas una observación, mínimo 15 caracteres..."
+            [class.invalid]="submitted && form.controls['observaciones'].invalid"></textarea>
+          <span class="error-msg" *ngIf="submitted && form.controls['observaciones'].errors?.['minLengthSiPresente'] as e">
+            La observación debe tener al menos {{ e.requerido }} caracteres (llevas {{ e.actual }}).
+          </span>
         </div>
 
         <div class="error-msg" *ngIf="errorMsg === 'Estudiante no encontrado.'">
@@ -95,32 +103,36 @@
 
         <div class="form-group">
           <label for="nombreInput">Nombre <span class="required-mark">*</span></label>
-          <input id="nombreInput" type="text" formControlName="nombre" placeholder="Nombre" autocomplete="given-name">
+          <input id="nombreInput" type="text" formControlName="nombre" placeholder="Nombre" autocomplete="given-name"
+            [class.invalid]="submitted && form.controls['nombre'].invalid">
           <span class="error-msg" *ngIf="submitted && form.controls['nombre'].errors?.['required']">El nombre es
             requerido.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['nombre'].errors?.['nombreInvalido']">Ingresa un
+            nombre válido (mínimo 2 caracteres).</span>
         </div>
 
         <div class="form-group">
           <label for="apellidoInput">Apellido <span class="required-mark">*</span></label>
           <input id="apellidoInput" type="text" formControlName="apellido" placeholder="Apellido"
-            autocomplete="family-name">
+            autocomplete="family-name" [class.invalid]="submitted && form.controls['apellido'].invalid">
           <span class="error-msg" *ngIf="submitted && form.controls['apellido'].errors?.['required']">El apellido es
             requerido.</span>
+          <span class="error-msg" *ngIf="submitted && form.controls['apellido'].errors?.['nombreInvalido']">Ingresa un
+            apellido válido (mínimo 2 caracteres).</span>
         </div>
 
+        <!-- REQ13: el correo se deduce del RUT, se muestra pero no se pide -->
         <div class="form-group">
-          <label for="correoRegInput">Correo Electrónico <span class="required-mark">*</span></label>
-          <input id="correoRegInput" type="email" formControlName="correo" placeholder="correo@ejemplo.cl"
-            autocomplete="email">
-          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['required']">El correo es
-            requerido.</span>
-          <span class="error-msg" *ngIf="submitted && form.controls['correo'].errors?.['email']">Ingresa un correo
-            válido.</span>
+          <label>Correo institucional</label>
+          <p class="correo-deducido" aria-live="polite">{{ correoDeducido }} <span class="badge-auto">automático</span></p>
         </div>
 
         <div class="form-group">
           <label for="telefonoInput">Teléfono (opcional)</label>
-          <input id="telefonoInput" type="tel" formControlName="telefono" placeholder="+56912345678" autocomplete="tel">
+          <input id="telefonoInput" type="tel" formControlName="telefono" placeholder="+56912345678" autocomplete="tel"
+            [class.invalid]="submitted && form.controls['telefono'].invalid">
+          <span class="error-msg" *ngIf="submitted && form.controls['telefono'].errors?.['pattern']">Teléfono inválido
+            (8 a 12 dígitos, opcional +).</span>
         </div>
 
         <div class="form-group">

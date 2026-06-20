@@ -100,13 +100,41 @@
 
 ## Issue 7: [Frontend] Robustecer Validaciones y Mensajes de Información
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
+**Responsable:** Lucas
+
+### Archivos Modificados / Creados
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.ts`
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.html`
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.scss`
+
+### Lógica y Contexto
+Se reforzaron las validaciones del formulario reactivo de reservas/registro (REQ12): validación del
+dígito verificador del RUT (módulo 11) mediante `rutDvValidator`; nombre/apellido sin espacios vacíos
+(`noSoloEspacios`); teléfono con patrón `^\+?\d{8,12}$`; observaciones con mínimo 15 caracteres solo si
+se escriben (`minLengthSiPresente`). Los inputs inválidos reciben la clase `.invalid` (borde rojo) con
+mensajes de ayuda legibles. Los errores del backend se traducen en `mensajeDeError()`, que prioriza el
+mensaje de la API y cubre los códigos `400`, `404`, `409` y `0` (sin conexión).
 
 ---
 
 ## Issue 8: [Frontend] Optimizar Usabilidad y Reducir Datos Innecesarios
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅
+**Responsable:** Lucas
+
+### Archivos Modificados / Creados
+* `frontend/src/app/services/estudiante.service.ts`
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.ts`
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.html`
+* `frontend/src/app/components/formulario-reserva/formulario-reserva.scss`
+
+### Lógica y Contexto
+Se optimizó el flujo de creación de reservas para no pedir datos deducibles (REQ13): correo institucional
+automático `rut@usm.cl` mediante `deducirCorreoInstitucional()` (el campo correo se ocultó y se muestra como
+dato de solo lectura); autollenado de nombre/apellido buscando por RUT mientras el usuario escribe, con
+`debounceTime(450)` + `distinctUntilChanged()`; y fecha de hoy por defecto en el datepicker. La suscripción
+del buscador se limpia en `ngOnDestroy`.
 
 ---
 

@@ -237,3 +237,45 @@
     }
   }
 }
+
+/* ===== Proyecto 3 · REQ12/REQ13 · feedback de validación y usabilidad ===== */
+.reserva-form {
+  input.invalid,
+  select.invalid,
+  textarea.invalid {
+    border-color: #d9534f !important;
+    background-color: rgba(217, 83, 79, 0.05);
+  }
+
+  .success-inline {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.82rem;
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  .correo-deducido {
+    margin: 0;
+    padding: 0.55rem 0.7rem;
+    background: var(--bg-muted, #f4f1ea);
+    border: 1px dashed var(--border-color, #cfc6b8);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--text-main, #2b2b2b);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .badge-auto {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--accent-wood, #8a6d3b);
+      color: #fff;
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+  }
+}

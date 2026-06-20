@@ -31,4 +31,17 @@ export class EstudianteService {
   actualizarTelefono(id: number, telefono: string): Observable<Estudiante> {
     return this.http.patch<Estudiante>(`${this.baseUrl}/${id}/telefono`, { telefono });
   }
+
+  /**
+   * Deduce el correo institucional a partir del RUT (REQ13).
+   * Toma solo el cuerpo del RUT (sin puntos, sin guión, sin dígito verificador)
+   * y arma el correo en formato institucional: 12345678-9 -> 12345678@usm.cl
+   */
+  deducirCorreoInstitucional(rut: string): string {
+    if (!rut) return '';
+    const limpio = rut.replace(/[^0-9kK]/g, '');
+    if (limpio.length < 2) return '';
+    const cuerpo = limpio.slice(0, -1); // descarta el dígito verificador
+    return `${cuerpo}@usm.cl`;
+  }
 }
