@@ -159,10 +159,10 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Desarrollar la resiliencia en el frontend para manejar caídas o falta de disponibilidad del servidor, entregando una experiencia de usuario controlada y profesional.
 
 **Tareas a realizar:**
-- [ ] Implementar un interceptor HTTP en Angular o extender el manejo de errores en los servicios para capturar errores de conexión (ej. `HttpErrorResponse` con `status: 0`).
-- [ ] Diseñar y mostrar un mensaje visual de error ("Servidor Fuera de Línea", "No se pudo establecer conexión con el backend. Por favor, intente más tarde") en pantalla mediante `MensajeComponent` o un banner informativo persistente cuando ocurran estos errores.
-- [ ] Detener el backend localmente de forma deliberada y validar que al intentar interactuar con la aplicación (listar salas, buscar reservas o enviar formularios) el frontend no colapse, sino que devuelva el mensaje controlado de fracaso de conexión (REQ11).
-- [ ] Registrar y documentar las pruebas de comportamiento offline del frontend.
+- [x] Implementar un interceptor HTTP en Angular o extender el manejo de errores en los servicios para capturar errores de conexión (ej. `HttpErrorResponse` con `status: 0`).
+- [x] Diseñar y mostrar un mensaje visual de error ("Servidor Fuera de Línea", "No se pudo establecer conexión con el backend. Por favor, intente más tarde") en pantalla mediante `MensajeComponent` o un banner informativo persistente cuando ocurran estos errores.
+- [x] Detener el backend localmente de forma deliberada y validar que al intentar interactuar con la aplicación (listar salas, buscar reservas o enviar formularios) el frontend no colapse, sino que devuelva el mensaje controlado de fracaso de conexión (REQ11).
+- [x] Registrar y documentar las pruebas de comportamiento offline del frontend.
 
 ---
 
@@ -175,11 +175,11 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Generar el diagrama del Modelo Entidad-Relación (MER) a partir del esquema físico MySQL creado automáticamente por Hibernate, mediante la herramienta de ingeniería inversa de MySQL Workbench.
 
 **Tareas a realizar:**
-- [ ] Levantar la base de datos MySQL local del proyecto con las tablas creadas por Hibernate.
-- [ ] Abrir MySQL Workbench y configurar una conexión a la base de datos local `reserva_salas_db`.
-- [ ] Ejecutar el proceso de Ingeniería Inversa (Reverse Engineer) seleccionando el esquema del proyecto.
+- [x] Levantar la base de datos MySQL local del proyecto con las tablas creadas por Hibernate.
+- [x] Abrir MySQL Workbench y configurar una conexión a la base de datos local `reserva_salas_db`.
+- [x] Ejecutar el proceso de Ingeniería Inversa (Reverse Engineer) seleccionando el esquema del proyecto.
 - [ ] Organizar de manera lógica y ordenada el diagrama físico resultante para asegurar una lectura fluida del MER.
-- [ ] Exportar el diagrama obtenido en formato de imagen (.PNG) y PDF, y almacenarlo en la ruta `docs_p3/assets/` para que esté disponible para el equipo, la documentación final y la presentación del proyecto.
+- [x] Exportar el diagrama obtenido en formato de imagen (.PNG) y PDF, y almacenarlo en la ruta `docs_p3/assets/` para que esté disponible para el equipo, la documentación final y la presentación del proyecto.
 
 ---
 
