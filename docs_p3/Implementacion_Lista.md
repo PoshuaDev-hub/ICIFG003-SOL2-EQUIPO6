@@ -138,15 +138,38 @@ del buscador se limpia en `ngOnDestroy`.
 
 ---
 
-## Issue 9: [QA / Testing] Pruebas en Frontend con Backend Detenido
+## Issue 9: [QA / Testing] Pruebas en Frontend con Backend Detenido (REQ11)
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅  
+**Asignado a:** Victor  
+
+### Archivos Modificados / Creados
+1. **`frontend/src/app/core/interceptors/error.interceptor.ts` (Creado):**
+   - Se implementó un interceptor HTTP funcional (`HttpInterceptorFn`) en Angular para capturar globalmente las respuestas de error.
+   - Se configuró el operador `catchError` de RxJS para interceptar específicamente el código de error `status: 0`, el cual indica la falta de comunicación o caída del servidor.
+2. **`frontend/src/app/app.config.ts` (Modificado):**
+   - Se registró el interceptor en los *providers* globales de Angular utilizando `provideHttpClient(withInterceptors([errorInterceptor]))`, garantizando que evalúe todas las peticiones salientes.
+3. **`package.json` en Frontend (Modificado):**
+   - Se instaló la dependencia `sweetalert2` para gestionar las notificaciones de error de manera profesional y persistente en pantalla.
+4. **`docs_p3/assets/alerta_error_offline.png` (Creado):**
+   - Captura de pantalla adjunta que evidencia de manera visual la alerta de SweetAlert2 desplegada inmediatamente al intentar interactuar con la aplicación (como reservar una sala o listar componentes) estando el backend fuera de servicio.
+
+### Lógica y Contexto
+Se desarrolló la resiliencia del frontend para manejar caídas o falta de disponibilidad del backend (REQ11). Para validar el requerimiento, se detuvo el contenedor del servidor Spring Boot localmente de forma deliberada (`docker compose stop backend`). Se comprobó que al intentar interactuar con el sistema o enviar formularios de reserva, la aplicación no colapsa ni queda congelada en un estado de carga infinita. En su lugar, el interceptor funcional detiene el flujo de red roto y lanza un mensaje visual controlado de fracaso mediante una interfaz modal estética de SweetAlert2 que informa al usuario: *"Servidor Fuera de Línea: No se pudo establecer conexión con el backend. Por favor, intente más tarde."*. El comportamiento offline quedó validado de extremo a extremo y respaldado por el archivo PNG de evidencia.
 
 ---
 
-## Issue 10: [Backend / DB] Ingeniería Inversa y Generación de Diagrama MER
+## Issue 10: [Backend / DB] Ingeniería Inversa y Generación de Diagrama MER (REQ8)
 
-**Estado:** Pendiente ⏳
+**Estado:** Completado ✅  
+**Asignado a:** Victor  
+
+### Archivos Modificados / Creados
+1. **`docs_p3/assets/diagrama_mer.png` y `.pdf` (Creados):**
+   - Se exportó y almacenó visualmente el Modelo Entidad-Relación resultante de la base de datos MySQL en los formatos requeridos para la documentación y presentación.
+
+### Lógica y Contexto
+Se validó la correcta generación de la estructura física de la base de datos por parte de Hibernate tras migrar el sistema a MySQL. Con el backend en ejecución y las tablas creadas automáticamente mediante la propiedad `ddl-auto=update`, se estableció conexión mediante MySQL Workbench a la base de datos local `reserva_salas_db` en el puerto mapeado por Docker. Utilizando la herramienta de Ingeniería Inversa (*Reverse Engineer*), se extrajo el Modelo Entidad-Relación (MER) reflejando de manera exacta las 8 tablas, llaves primarias, tipos de datos y relaciones foráneas generadas por el código de Spring Boot. El esquema visual fue organizado de manera lógica para asegurar una lectura fluida, cumpliendo de forma íntegra con el REQ8 del proyecto.
 
 ---
 
