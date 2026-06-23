@@ -178,7 +178,7 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 - [x] Levantar la base de datos MySQL local del proyecto con las tablas creadas por Hibernate.
 - [x] Abrir MySQL Workbench y configurar una conexión a la base de datos local `reserva_salas_db`.
 - [x] Ejecutar el proceso de Ingeniería Inversa (Reverse Engineer) seleccionando el esquema del proyecto.
-- [ ] Organizar de manera lógica y ordenada el diagrama físico resultante para asegurar una lectura fluida del MER.
+- [X] Organizar de manera lógica y ordenada el diagrama físico resultante para asegurar una lectura fluida del MER.
 - [x] Exportar el diagrama obtenido en formato de imagen (.PNG) y PDF, y almacenarlo en la ruta `docs_p3/assets/` para que esté disponible para el equipo, la documentación final y la presentación del proyecto.
 
 ---
