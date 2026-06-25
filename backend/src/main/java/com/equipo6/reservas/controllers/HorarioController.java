@@ -2,7 +2,8 @@ package com.equipo6.reservas.controllers;
 
 import com.equipo6.reservas.models.HorarioDisponible;
 import com.equipo6.reservas.services.HorarioService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/horarios")
 public class HorarioController {
+
+    private Logger log = LoggerFactory.getLogger(HorarioController.class);
 
     @Autowired
     private HorarioService horarioService;

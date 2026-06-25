@@ -2,7 +2,8 @@ package com.equipo6.reservas.controllers;
 
 import com.equipo6.reservas.models.Sala;
 import com.equipo6.reservas.services.SalaService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/salas")
 public class SalaController {
+
+    private Logger log = LoggerFactory.getLogger(SalaController.class);
 
     @Autowired
     private SalaService salaService;

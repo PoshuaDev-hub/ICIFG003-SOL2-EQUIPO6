@@ -24,12 +24,12 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Establecer la base del repositorio para el Proyecto 3, resguardando la entrega del Solemne 2 e implementando el flujo de ramas requerido.
 
 **Tareas a realizar:**
-- [ ] Documentar formalmente la reasignación de roles del equipo (REQ0).
-- [ ] Realizar un respaldo físico/digital del estado del repositorio Git tras finalizar el Solemne 2 (REQ1).
-- [ ] Crear el tag `v2.0-solemne2` en el commit correspondiente a la entrega final de la unidad anterior y subirlo a GitHub (REQ2).
-- [ ] Crear las ramas de trabajo `DEV` (para desarrollo rápido) y `QA` (para pruebas de integración y compilación final estable) (REQ3).
-- [ ] Demostrar el uso y flujo entre ambas ramas, asegurando que la versión final integrada para revisión se clone desde la rama `QA`.
-- [ ] Inicializar y mantener actualizado el tablero Kanban de GitHub para el seguimiento de actividades (REQ4).
+- [x] Documentar formalmente la reasignación de roles del equipo (REQ0).
+- [x] Realizar un respaldo físico/digital del estado del repositorio Git tras finalizar el Solemne 2 (REQ1).
+- [x] Crear el tag `v2.0-solemne2` en el commit correspondiente a la entrega final de la unidad anterior y subirlo a GitHub (REQ2).
+- [x] Crear las ramas de trabajo `DEV` (para desarrollo rápido) y `QA` (para pruebas de integración y compilación final estable) (REQ3).
+- [x] Demostrar el uso y flujo entre ambas ramas, asegurando que la versión final integrada para revisión se clone desde la rama `QA`.
+- [x] Inicializar y mantener actualizado el tablero Kanban de GitHub para el seguimiento de actividades (REQ4).
 
 ---
 
@@ -42,13 +42,13 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Configurar la infraestructura del proyecto para que pueda ser ejecutada en contenedores Docker mediante una sola instrucción de orquestación.
 
 **Tareas a realizar:**
-- [ ] Crear el archivo `Dockerfile` para empaquetar y ejecutar la aplicación del backend (Spring Boot).
-- [ ] Crear el archivo `Dockerfile` para compilar y servir la aplicación del frontend (Angular).
-- [ ] Crear el archivo `docker-compose.yml` en la raíz del proyecto para levantar el ecosistema completo (REQ14):
+- [x] Crear el archivo `Dockerfile` para empaquetar y ejecutar la aplicación del backend (Spring Boot).
+- [x] Crear el archivo `Dockerfile` para compilar y servir la aplicación del frontend (Angular).
+- [x] Crear el archivo `docker-compose.yml` en la raíz del proyecto para levantar el ecosistema completo (REQ14):
     - **Servicio `db`:** Base de datos MySQL 8.0 (configurar variables de entorno para usuario/password, exponer puerto 3306 y usar volúmenes para persistencia de datos).
     - **Servicio `backend`:** Aplicación Spring Boot (esperar a que el servicio `db` esté listo, enlazar credenciales mediante variables de entorno y exponer el puerto 8080).
     - **Servicio `frontend`:** Aplicación Angular (exponer el puerto 4200 y conectar al endpoint del backend).
-- [ ] Probar el control del ciclo de vida de los contenedores utilizando Docker Compose (`docker compose up` y `docker compose down`), garantizando que los servicios inicien y se detengan limpiamente mediante composer (REQ15).
+- [x] Probar el control del ciclo de vida de los contenedores utilizando Docker Compose (`docker compose up` y `docker compose down`), garantizando que los servicios inicien y se detengan limpiamente mediante composer (REQ15).
 
 ---
 
@@ -61,8 +61,8 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Adaptar el backend desarrollado en Spring Boot para que interactúe con el motor de base de datos MySQL en lugar de PostgreSQL.
 
 **Tareas a realizar:**
-- [ ] Reemplazar la dependencia del driver de PostgreSQL por la de MySQL (`mysql-connector-j`) en el archivo `backend/pom.xml`.
-- [ ] Actualizar el archivo `backend/src/main/resources/application.properties` con los parámetros de conexión para MySQL (REQ6):
+- [x] Reemplazar la dependencia del driver de PostgreSQL por la de MySQL (`mysql-connector-j`) en el archivo `backend/pom.xml`.
+- [x] Actualizar el archivo `backend/src/main/resources/application.properties` con los parámetros de conexión para MySQL (REQ6):
     - Configurar la URL JDBC (`jdbc:mysql://localhost:3306/reserva_salas_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`).
     - Configurar las credenciales (usuario y contraseña correspondientes a la base de datos).
     - Configurar el dialecto de JPA Hibernate para MySQL (`org.hibernate.dialect.MySQLDialect`).
@@ -78,9 +78,9 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Configurar el backend para que la base de datos y todas sus tablas se autogeneren a partir del modelo de entidades JPA, eliminando la necesidad de scripts DDL manuales.
 
 **Tareas a realizar:**
-- [ ] Configurar en `application.properties` la propiedad de Hibernate `spring.jpa.hibernate.ddl-auto=update` o `create` para asegurar que las tablas se creen al ejecutar el backend sin que el equipo escriba archivos DDL manuales (REQ5, REQ7).
-- [ ] Verificar y ajustar el mapeo de las entidades JPA existentes para evitar discrepancias de tipo de datos al migrar a MySQL (como tipos de datos, llaves foráneas y restricciones).
-- [ ] Validar que al arrancar el backend con una base de datos MySQL vacía, Hibernate cree el esquema de tablas en su totalidad de manera automática.
+- [x] Configurar en `application.properties` la propiedad de Hibernate `spring.jpa.hibernate.ddl-auto=update` o `create` para asegurar que las tablas se creen al ejecutar el backend sin que el equipo escriba archivos DDL manuales (REQ5, REQ7).
+- [x] Verificar y ajustar el mapeo de las entidades JPA existentes para evitar discrepancias de tipo de datos al migrar a MySQL (como tipos de datos, llaves foráneas y restricciones).
+- [x] Validar que al arrancar el backend con una base de datos MySQL vacía, Hibernate cree el esquema de tablas en su totalidad de manera automática.
 
 ---
 
@@ -93,12 +93,12 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Implementar la carga automatizada de datos iniciales en la base de datos MySQL al iniciar el servidor siguiendo los estándares de Spring Boot.
 
 **Tareas a realizar:**
-- [ ] Crear el archivo `backend/src/main/resources/data.sql` con las sentencias DML (`INSERT`) para poblar la base de datos con datos de prueba consistentes.
-- [ ] Migrar el script seed anterior (`02_seed.sql`) a la sintaxis y tipos de MySQL.
-- [ ] Configurar las propiedades en `application.properties` para diferir el inicio del datasource y garantizar que el script de datos se ejecute inmediatamente después de la creación automática de tablas por parte de Hibernate:
+- [x] Crear el archivo `backend/src/main/resources/data.sql` con las sentencias DML (`INSERT`) para poblar la base de datos con datos de prueba consistentes.
+- [x] Migrar el script seed anterior (`02_seed.sql`) a la sintaxis y tipos de MySQL.
+- [x] Configurar las propiedades en `application.properties` para diferir el inicio del datasource y garantizar que el script de datos se ejecute inmediatamente después de la creación automática de tablas por parte de Hibernate:
     - `spring.sql.init.mode=always`
     - `spring.jpa.defer-datasource-initialization=true`
-- [ ] Validar que los registros iniciales se inserten sin errores y que las secuencias de autoincremento (IDs auto-generados por MySQL) queden configuradas correctamente.
+- [x] Validar que los registros iniciales se inserten sin errores y que las secuencias de autoincremento (IDs auto-generados por MySQL) queden configuradas correctamente.
 
 ---
 
@@ -111,12 +111,12 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Implementar un sistema de registro de eventos (logging) en el backend que escriba los registros en un archivo local llamado `backend.log`.
 
 **Tareas a realizar:**
-- [ ] Configurar el sistema de logs en `backend/src/main/resources/application.properties` definiendo la ruta del archivo de log:
+- [x] Configurar el sistema de logs en `backend/src/main/resources/application.properties` definiendo la ruta del archivo de log:
     - `logging.file.name=logs/backend.log` (o en la raíz del backend como `backend.log`).
     - Configurar los niveles de logging deseados (ej. `logging.level.com.equipo6.reservas=INFO`).
-- [ ] Declarar e implementar el uso de `Logger` (SLF4J/LoggerFactory) o a través de la anotación `@Slf4j` de Lombok en controladores y servicios principales (`ReservaController`, `ReservaService`, `EstudianteService`).
-- [ ] Agregar sentencias `logger.info("...")` descriptivas que registren el flujo del negocio y las llamadas a los endpoints (ej. creación de reservas, búsquedas, login o consultas).
-- [ ] Confirmar que al realizar interacciones con la API se escriba y guarde la información de manera persistente en el archivo `backend.log`.
+- [x] Declarar e implementar el uso de `Logger` (SLF4J/LoggerFactory) o a través de la anotación `@Slf4j` de Lombok en controladores y servicios principales (`ReservaController`, `ReservaService`, `EstudianteService`).
+- [x] Agregar sentencias `logger.info("...")` descriptivas que registren el flujo del negocio y las llamadas a los endpoints (ej. creación de reservas, búsquedas, login o consultas).
+- [x] Confirmar que al realizar interacciones con la API se escriba y guarde la información de manera persistente en el archivo `backend.log`.
 
 ---
 
@@ -159,10 +159,10 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Desarrollar la resiliencia en el frontend para manejar caídas o falta de disponibilidad del servidor, entregando una experiencia de usuario controlada y profesional.
 
 **Tareas a realizar:**
-- [ ] Implementar un interceptor HTTP en Angular o extender el manejo de errores en los servicios para capturar errores de conexión (ej. `HttpErrorResponse` con `status: 0`).
-- [ ] Diseñar y mostrar un mensaje visual de error ("Servidor Fuera de Línea", "No se pudo establecer conexión con el backend. Por favor, intente más tarde") en pantalla mediante `MensajeComponent` o un banner informativo persistente cuando ocurran estos errores.
-- [ ] Detener el backend localmente de forma deliberada y validar que al intentar interactuar con la aplicación (listar salas, buscar reservas o enviar formularios) el frontend no colapse, sino que devuelva el mensaje controlado de fracaso de conexión (REQ11).
-- [ ] Registrar y documentar las pruebas de comportamiento offline del frontend.
+- [x] Implementar un interceptor HTTP en Angular o extender el manejo de errores en los servicios para capturar errores de conexión (ej. `HttpErrorResponse` con `status: 0`).
+- [x] Diseñar y mostrar un mensaje visual de error ("Servidor Fuera de Línea", "No se pudo establecer conexión con el backend. Por favor, intente más tarde") en pantalla mediante `MensajeComponent` o un banner informativo persistente cuando ocurran estos errores.
+- [x] Detener el backend localmente de forma deliberada y validar que al intentar interactuar con la aplicación (listar salas, buscar reservas o enviar formularios) el frontend no colapse, sino que devuelva el mensaje controlado de fracaso de conexión (REQ11).
+- [x] Registrar y documentar las pruebas de comportamiento offline del frontend.
 
 ---
 
@@ -175,11 +175,11 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Generar el diagrama del Modelo Entidad-Relación (MER) a partir del esquema físico MySQL creado automáticamente por Hibernate, mediante la herramienta de ingeniería inversa de MySQL Workbench.
 
 **Tareas a realizar:**
-- [ ] Levantar la base de datos MySQL local del proyecto con las tablas creadas por Hibernate.
-- [ ] Abrir MySQL Workbench y configurar una conexión a la base de datos local `reserva_salas_db`.
-- [ ] Ejecutar el proceso de Ingeniería Inversa (Reverse Engineer) seleccionando el esquema del proyecto.
-- [ ] Organizar de manera lógica y ordenada el diagrama físico resultante para asegurar una lectura fluida del MER.
-- [ ] Exportar el diagrama obtenido en formato de imagen (.PNG) y PDF, y almacenarlo en la ruta `docs_p3/assets/` para que esté disponible para el equipo, la documentación final y la presentación del proyecto.
+- [x] Levantar la base de datos MySQL local del proyecto con las tablas creadas por Hibernate.
+- [x] Abrir MySQL Workbench y configurar una conexión a la base de datos local `reserva_salas_db`.
+- [x] Ejecutar el proceso de Ingeniería Inversa (Reverse Engineer) seleccionando el esquema del proyecto.
+- [X] Organizar de manera lógica y ordenada el diagrama físico resultante para asegurar una lectura fluida del MER.
+- [x] Exportar el diagrama obtenido en formato de imagen (.PNG) y PDF, y almacenarlo en la ruta `docs_p3/assets/` para que esté disponible para el equipo, la documentación final y la presentación del proyecto.
 
 ---
 

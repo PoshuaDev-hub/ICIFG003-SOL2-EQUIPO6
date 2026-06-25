@@ -6,7 +6,8 @@ import com.equipo6.reservas.models.Estudiante;
 import com.equipo6.reservas.repositories.CarreraRepository;
 import com.equipo6.reservas.repositories.CredencialRepository;
 import com.equipo6.reservas.repositories.EstudianteRepository;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class EstudianteService {
+
+    private Logger log = LoggerFactory.getLogger(EstudianteService.class);
 
     @Autowired
     private EstudianteRepository estudianteRepository;
