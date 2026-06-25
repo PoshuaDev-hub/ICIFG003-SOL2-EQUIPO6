@@ -1,3 +1,5 @@
+name: Equipo-6
+
 services:
   db:
     image: mysql:8.0
@@ -17,6 +19,7 @@ services:
 
   backend:
     build: ./backend
+    image: reservas-backend:latest
     container_name: reservas-backend
     restart: unless-stopped
     depends_on:
@@ -31,6 +34,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: reservas-frontend:latest
     container_name: reservas-frontend
     restart: unless-stopped
     depends_on:
@@ -40,3 +44,4 @@ services:
 
 volumes:
   mysql_data:
+
