@@ -23,6 +23,7 @@ Port: 3307
 Default Schema (Opcional): reserva_salas_db
 
 select * from estudiante;
+# Datos de pruebas: 19960115-3 Contraseña: test1234
 
 ```
 
