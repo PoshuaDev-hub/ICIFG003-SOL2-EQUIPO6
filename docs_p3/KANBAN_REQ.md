@@ -129,9 +129,9 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Mejorar las validaciones en todos los campos solicitados de la interfaz del frontend y asegurar una retroalimentación detallada y robusta al usuario en caso de error o éxito.
 
 **Tareas a realizar:**
-- [ ] Validar rigurosamente los campos del formulario reactivo de reservas (RUT con formato válido, Nombre/Apellido no vacíos, observaciones cuando corresponda).
-- [ ] Implementar visualización clara en la interfaz cuando un campo es inválido (ej. bordes rojos en inputs y mensajes de ayuda legibles como "RUT requerido con formato 12345678-9").
-- [ ] Capturar las respuestas de error estructuradas que provengan del backend (como códigos `400 Bad Request` o `409 Conflict` por horario ocupado) y presentarlas mediante el `MensajeComponent` de forma elegante y comprensible para el usuario final.
+- [x] Validar rigurosamente los campos del formulario reactivo de reservas (RUT con formato válido, Nombre/Apellido no vacíos, observaciones cuando corresponda).
+- [x] Implementar visualización clara en la interfaz cuando un campo es inválido (ej. bordes rojos en inputs y mensajes de ayuda legibles como "RUT requerido con formato 12345678-9").
+- [x] Capturar las respuestas de error estructuradas que provengan del backend (como códigos `400 Bad Request` o `409 Conflict` por horario ocupado) y presentarlas mediante el `MensajeComponent` de forma elegante y comprensible para el usuario final.
 
 ---
 
@@ -144,9 +144,9 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Modificar el flujo de interacción en el cliente para evitar solicitar información redundante y autocompletar o deducir datos implícitos.
 
 **Tareas a realizar:**
-- [ ] Configurar el sistema para deducir datos implícitos: por ejemplo, deducir automáticamente el correo electrónico institucional del estudiante en formato `rut@usm.cl` en base al RUT ingresado, sin requerir que el usuario lo escriba.
-- [ ] Optimizar el flujo de creación de reservas: si el estudiante ya existe en la base de datos, cargar automáticamente su nombre y apellido en el formulario al ingresar el RUT, impidiendo que el usuario deba digitar campos ya registrados.
-- [ ] Establecer la fecha actual del sistema como valor por defecto en los Datepickers de búsqueda y reserva para acelerar el proceso.
+- [x] Configurar el sistema para deducir datos implícitos: por ejemplo, deducir automáticamente el correo electrónico institucional del estudiante en formato `rut@usm.cl` en base al RUT ingresado, sin requerir que el usuario lo escriba.
+- [x] Optimizar el flujo de creación de reservas: si el estudiante ya existe en la base de datos, cargar automáticamente su nombre y apellido en el formulario al ingresar el RUT, impidiendo que el usuario deba digitar campos ya registrados.
+- [x] Establecer la fecha actual del sistema como valor por defecto en los Datepickers de búsqueda y reserva para acelerar el proceso.
 
 ---
 
@@ -192,7 +192,7 @@ De acuerdo a la experticia de cada integrante del equipo, se han reasignado los 
 **Objetivo:** Validar el funcionamiento del sistema completo integrado en Docker, asegurar la persistencia en MySQL y preparar los entregables finales de la presentación grupal.
 
 **Tareas a realizar:**
-- [ ] Integrar (merge) todos los avances en la rama `QA`, resolver posibles conflictos y verificar que el despliegue mediante Docker Compose funcione perfectamente.
-- [ ] Realizar pruebas globales para garantizar que todas las operaciones del frontend (reserva de salas, consultas, registro automático de estudiantes) persistan de manera efectiva en la base de datos MySQL en el backend (REQ9).
-- [ ] Completar la documentación en `docs_p3/Implementacion_Lista.md` actualizando el estado de todos los Issues a Completado ✅, detallando los archivos modificados y la lógica agregada.
-- [ ] Diseñar y armar la presentación grupal (formato PowerPoint) conteniendo las 5 secciones obligatorias: Gestión de Proyecto, Arquitectura, Backend, Frontend y Conclusiones, asignando la defensa de cada bloque de acuerdo al expertise y rol de cada integrante (REQ0).
+- [x] Integrar (merge) todos los avances en la rama `QA`, resolver posibles conflictos y verificar que el despliegue mediante Docker Compose funcione perfectamente.
+- [x] Realizar pruebas globales para garantizar que todas las operaciones del frontend (reserva de salas, consultas, registro automático de estudiantes) persistan de manera efectiva en la base de datos MySQL en el backend (REQ9).
+- [x] Completar la documentación en `docs_p3/Implementacion_Lista.md` actualizando el estado de todos los Issues a Completado ✅, detallando los archivos modificados y la lógica agregada.
+- [x] Diseñar y armar la presentación grupal (formato PowerPoint) conteniendo las 5 secciones obligatorias: Gestión de Proyecto, Arquitectura, Backend, Frontend y Conclusiones, asignando la defensa de cada bloque de acuerdo al expertise y rol de cada integrante (REQ0).
